@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import Image from "next/image";
+import { motion } from "framer-motion";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -35,54 +37,148 @@ export default function LoginPage() {
         toast.error(data.message || "Login gagal!");
       }
     } catch (err) {
-      toast.error("Terjadi kesalahan server.");
+      toast.error(`Terjadi kesalahan server.${err}`);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-300">
-      <div className="w-full max-w-lg bg-white p-6 rounded-md shadow-md flex justify-between">
-        <div className="">
-          K-Nekat
-        </div>
-      <form
-        onSubmit={handleLogin}
-        className=""
+    <div className="min-h-screen flex items-center justify-center bg-gray-300 p-4">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.3 }}
+        className="w-full max-w-4xl bg-white rounded-md shadow-md flex flex-col md:flex-row overflow-hidden min-h-[300px] md:min-h-[500px]"
       >
-        <h1 className="text-xl font-semibold mb-4">Login</h1>
+        {/* Kiri */}
+        <div className="bg-gradient-to-br from-blue-500 to-blue-700 w-full md:w-1/2 p-6 flex flex-col justify-center items-center text-center">
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="text-4xl font-bold text-white "
+          >
+            K-Nekat
+          </motion.p>
 
-        <div className="mb-4">
-          <Label htmlFor="username">Username</Label>
-          <Input
-            id="username"
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            className="text-white text-sm font-semibold sm:text-base mb-4 max-w-xs"
+          >
+            Sistem Informasi Pelanggaran Kedisiplinan Siswa SMKN 1 Katapang
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+          >
+            <Image
+              src="/Logo_Smk.png"
+              alt="Logo SMK"
+              width={140}
+              height={140}
+              priority
+              className="sm:w-[180px] sm:h-[180px]"
+            />
+          </motion.div>
         </div>
 
-        <div className="mb-4">
-          <Label htmlFor="password">Password</Label>
-          <Input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
+        {/* Kanan */}
+        <motion.form
+          onSubmit={handleLogin}
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: {},
+            visible: {
+              transition: {
+                staggerChildren: 0.15, // jeda antar elemen
+              },
+            },
+          }}
+          className="w-full md:w-1/2 p-8 sm:p-10 flex flex-col justify-center"
+        >
+          {/* Judul */}
+          <motion.h1
+            variants={{
+              hidden: { opacity: 0, y: 20 },
+              visible: { opacity: 1, y: 0 },
+            }}
+            transition={{ duration: 0.5 }}
+            className="text-2xl font-semibold mb-6 text-center md:text-left"
+          >
+            Login
+          </motion.h1>
 
-        <Button type="submit" className="w-full" disabled={isLoading}>
-          {isLoading ? (
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          ) : null}
-          {isLoading ? "Memproses..." : "Login"}
-        </Button>
-      </form>
-      </div>
+          {/* Username */}
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, x: 20 },
+              visible: { opacity: 1, x: 0 },
+            }}
+            transition={{ duration: 0.4 }}
+            className="mb-4"
+          >
+            <Label htmlFor="username">Username</Label>
+            <Input
+              id="username"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </motion.div>
+
+          {/* Password */}
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, x: 20 },
+              visible: { opacity: 1, x: 0 },
+            }}
+            transition={{ duration: 0.4 }}
+            className="mb-6"
+          >
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </motion.div>
+
+          {/* Tombol Login */}
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, scale: 0.9 },
+              visible: { opacity: 1, scale: 1 },
+            }}
+            transition={{ duration: 0.4 }}
+          >
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {isLoading ? "Memproses..." : "Login"}
+            </Button>
+          </motion.div>
+
+          {/* Info bawah */}
+          <motion.p
+            variants={{
+              hidden: { opacity: 0 },
+              visible: { opacity: 1 },
+            }}
+            transition={{ duration: 0.4 }}
+            className="text-sm text-gray-500 text-center mt-4"
+          >
+            Akun ini hanya diberikan oleh pihak kesiswaan. Pastikan Anda sudah terdaftar.
+          </motion.p>
+        </motion.form>
+      </motion.div>
     </div>
   );
 }
