@@ -14,8 +14,6 @@ import {
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-// import bg from "@/assets/logo3.png"; 
-
 interface NavItem {
   id: number;
   name: keyof typeof iconMap;
@@ -109,7 +107,6 @@ const Sidebar: React.FC = () => {
           })}
         </nav>
 
-        {/* Logout */}
         <div className="mt-10 pr-6">
           <button
             className="flex items-center gap-2 px-4 py-2 bg-white text-black rounded-full shadow cursor-pointer font-semibold w-full"
@@ -143,7 +140,7 @@ const Sidebar: React.FC = () => {
         </button>
       </div>
 
-      {/* Mobile Sidebar + Backdrop */}
+      
       {isOpen && (
         <>
           <div
@@ -156,7 +153,6 @@ const Sidebar: React.FC = () => {
         </>
       )}
 
-      {/* Desktop Sidebar */}
       <aside className="hidden lg:block w-64 min-h-screen bg-blue-600 pl-6 py-8 overflow-hidden">
         {SidebarContent}
       </aside>
