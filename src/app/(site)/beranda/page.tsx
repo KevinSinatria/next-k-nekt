@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import CountUp from "@/components/CountUp";
 import LineChart from "@/components/LineChart";
 import PieChartt from "@/components/PieChart";
+import { RecentViolationsTable } from "@/components/PelanggaranBaru";
 
 export default function Beranda() {
   const [jumlahSiswa, setJumlahSiswa] = useState(0);
@@ -94,15 +95,9 @@ export default function Beranda() {
               <PieChartt />
             </Card>
           </div>
-          <Card className="p-4 text-center">
-            <p className="text-sm text-muted-foreground">Jumlah Pelanggan</p>
-            <p className="text-2xl font-bold">345</p>{" "}
-          </Card>
-          <Card className="p-4 text-center">
-            <p className="text-sm text-muted-foreground">Jumlah Kelas</p>
-            <p className="text-2xl font-bold">
-              <CountUp from={0} to={jumlahKelas} duration={1} />
-            </p>
+          <Card className="p-4">
+            <h2 className="font-semibold mb-2">Pelanggaran Terbaru</h2>
+            <RecentViolationsTable />
           </Card>
         </div>
       </div>

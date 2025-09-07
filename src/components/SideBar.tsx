@@ -10,6 +10,7 @@ import {
   PackageOpen,
   Clapperboard,
   LogOut,
+  SquareArrowOutUpRight,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -23,7 +24,7 @@ interface NavItem {
 const iconMap = {
   Beranda: <LayoutDashboard size={18} />,
   Profile: <CircleUserRound size={18} />,
-  "Kelola Jajanan": <SquarePen size={18} />,
+  "input_pelanggaran": <SquareArrowOutUpRight size={18} />,
   Statistik: <BarChart2 size={18} />,
   "Kelola User": <PersonStanding size={18} />,
   Pesanan: <PackageOpen size={18} />,
@@ -33,6 +34,7 @@ const iconMap = {
 const navItems: NavItem[] = [
   { id: 1, name: "Beranda", path: "/beranda" },
   { id: 2, name: "Statistik", path: "/statistik" },
+  { id: 2, name: "input_pelanggaran", path: "/input_pelanggaran" },
 ];
 
 const ITEM_HEIGHT = 56;
