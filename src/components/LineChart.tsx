@@ -22,7 +22,7 @@ ChartJS.register(
 );
 
 const data = {
-  labels: ["Januari", "Februari", "Maret", "April", "Mei"],
+  labels: ["Januari", "Februari", "Maret", "April", "Mei", "juni","juni","juni","juni","juni"],
   datasets: [
     {
       label: "Pemasukan",
@@ -57,14 +57,11 @@ const options = {
 
 export default function LineChart() {
   return (
-    <div className="bg-white p-4 rounded-md shadow-md">
-      <div className="flex justify-between items-center mb-2">
-        <h2 className="text-lg font-semibold">Pemasukan dan Pengeluaran</h2>
-        <span className="text-sm text-blue-500 cursor-pointer hover:underline">
-          Lihat detail →
-        </span>
+    <div className="bg-white p-4 rounded-md shadow-md overflow-x-auto">
+      <div className="min-w-[640px]"> {/* ⬅️ tambahkan ini */}
+        <Line data={data} options={options} />
       </div>
-      <Line data={data} options={options} />
     </div>
   );
+
 }

@@ -83,9 +83,16 @@ export default function Beranda() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <Card className="md:col-span-3 p-4">
-          <h2 className="font-semibold mb-2">Pemasukan dan Pengeluaran</h2>
-          <LineChart />
+        <Card className="md:col-span-3 p-4 ">
+          <div className="flex justify-between items-center mb-2">
+            <h2 className="text-lg font-semibold">statistik pelanggaran yang dilakukan</h2>
+            <span className="text-sm text-blue-500 cursor-pointer hover:underline">
+              Lihat detail →
+            </span>
+          </div>
+          <div className="overflow-x-auto">
+            <LineChart />
+          </div>
         </Card>
 
         <div className="md:col-span-2 flex flex-col gap-4">

@@ -24,7 +24,7 @@ interface NavItem {
 const iconMap = {
   Beranda: <LayoutDashboard size={18} />,
   Profile: <CircleUserRound size={18} />,
-  "input_pelanggaran": <SquareArrowOutUpRight size={18} />,
+  "Input Pelanggaran": <SquareArrowOutUpRight size={18} />,
   Statistik: <BarChart2 size={18} />,
   "Kelola User": <PersonStanding size={18} />,
   Pesanan: <PackageOpen size={18} />,
@@ -34,7 +34,7 @@ const iconMap = {
 const navItems: NavItem[] = [
   { id: 1, name: "Beranda", path: "/beranda" },
   { id: 2, name: "Statistik", path: "/statistik" },
-  { id: 2, name: "input_pelanggaran", path: "/input_pelanggaran" },
+  { id: 2, name: "Input Pelanggaran", path: "/pelanggaran" },
 ];
 
 const ITEM_HEIGHT = 56;
@@ -149,7 +149,7 @@ const Sidebar: React.FC = () => {
             className="fixed inset-0 bg-black opacity-50 z-20 lg:hidden"
             onClick={closeSidebar}
           />
-          <aside className="fixed top-0 left-0 w-64 h-full bg-[#202720] pl-6 py-8 z-30 overflow-y-auto lg:hidden">
+          <aside className="fixed top-0 left-0 w-64 h-full bg-blue-600  pl-6 py-8 z-30 overflow-y-auto lg:hidden">
             {SidebarContent}
           </aside>
         </>
