@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 interface Siswa {
   id: number;
@@ -10,37 +11,37 @@ interface Siswa {
   poin: number;
 }
 
-export default function DashboardPage() {
+export default function TabelPage() {
   const router = useRouter();
   const [siswa, setSiswa] = useState<Siswa[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+  // const token = localStorage.getItem("token");
 
-    if (!token) {
-      router.replace("/login");
-      return;
-    }
+  // if (!token) {
+  //   router.replace("/login");
+  //   return;
+  // }
 
-    fetch("http://localhost:3001/siswa", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+  fetch("https://k-nekt.vercel.app/v1/violations", {
+    // headers: {
+    //   Authorization: `Bearer ${token}`,
+    // },
+  })
+    .then((res) => {
+      if (!res.ok) throw new Error("Unauthorized");
+      return res.json();
     })
-      .then((res) => {
-        if (!res.ok) throw new Error("Unauthorized");
-        return res.json();
-      })
-      .then((data) => {
-        setSiswa(data);
-      })
-      .catch(() => {
-        alert("Gagal ambil data siswa. Coba login ulang.");
-        router.replace("/login");
-      })
-      .finally(() => setLoading(false));
-  }, [router]);
+    .then((data) => {
+      setSiswa(data);
+    })
+    .catch(() => {
+      toast.error("Gagal ambil data siswa.")
+    })
+    .finally(() => setLoading(false));
+}, []);
+
 
   const handleLogout = () => {
     localStorage.removeItem("token");
