@@ -4,19 +4,18 @@ import React, { useEffect, useState } from "react";
 import {
   LayoutDashboard,
   CircleUserRound,
-  SquarePen,
+  SquareArrowOutUpRight,
   BarChart2,
   PersonStanding,
   PackageOpen,
   Clapperboard,
   LogOut,
-  SquareArrowOutUpRight,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+
 interface NavItem {
-  id: number;
   name: keyof typeof iconMap;
   path: string;
 }
@@ -24,7 +23,7 @@ interface NavItem {
 const iconMap = {
   Beranda: <LayoutDashboard size={18} />,
   Profile: <CircleUserRound size={18} />,
-  "Input Pelanggaran": <SquareArrowOutUpRight size={18} />,
+  Pelanggaran: <SquareArrowOutUpRight size={18} />,
   Statistik: <BarChart2 size={18} />,
   "Kelola User": <PersonStanding size={18} />,
   Pesanan: <PackageOpen size={18} />,
@@ -32,9 +31,9 @@ const iconMap = {
 };
 
 const navItems: NavItem[] = [
-  { id: 1, name: "Beranda", path: "/beranda" },
-  { id: 2, name: "Statistik", path: "/statistik" },
-  { id: 2, name: "Input Pelanggaran", path: "/pelanggaran" },
+  { name: "Beranda", path: "/beranda" },
+  { name: "Statistik", path: "/statistik" },
+  { name: "Pelanggaran", path: "/pelanggaran" }, // ✅ Capital & konsisten
 ];
 
 const ITEM_HEIGHT = 56;
@@ -62,12 +61,18 @@ const Sidebar: React.FC = () => {
       {/* Logo */}
       <div className="text-center font-bold text-xl tracking-wide mb-10 z-10">
         <div className="py-3 rounded-lg w-20 mx-auto ml-16">
-          <Image src="/Logo_Smk.png" width={50} height={50} alt="Logo Jajankuy" className="w-full object-contain" />
+          <Image
+            src="/Logo_Smk.png"
+            width={50}
+            height={50}
+            alt="Logo Jajankuy"
+            className="w-full object-contain"
+          />
         </div>
       </div>
 
       <div className="relative">
-        {/* Highlight */}
+        {/* Highlight Active */}
         <AnimatePresence initial={false}>
           {activeIndex !== -1 && (
             <motion.div
@@ -78,7 +83,6 @@ const Sidebar: React.FC = () => {
               transition={{ type: "spring", stiffness: 400, damping: 35 }}
               className="absolute w-[240px] h-[55px] bg-white text-black rounded-l-[32px] shadow-md z-0"
             >
-              {/* Lengkungan */}
               <span className="absolute top-[-50px] right-[8px] w-[33px] h-[50px] rounded-br-[200px] shadow-[15px_15px_0_15px_white] bg-transparent" />
               <span className="absolute top-[55px] right-[8px] w-[33px] h-[50px] rounded-tr-[200px] shadow-[15px_-15px_0_15px_white] bg-transparent" />
             </motion.div>
@@ -91,7 +95,7 @@ const Sidebar: React.FC = () => {
             const isActive = index === activeIndex;
             return (
               <div
-                key={item.id}
+                key={item.path} // ✅ pakai path biar selalu unik
                 onClick={() => {
                   router.push(item.path);
                   if (window.innerWidth < 1024) closeSidebar();
@@ -142,7 +146,7 @@ const Sidebar: React.FC = () => {
         </button>
       </div>
 
-      
+      {/* Sidebar Mobile */}
       {isOpen && (
         <>
           <div
@@ -155,6 +159,7 @@ const Sidebar: React.FC = () => {
         </>
       )}
 
+      {/* Sidebar Desktop */}
       <aside className="hidden lg:block w-64 min-h-screen bg-blue-600 pl-6 py-8 overflow-hidden">
         {SidebarContent}
       </aside>

@@ -1,49 +1,62 @@
 "use client";
+import FilterBar from "@/components/FilterBar";
+import ViolationsTable from "@/components/ViolationsTable";
+import { useState } from "react";
 
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
-import { Card } from "@/components/ui/card";
-import CountUp from "@/components/CountUp";
-import LineChart from "@/components/LineChart";
-import PieChartt from "@/components/PieChart";
-import { RecentViolationsTable } from "@/components/PelanggaranBaru";
-import AddViolationForm from "@/components/AddViolationForm";
+const dummyData = [
+  {
+    nis: "123456",
+    nama: "Budi",
+    kelas: "X",
+    kategori: "Terlambat",
+    pelanggaran: "Datang jam 08.00",
+    poin: 5,
+    hukuman: "Peringatan",
+    tanggal: "2025-09-09",
+  },
+  {
+    nis: "789101",
+    nama: "Siti",
+    kelas: "XI",
+    kategori: "Bolos",
+    pelanggaran: "Tidak hadir tanpa keterangan",
+    poin: 10,
+    hukuman: "Panggilan Orang Tua",
+    tanggal: "2025-09-07",
+  },
+  // tambah data lain jika perlu
+];
 
-export default function Pelanggaran() {
-  const [jumlahSiswa, setJumlahSiswa] = useState(0);
-  const [loading, setLoading] = useState(true);
+export default function ViolationsPage() {
+  const [search, setSearch] = useState("");
+  const [filters, setFilters] = useState({
+    kategori: "",
+    hukuman: "",
+    kelas: "",
+    tanggal: "",
+  });
 
-  useEffect(() => {
-    async function fetchDashboardData() {
-      try {
-        const [siswaRes] = await Promise.all([
-          fetch("https://k-nekt.vercel.app/v1/violations"),
-        ]);
-
-        if (!siswaRes.ok) {
-          throw new Error("Gagal ambil data");
-        }
-
-        const siswaData = await siswaRes.json();
-
-        setJumlahSiswa(siswaData.length);
-      } catch (err) {
-        toast.error("Gagal memuat data beranda.");
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchDashboardData();
-  }, []);
+  const filtered = dummyData.filter((item) => {
+    return (
+      (item.nama.toLowerCase().includes(search.toLowerCase()) ||
+        item.nis.includes(search)) &&
+      (filters.kategori ? item.kategori === filters.kategori : true) &&
+      (filters.hukuman ? item.hukuman === filters.hukuman : true) &&
+      (filters.kelas ? item.kelas === filters.kelas : true) &&
+      (filters.tanggal ? item.tanggal === filters.tanggal : true)
+    );
+  });
 
   return (
-    <div className="p-6 space-y-6">
-      <h1 className="text-2xl font-semibold mb-4">Input Pelanggaran</h1>
-      <div className="p-6">
-        <h1 className="text-xl font-semibold mb-4">Tambah Pelanggaran</h1>
-        <AddViolationForm />
-      </div>
+    <div className="p-6">
+      <h1 className="text-xl font-semibold mb-4">Data Pelanggaran Siswa</h1>
+      <FilterBar
+        search={search}
+        setSearch={setSearch}
+        filters={filters}
+        setFilters={setFilters}
+      />
+      <ViolationsTable data={filtered} />
     </div>
   );
 }
