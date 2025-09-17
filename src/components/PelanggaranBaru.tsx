@@ -41,7 +41,7 @@ export function RecentViolationsTable() {
   }, [])
 
   return (
-    <ScrollArea className="rounded-md border h-[400px]">
+    <ScrollArea className="rounded-md border h-[200px]">
       <Table>
         <TableHeader>
           <TableRow>

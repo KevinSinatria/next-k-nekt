@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
@@ -53,12 +53,34 @@ export default function AddViolationForm() {
     }
   }
 
+  const [jumlahSiswa, setJumlahSiswa] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchDashboardData() {
+      try {
+        const [siswaRes] = await Promise.all([
+          fetch("https://k-nekt.vercel.app/v1/violations"),
+        ]);
+
+        if (!siswaRes.ok) {
+          throw new Error("Gagal ambil data");
+        }
+
+        const siswaData = await siswaRes.json();
+        setJumlahSiswa(siswaData.length);
+      } catch (err) {
+        toast.error(`Gagal memuat data beranda. ${err}`);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchDashboardData();
+  }, []);
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4 p-4 max-w-xl">
-      <div>
-        <Label htmlFor="nis">NIS</Label>
-        <Input id="nis" name="nis" required />
-      </div>
 
       <div>
         <Label htmlFor="name">Nama</Label>

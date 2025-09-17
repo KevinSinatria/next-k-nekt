@@ -97,8 +97,8 @@ export default function Beranda() {
 
         <div className="md:col-span-2 flex flex-col gap-4">
           <div className="grid grid-cols-1 ">
-            <Card className="p-4">
-              <h2 className="font-semibold mb-2">Penjualan per Kategori</h2>
+            <Card className="p-4 h-70">
+              <h2 className="font-semibold mb-2">Pelanggaran per Kategori</h2>
               <PieChartt />
             </Card>
           </div>
