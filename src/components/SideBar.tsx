@@ -59,7 +59,7 @@ const Sidebar: React.FC = () => {
   const SidebarContent = (
     <>
       {/* Logo */}
-      <div className="text-center font-bold text-xl tracking-wide mb-10 z-10">
+      <div className="text-center font-bold tracking-wide mb-10 z-10">
         <div className="py-3 rounded-lg w-20 mx-auto ml-16">
           <Image
             src="/Logo_Smk.png"
@@ -160,7 +160,7 @@ const Sidebar: React.FC = () => {
       )}
 
       {/* Sidebar Desktop */}
-      <aside className="hidden lg:block w-64 min-h-screen bg-blue-600 pl-6 py-8 overflow-hidden">
+      <aside className="hidden lg:block w-64 h-full max-h-screen bg-blue-600 pl-6 py-8 overflow-hidden">
         {SidebarContent}
       </aside>
     </>

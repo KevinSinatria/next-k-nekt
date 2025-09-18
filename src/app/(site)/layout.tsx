@@ -9,7 +9,7 @@ export default function RootLayout({
   return (
     <div
       suppressHydrationWarning
-      className="min-h-screen bg-white text-gray-900 flex"
+      className="max-h-screen bg-white text-gray-900 flex"
     >
       <Sidebar /> 
       <main className="flex-1 p-6">

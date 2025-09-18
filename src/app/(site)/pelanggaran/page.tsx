@@ -56,7 +56,7 @@ export default function ViolationsPage() {
         filters={filters}
         setFilters={setFilters}
       />
-      <ViolationsTable data={filtered} />
+      {/* <ViolationsTable data={filtered} /> */}
     </div>
   );
 }
