@@ -1,21 +1,50 @@
-import { Toaster } from "sonner";
-import Sidebar from "@/components/SideBar"; // ✅ Tambahkan ini!
+"use client";
+
+import { toast, Toaster } from "sonner";
+import Sidebar from "@/components/SideBar";
+import { HeaderProvider, useHeader } from "@/context/HeaderContext";
+import { AuthProvider, useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
+
+function DynamicHeader() {
+   const { title } = useHeader();
+   return (
+      <header className="sticky top-0 z-10 w-full bg-white shadow-md p-4 border-b">
+         <h1 className="text-xl font-semibold">{title}</h1>
+      </header>
+   );
+}
 
 export default function RootLayout({
-  children,
+   children,
 }: Readonly<{
-  children: React.ReactNode;
+   children: React.ReactNode;
 }>) {
-  return (
-    <div
-      suppressHydrationWarning
-      className="max-h-screen bg-white text-gray-900 flex"
-    >
-      <Sidebar /> 
-      <main className="flex-1 p-6">
-        <Toaster richColors position="top-center" />
-        {children}
-      </main>
-    </div>
-  );
+   const { isAuthenticated } = useAuth();
+   const router = useRouter();
+
+   if (isAuthenticated) {
+      return (
+         <AuthProvider>
+            <HeaderProvider>
+               <div
+                  suppressHydrationWarning
+                  className="flex h-screen bg-gray-50 texy-gray-950"
+               >
+                  <Sidebar />
+                  <main className="flex-1 flex flex-col overflow-y-hidden">
+                     <DynamicHeader />
+                     <div className="p-6 flex-1 overflow-y-auto">
+                        {children}
+                     </div>
+                     <Toaster richColors position="top-center" />
+                  </main>
+               </div>
+            </HeaderProvider>
+         </AuthProvider>
+      );
+   } else {
+      toast.error("Anda belum login, silahkan login terlebih dahulu.");
+      router.push("/login");
+   }
 }

@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { login } from "@/services/auth";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -16,32 +17,27 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
+   const handleLogin = async (e: React.FormEvent) => {
+     e.preventDefault();
+     setIsLoading(true);
 
-    try {
-      const res = await fetch("http://localhost:3001/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      });
+     try {
+      const res = await login({username, password});
 
-      const data = await res.json();
-
-      if (res.ok) {
-        localStorage.setItem("token", data.token);
+      if(res.access_token) {
+        localStorage.setItem("access_token", res.access_token);
+        localStorage.setItem("user", JSON.stringify(res.user));
         toast.success("Login berhasil!");
         router.push("/dashboard");
       } else {
-        toast.error(data.message || "Login gagal!");
+        toast.error(res.message || "Login gagal!");
       }
-    } catch (err) {
+     } catch (err) {
       toast.error(`Terjadi kesalahan server.${err}`);
-    } finally {
+     } finally {
       setIsLoading(false);
-    }
-  };
+     }
+   }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-300 p-4">
