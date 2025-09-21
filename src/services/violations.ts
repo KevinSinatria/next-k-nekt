@@ -14,7 +14,7 @@ export const getAllViolations = async (page = 1) => {
 		return violations.data;
 	} catch (error) {
 		console.error(error);
-		// throw new Error(error!);
+		throw new Error(String(error));
 	}
 };
 
