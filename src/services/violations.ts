@@ -18,6 +18,21 @@ export const getAllViolations = async (page = 1) => {
 	}
 };
 
+export const getAllViolationsWithoutPagination = async () => {
+   try {
+      const violations = await api.get(`/violations/all`, {
+         headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+         },
+      });
+      return violations.data.data;
+   } catch (error) {
+      console.error(error);
+      throw new Error(String(error));
+   }
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const createViolation = async (data: any) => {
 	try {
