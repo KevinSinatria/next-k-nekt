@@ -1,11 +1,14 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 
 interface AuthContextType {
    isAuthenticated: boolean;
-   setAccessToken: (token: string) => void;
+   user: {
+      id: string;
+      username: string;
+      role: string;
+   } | null;
    setIsAuthenticated: (isAuthenticated: boolean) => void;
    loading: boolean;
 }
@@ -15,19 +18,20 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
    const [isAuthenticated, setIsAuthenticated] = useState(false);
    const [loading, setLoading] = useState(true);
-   const [accessToken, setAccessToken] = useState('');
+   const [user, setUser] = useState(null);
 
    useEffect(() => {
       const token = localStorage.getItem('access_token');
+      const user = JSON.parse(String(localStorage.getItem('user')));
       if (token) {
          setIsAuthenticated(true);
-         setAccessToken(token);
+         setUser(user);
       }
       setLoading(false);
-   }, [accessToken]);
+   }, []);
 
    return (
-      <AuthContext.Provider value={{ isAuthenticated, setAccessToken, setIsAuthenticated, loading }}>
+      <AuthContext.Provider value={{ isAuthenticated, user, setIsAuthenticated, loading }}>
          {children}
       </AuthContext.Provider>
    );

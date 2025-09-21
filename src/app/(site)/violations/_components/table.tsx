@@ -1,16 +1,18 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Meta, Violation } from "../page"
+import { Meta } from "../page"
 import { Badge } from "@/components/ui/badge"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import { MoreHorizontal, Plus } from "lucide-react"
+import { FileSpreadsheet, MoreHorizontal, Plus } from "lucide-react"
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
-import { deleteViolationById, implementViolationById, unimplementViolationById } from "@/services/violations"
+import { deleteViolationById, getAllViolationsWithoutPagination, implementViolationById, unimplementViolationById } from "@/services/violations"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
 import { useState } from "react"
+import { Violation } from "./form"
+import * as XLSX from 'xlsx';
 
 export const ViolationsTable = ({ violations, meta, handlePageChange }: { violations: Violation[], meta: Meta, handlePageChange: (page: number) => void }) => {
    const router = useRouter();
@@ -83,10 +85,71 @@ export const ViolationsTable = ({ violations, meta, handlePageChange }: { violat
       router.push(`/violations/edit/${id}`);
    }
 
+   const exportHandler = async () => {
+      toast.loading("Mempersiapkan data untuk diekspor...");
+
+      try {
+         // Fetching all violations
+         const allViolations = await getAllViolationsWithoutPagination();
+
+         if (allViolations.length === 0) {
+            toast.info("Tidak ada data untuk diekspor.");
+            return
+         }
+
+         // Group violations by class
+         // eslint-disable-next-line @typescript-eslint/no-explicit-any
+         const groupedByClass = allViolations.reduce((acc: { [key: string]: any[] }, violation: Violation) => {
+            const className = violation.class;
+
+            if (!acc[className]) {
+               acc[className] = [];
+            }
+
+            acc[className].push({
+               "NIS": violation.nis,
+               "Nama": violation.name,
+               "Kelas": violation.class,
+               "Nama Pelanggaran": violation.violation_name,
+               "Poin": violation.punishment_point,
+               "Punishment": violation.punishment,
+               "Kategori": violation.violation_category,
+               "Dibuat Oleh": violation.teacher,
+               "Tanggal": violation.created_at,
+            });
+
+            return acc;
+         }, {});
+
+         // Create a new Excel workbook
+         const workbook = XLSX.utils.book_new();
+
+         // Create a new worksheet for each class
+         for (const className in groupedByClass) {
+            const worksheet = XLSX.utils.json_to_sheet(groupedByClass[className]);
+            XLSX.utils.book_append_sheet(workbook, worksheet, className);
+         }
+
+         // Save the workbook to a file
+         XLSX.writeFile(workbook, "data_pelanggaran_siswa.xlsx");
+
+         toast.dismiss();
+         toast.success("Data berhasil diekspor.");
+      } catch (error) {
+         toast.dismiss();
+         toast.error("Gagal mengekspor data.");
+         console.error("Export error:", error);
+      }
+   }
+
    return (
       <>
-         <div className="flex gap-4 justify-end items-center mb-4">
-            <Link className="bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded-lg transition-all flex items-center justify-center text-sm gap-2" href="/violations/create"><Plus />Buat Data</Link>
+         <div className="flex flex-wrap gap-4 justify-end items-center mb-4">
+            <Button onClick={exportHandler} className="flex items-center gap-2">
+               <FileSpreadsheet />
+               Export ke Excel
+            </Button>
+            <Button className="bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded-lg transition-all flex items-center justify-center text-sm gap-2" asChild><Link href="/violations/create"><Plus />Buat Data</Link></Button>
             <div className="bg-gray-200 p-1 flex items-center justify-center rounded-lg">
                <Pagination className="cursor-pointer transition-all">
                   <PaginationContent>

@@ -21,15 +21,15 @@ export default function RootLayout({
 }: Readonly<{
    children: React.ReactNode;
 }>) {
-   const { isAuthenticated } = useAuth();
+   const { isAuthenticated, loading } = useAuth();
    const router = useRouter();
 
    useEffect(() => {
-      if (!isAuthenticated) {
+      if (!isAuthenticated && !loading && localStorage.getItem("access_token") !== null) {
          router.push("/login");
          toast.error("Anda belum login, silahkan login terlebih dahulu.");
       }
-   }, [isAuthenticated, router]);
+   }, [isAuthenticated, router, loading]);
 
    return (
       <AuthProvider>

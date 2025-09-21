@@ -35,7 +35,22 @@ export const formSchema = z.object({
    })
 })
 
-export function ViolationsForm({ onSubmit = () => {}, initialData, readOnly }: { onSubmit?: (values: z.infer<typeof formSchema>) => void, initialData?: z.infer<typeof formSchema> | null, readOnly?: boolean }) {
+export type Violation = {
+   id: number;
+   nis: number;
+   name: string;
+   class: string;
+   violation_name: string;
+   punishment_point: number;
+   punishment: string;
+   violation_category: string;
+   implemented: boolean;
+   teacher: string;
+   created_at: string;
+   updated_at: string;
+};
+
+export function ViolationsForm({ onSubmit = () => { }, initialData, readOnly }: { onSubmit?: (values: z.infer<typeof formSchema>) => void, initialData?: z.infer<typeof formSchema> | null, readOnly?: boolean }) {
    const form = useForm<z.infer<typeof formSchema>>({
       resolver: zodResolver(formSchema),
       defaultValues: {
