@@ -6,13 +6,15 @@ import { Card } from "@/components/ui/card";
 import CountUp from "@/components/CountUp";
 import LineChart from "@/components/LineChart";
 import PieChartt from "@/components/PieChart";
-import { RecentViolationsTable } from "@/components/PelanggaranBaru";
+import { useHeader } from "@/context/HeaderContext";
+// import { RecentViolationsTable } from "@/components/PelanggaranBaru";
 
 export default function Beranda() {
   const [jumlahSiswa, setJumlahSiswa] = useState(0);
   const [jumlahPelanggaran, setJumlahPelanggaran] = useState(0);
   const [jumlahKelas, setJumlahKelas] = useState(0);
   const [loading, setLoading] = useState(true);
+  const {setTitle} = useHeader();
 
   useEffect(() => {
     async function fetchDashboardData() {
@@ -42,6 +44,10 @@ export default function Beranda() {
     }
 
     fetchDashboardData();
+  }, []);
+
+  useEffect(() => {
+    setTitle("Dashboard");
   }, []);
 
   return (
@@ -102,10 +108,10 @@ export default function Beranda() {
               <PieChartt />
             </Card>
           </div>
-          <Card className="p-4">
+          {/* <Card className="p-4">
             <h2 className="font-semibold mb-2">Pelanggaran Terbaru</h2>
             <RecentViolationsTable />
-          </Card>
+          </Card> */}
         </div>
       </div>
     </div>
