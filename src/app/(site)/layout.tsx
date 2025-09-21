@@ -5,6 +5,7 @@ import Sidebar from "@/components/SideBar";
 import { HeaderProvider, useHeader } from "@/context/HeaderContext";
 import { AuthProvider, useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 function DynamicHeader() {
    const { title } = useHeader();
@@ -23,28 +24,30 @@ export default function RootLayout({
    const { isAuthenticated } = useAuth();
    const router = useRouter();
 
-   if (isAuthenticated) {
-      return (
-         <AuthProvider>
-            <HeaderProvider>
-               <div
-                  suppressHydrationWarning
-                  className="flex h-screen bg-gray-50 texy-gray-950"
-               >
-                  <Sidebar />
-                  <main className="flex-1 flex flex-col overflow-y-hidden">
-                     <DynamicHeader />
-                     <div className="p-6 flex-1 overflow-y-auto">
-                        {children}
-                     </div>
-                     <Toaster richColors position="top-center" />
-                  </main>
-               </div>
-            </HeaderProvider>
-         </AuthProvider>
-      );
-   } else {
-      toast.error("Anda belum login, silahkan login terlebih dahulu.");
-      router.push("/login");
-   }
+   useEffect(() => {
+      if (!isAuthenticated) {
+         router.push("/login");
+         toast.error("Anda belum login, silahkan login terlebih dahulu.");
+      }
+   }, [isAuthenticated, router]);
+
+   return (
+      <AuthProvider>
+         <HeaderProvider>
+            <div
+               suppressHydrationWarning
+               className="flex h-screen bg-gray-50 texy-gray-950"
+            >
+               <Sidebar />
+               <main className="flex-1 flex flex-col overflow-y-hidden">
+                  <DynamicHeader />
+                  <div className="p-6 flex-1 overflow-y-auto">
+                     {children}
+                  </div>
+                  <Toaster richColors position="top-center" />
+               </main>
+            </div>
+         </HeaderProvider>
+      </AuthProvider>
+   );
 }
