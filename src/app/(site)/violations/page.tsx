@@ -6,6 +6,9 @@ import { ViolationsTable } from "./_components/table";
 import { getAllViolations } from "@/services/violations";
 import { toast } from "sonner";
 import { useHeader } from "@/context/HeaderContext";
+import { AxiosError } from "axios";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 const dummyData = [
    {
@@ -49,13 +52,6 @@ export interface Meta {
 }
 
 export default function ViolationsPage() {
-   const [search, setSearch] = useState("");
-   const [filters, setFilters] = useState({
-      kategori: "",
-      hukuman: "",
-      kelas: "",
-      tanggal: "",
-   });
    const [violations, setViolations] = useState<Violation[]>([]);
    const [meta, setMeta] = useState<Meta>({
       page: 0,
@@ -65,19 +61,23 @@ export default function ViolationsPage() {
       hasNextPage: false,
       hasPrevPage: false
    });
-   const [isLoading, setIsLoading] = useState(false);
-   const {setTitle} = useHeader();
-   //   const violations= getViolations();
+   const { setTitle } = useHeader();
+   const { setIsAuthenticated } = useAuth();
 
    const getViolations = async (page = 1) => {
-      toast.loading("Loading...");
+      toast.loading("Loading...", { id: "getViolations" });
       try {
          const violations = await getAllViolations(page);
          toast.dismiss();
          setViolations(violations.data);
          setMeta(violations.meta);
       } catch (error) {
-         toast.error("Failed to fetch violations: " + error);
+         toast.dismiss("getViolations");
+         if (error instanceof Error && error instanceof AxiosError && error.status !== 401) {
+            toast.error("Gagal memuat data: " + error.response?.data.message)
+         } else {
+            setIsAuthenticated(false);
+         };
       }
    }
 
