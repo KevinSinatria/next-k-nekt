@@ -68,7 +68,7 @@ export default function ViolationsPage() {
       toast.loading("Loading...", { id: "getViolations" });
       try {
          const violations = await getAllViolations(page);
-         toast.dismiss();
+         toast.dismiss("getViolations");
          setViolations(violations.data);
          setMeta(violations.meta);
       } catch (error) {
@@ -98,7 +98,7 @@ export default function ViolationsPage() {
             setFilters={setFilters}
          /> */}
          {/* <ViolationsTable data={filtered} /> */}
-         <ViolationsTable violations={violations} meta={meta} handlePageChange={(page) => getViolations(page)} />
+         <ViolationsTable violations={violations} setViolations={setViolations} meta={meta} setMeta={setMeta} handlePageChange={(page) => getViolations(page)} />
       </div>
    );
 }

@@ -8,15 +8,22 @@ import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, Pagi
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
-import { deleteViolationById, getAllViolationsWithoutPagination, implementViolationById, unimplementViolationById } from "@/services/violations"
+import { deleteViolationById, getAllViolations, getAllViolationsWithoutPagination, implementViolationById, unimplementViolationById } from "@/services/violations"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
-import { useState } from "react"
+import { ChangeEvent, useEffect, useState } from "react"
 import { Violation } from "./form"
 import * as XLSX from 'xlsx';
+import { useDebounce } from "use-debounce"
+import { AxiosError } from "axios"
+import { useAuth } from "@/context/AuthContext"
+import { Input } from "@/components/ui/input"
 
-export const ViolationsTable = ({ violations, meta, handlePageChange }: { violations: Violation[], meta: Meta, handlePageChange: (page: number) => void }) => {
+export const ViolationsTable = ({ violations, setViolations, meta, setMeta, handlePageChange }: { violations: Violation[], setViolations: (violations: Violation[]) => void, meta: Meta, setMeta: (meta: Meta) => void, handlePageChange: (page: number) => void }) => {
    const router = useRouter();
    const [openMenuId, setOpenMenuId] = useState<number | null>(null);
+   const [searchQuery, setSearchQuery] = useState("");
+   const [search] = useDebounce(searchQuery, 600);
+   const { setIsAuthenticated } = useAuth();
 
    const implementHandler = async (id: string) => {
       toast.loading("Loading...");
@@ -142,41 +149,71 @@ export const ViolationsTable = ({ violations, meta, handlePageChange }: { violat
       }
    }
 
+   const handleSearch = async (value: string) => {
+      toast.loading("Mencari data...", { id: "getViolationsBySearch" });
+      try {
+         const response = await getAllViolations(1, value);
+         toast.dismiss("getViolationsBySearch");
+         setViolations(response.data);
+         setMeta(response.meta);
+      } catch (error) {
+         toast.dismiss("getViolationsBySearch");
+         if (error instanceof Error && error instanceof AxiosError && error.status !== 401) {
+            toast.error("Gagal memuat data: " + error.response?.data.message)
+         } else {
+            setIsAuthenticated(false);
+         };
+      }
+   };
+
+   useEffect(() => {
+      if (search.length < 2) {
+         if (search.length === 0) {
+            handlePageChange(1);
+         }
+         return;
+      }
+      handleSearch(search);
+   }, [search])
+
    return (
       <>
-         <div className="flex flex-wrap gap-4 justify-end items-center mb-4">
-            <Button onClick={exportHandler} className="flex items-center gap-2">
-               <FileSpreadsheet />
-               Export ke Excel
-            </Button>
-            <Button className="bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded-lg transition-all flex items-center justify-center text-sm gap-2" asChild><Link href="/violations/create"><Plus />Buat Data</Link></Button>
-            <div className="bg-gray-200 p-1 flex items-center justify-center rounded-lg">
-               <Pagination className="cursor-pointer transition-all">
-                  <PaginationContent>
-                     {meta.page > 1 && (
-                        <PaginationItem>
-                           <PaginationPrevious onClick={() => handlePageChange(meta.page - 1)} />
-                        </PaginationItem>
-                     )}
-                     {Array.from({ length: meta.totalPage }, (_, index) => (
-                        <PaginationItem className={`${meta.page === index + 1 ? "bg-gray-300 rounded-lg" : ""}`} key={index}>
-                           <PaginationLink onClick={() => handlePageChange(index + 1)}>
-                              {index + 1}
-                           </PaginationLink>
-                        </PaginationItem>
-                     ))}
-                     {meta.totalPage > 5 &&
-                        <PaginationItem>
-                           <PaginationEllipsis />
-                        </PaginationItem>
-                     }
-                     {meta.page != meta.totalPage && (
-                        <PaginationItem>
-                           <PaginationNext onClick={() => handlePageChange(meta.page + 1)} />
-                        </PaginationItem>
-                     )}
-                  </PaginationContent>
-               </Pagination>
+         <div className="flex flex-wrap gap-4 justify-between items-center mb-4">
+            <Input type="search" placeholder="Cari siswa, kelas atau lainnya..." className="flex-1 min-w-[260px]" onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)} />
+            <div className="flex gap-4 items-center justify-end flex-wrap">
+               <Button onClick={exportHandler} className="flex items-center gap-2">
+                  <FileSpreadsheet />
+                  Export ke Excel
+               </Button>
+               <Button className="bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded-lg transition-all flex items-center justify-center text-sm gap-2" asChild><Link href="/violations/create"><Plus />Buat Data</Link></Button>
+               <div className="bg-gray-200 p-1 flex items-center justify-center rounded-lg">
+                  <Pagination className="cursor-pointer transition-all">
+                     <PaginationContent>
+                        {meta.page > 1 && (
+                           <PaginationItem>
+                              <PaginationPrevious onClick={() => handlePageChange(meta.page - 1)} />
+                           </PaginationItem>
+                        )}
+                        {Array.from({ length: meta.totalPage }, (_, index) => (
+                           <PaginationItem className={`${meta.page === index + 1 ? "bg-gray-300 rounded-lg" : ""}`} key={index}>
+                              <PaginationLink onClick={() => handlePageChange(index + 1)}>
+                                 {index + 1}
+                              </PaginationLink>
+                           </PaginationItem>
+                        ))}
+                        {meta.totalPage > 5 &&
+                           <PaginationItem>
+                              <PaginationEllipsis />
+                           </PaginationItem>
+                        }
+                        {meta.page != meta.totalPage && (
+                           <PaginationItem>
+                              <PaginationNext onClick={() => handlePageChange(meta.page + 1)} />
+                           </PaginationItem>
+                        )}
+                     </PaginationContent>
+                  </Pagination>
+               </div>
             </div>
          </div>
          <Table className="min-w-[1200px] shadow-md relative bg-white">
@@ -251,7 +288,9 @@ export const ViolationsTable = ({ violations, meta, handlePageChange }: { violat
                         <TableCell className="font-medium">{violation.name}</TableCell>
                         <TableCell>{violation.class}</TableCell>
                         <TableCell>{violation.violation_name}</TableCell>
-                        <TableCell className="text-center">{violation.punishment_point}</TableCell>
+                        <TableCell className="text-center">
+                           <span className={`${violation.punishment_point > 5 ? "bg-red-500 text-white" : "bg-yellow-500 text-white"} px-2 py-[2px] rounded-full`}>{violation.punishment_point}</span>
+                        </TableCell>
                         <TableCell className="hidden lg:table-cell">{violation.punishment}</TableCell>
                         <TableCell className="hidden md:table-cell">{violation.violation_category}</TableCell>
                         <TableCell className="text-center">
@@ -266,7 +305,7 @@ export const ViolationsTable = ({ violations, meta, handlePageChange }: { violat
                      </TableRow>
                   ))}
             </TableBody>
-         </Table>
+         </Table >
       </>
    )
 }
