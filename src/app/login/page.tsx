@@ -18,7 +18,6 @@ export default function LoginPage() {
    const [isLoading, setIsLoading] = useState(false);
    const router = useRouter();
    const pathname = usePathname();
-   const { setAccessToken } = useAuth();
 
    const handleLogin = async (e: React.FormEvent) => {
       e.preventDefault();
@@ -30,7 +29,6 @@ export default function LoginPage() {
          if (res.access_token) {
             localStorage.setItem("access_token", res.access_token);
             localStorage.setItem("user", JSON.stringify(res.user));
-            setAccessToken(res.access_token);
             toast.success("Login berhasil!");
             router.push("/dashboard");
          } else {
@@ -47,7 +45,12 @@ export default function LoginPage() {
       if (pathname === "/login") {
          const token = localStorage.getItem("access_token");
          if (token) {
-            router.push("/dashboard");
+            const user = JSON.parse(String(localStorage.getItem("user")));
+            if (user.role === "admin") {
+               router.push("/dashboard");
+            } else {
+               router.push("/violations");
+            }
          }
       }
    }, [pathname, router]);
