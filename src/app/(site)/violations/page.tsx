@@ -1,46 +1,12 @@
 "use client";
-import FilterBar from "@/components/FilterBar";
-// import ViolationsTable from "@/components/ViolationsTable";
 import { useEffect, useState } from "react";
 import { ViolationsTable } from "./_components/table";
 import { getAllViolations } from "@/services/violations";
 import { toast } from "sonner";
 import { useHeader } from "@/context/HeaderContext";
 import { AxiosError } from "axios";
-import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
-
-const dummyData = [
-   {
-      id: 1,
-      nis: 1234567,
-      name: "John Doe",
-      class: "X",
-      violation_name: "Membunuh",
-      punishment_point: 10,
-      punishment: "Denda",
-      violation_category: "Kriminal",
-      implemented: true,
-      teacher: "Guru A",
-      created_at: "2023-01-01",
-      updated_at: "2023-01-01",
-   }
-];
-
-export interface Violation {
-   id: number;
-   nis: number;
-   name: string;
-   class: string;
-   violation_name: string;
-   punishment_point: number;
-   punishment: string;
-   violation_category: string;
-   implemented: boolean;
-   teacher: string;
-   created_at: string;
-   updated_at: string;
-}
+import { Violation } from "./_components/form";
 
 export interface Meta {
    page: number;
@@ -91,13 +57,6 @@ export default function ViolationsPage() {
 
    return (
       <div className="flex flex-col h-full">
-         {/* <FilterBar
-            search={search}
-            setSearch={setSearch}
-            filters={filters}
-            setFilters={setFilters}
-         /> */}
-         {/* <ViolationsTable data={filtered} /> */}
          <ViolationsTable violations={violations} setViolations={setViolations} meta={meta} setMeta={setMeta} handlePageChange={(page) => getViolations(page)} />
       </div>
    );

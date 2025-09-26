@@ -1,34 +1,28 @@
 "use client";
 
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { ViolationsForm } from "../_components/form";
-import { createViolation } from "@/services/violations";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { BreadcrumbContainer } from "@/components/ui/breadcrumbContainer";
+import { ClassesForm, formSchema } from "../_components/form";
+import z from "zod";
+import { createClass } from "@/services/classes";
 
 export default function CreateViolationPage() {
   const router = useRouter();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const onSubmit = async (data: any) => {
-    toast.loading("Loading...");
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    toast.loading("Loading...", { id: "createClass" });
     try {
-      const response = await createViolation(data);
+      const response = await createClass(data);
 
       if (response.success === true) {
-        toast.dismiss();
+        toast.dismiss("createClass");
         toast.success("Data berhasil disimpan");
-        router.push("/violations");
+        router.push("/classes");
       }
     } catch (error) {
+      toast.dismiss("createClass");
       toast.error("Data gagal disimpan");
       console.error(error);
     }
@@ -37,11 +31,11 @@ export default function CreateViolationPage() {
   return (
     <div className="flex flex-col overflow-x-hidden gap-6">
       <BreadcrumbContainer
-        link="/violations"
-        prevPage="Pelanggaran"
-        currentPage="Tambah Pelanggaran"
+        link="/classes"
+        prevPage="Kelas"
+        currentPage="Tambah Kelas"
       />
-      <ViolationsForm onSubmit={onSubmit} />
+      <ClassesForm rootPath="/classes" onSubmit={onSubmit} />
     </div>
   );
 }
