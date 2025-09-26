@@ -75,10 +75,10 @@ export function ComboboxSearchStudent() {
                      <CommandEmpty>Tidak ada data yang cocok.</CommandEmpty>
                   }
                   <CommandGroup>
-                     {searchedStudents.map((student) => {
+                     {searchedStudents.map((student, index) => {
                         return (
                            <CommandItem
-                              key={student.id}
+                              key={index}
                               value={student.name}
                               onSelect={() => {
                                  form.setValue("student_id", student.id);
