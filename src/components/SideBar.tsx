@@ -11,6 +11,7 @@ import {
   Clapperboard,
   LogOut,
   DoorOpen,
+  Users,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -33,12 +34,14 @@ const iconMap = {
   Pesanan: <PackageOpen size={18} />,
   "Kelola Iklan": <Clapperboard size={18} />,
   Kelas: <DoorOpen size={18} />,
+  Siswa: <Users size={18} />,
 };
 
 const navItems: NavItem[] = [
   { name: "Beranda", path: "/dashboard", role: ["admin"] },
   { name: "Pelanggaran", path: "/violations", role: ["admin", "kesiswaan"] },
   { name: "Kelas", path: "/classes", role: ["admin"] },
+  { name: "Siswa", path: "/students", role: ["admin"] },
 ];
 
 const ITEM_HEIGHT = 56;
