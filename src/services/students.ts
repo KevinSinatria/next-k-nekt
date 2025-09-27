@@ -69,6 +69,40 @@ export const getStudentsByComboboxSearch = async (
   }
 };
 
+export const getAllStudentsForExport = async (year_period_id: string) => {
+  try {
+    const response = await api.get(`/students/all?year_id=${year_period_id}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error(String(error), {
+      cause: error,
+    });
+  }
+};
+
+export const getStudentsByComboboxSearch = async (search: string, limit: number, year_period_id: string) => {
+  try {
+    const response = await api.get(`/students?search=${search}&limit=${limit}&year_id=${year_period_id}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error(String(error), {
+      cause: error,
+    });
+  }
+}
+
 export const getStudentByNIS = async (nis: string, year_period_id: number) => {
   try {
     const response = await api.get(
