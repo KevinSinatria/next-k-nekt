@@ -52,7 +52,10 @@ export default function LoginPage() {
       if (res.access_token) {
         localStorage.setItem("access_token", res.access_token);
         localStorage.setItem("user", JSON.stringify(res.user));
-        localStorage.setItem("year_period", JSON.stringify(year_period_res.data));
+        localStorage.setItem(
+          "year_period",
+          JSON.stringify(year_period_res.data)
+        );
         toast.success("Login berhasil!");
         setIsAuthenticated(true);
         setLoading(false);
@@ -101,7 +104,7 @@ export default function LoginPage() {
         className="w-full max-w-4xl bg-white rounded-md shadow-md flex flex-col md:flex-row overflow-hidden min-h-[300px] md:min-h-[500px]"
       >
         {/* Kiri */}
-        <div className="bg-gradient-to-br from-blue-500 to-blue-700 w-full md:w-1/2 p-6 flex flex-col justify-center items-center text-center">
+        <div className="bg-sky-600 w-full md:w-1/2 p-6 flex flex-col justify-center items-center text-center">
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -126,10 +129,10 @@ export default function LoginPage() {
             transition={{ duration: 0.5, delay: 0.6 }}
           >
             <Image
-              src="/Logo_Smk.png"
+              src="/logo_nekat.webp"
               alt="Logo SMK"
-              width={140}
-              height={140}
+              width={500}
+              height={500}
               priority
               className="sm:w-[180px] sm:h-[180px]"
             />
@@ -170,12 +173,13 @@ export default function LoginPage() {
               visible: { opacity: 1, x: 0 },
             }}
             transition={{ duration: 0.4 }}
-            className="mb-4"
+            className="mb-4 flex flex-col gap-2"
           >
             <Label htmlFor="username">Username</Label>
             <Input
               id="username"
               type="text"
+              placeholder="Masukkan username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
@@ -189,13 +193,14 @@ export default function LoginPage() {
               visible: { opacity: 1, x: 0 },
             }}
             transition={{ duration: 0.4 }}
-            className="mb-6"
+            className="mb-4 flex flex-col gap-2"
           >
             <Label htmlFor="password">Password</Label>
             <Input
               id="password"
               type="password"
               value={password}
+              placeholder="Masukkan password"
               onChange={(e) => setPassword(e.target.value)}
               required
             />

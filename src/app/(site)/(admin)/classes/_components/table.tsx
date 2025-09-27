@@ -49,6 +49,8 @@ import { useAuth } from "@/context/AuthContext";
 import { Input } from "@/components/ui/input";
 import { Class } from "./form";
 import { deleteClassById, getAllClasses } from "@/services/classes";
+import { ExcelImporter } from "@/components/ExcelImporter";
+import { api } from "@/lib/api";
 
 type ClassesTableProps = {
   data: Class[];
@@ -73,6 +75,7 @@ export const ClassesTable = ({
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [search] = useDebounce(searchQuery, 600);
+  const [isLoading, setIsLoading] = useState(false);
   const { setIsAuthenticated } = useAuth();
 
   const deleteHandler = async (id: string) => {
@@ -135,6 +138,44 @@ export const ClassesTable = ({
     handleSearch(search);
   }, [search]);
 
+  const handleUpload = async (selectedFile: File) => {
+    if (!selectedFile) {
+      toast.error("Pilih file Excel terlebih dahulu!");
+      return;
+    }
+
+    setIsLoading(true);
+    toast.loading("Mengunggah dan memproses file...", {
+      id: "import-students",
+    });
+
+    const formData = new FormData();
+    formData.append("excelFile", selectedFile);
+
+    try {
+      const response = await api.post(`/classes/import`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      if (!response.data.success) {
+        throw new Error("Gagal mengimpor data");
+      }
+
+      toast.dismiss("import-students");
+      toast.success(response.data.message);
+    } catch (error) {
+      toast.dismiss("import-students");
+      console.log(error);
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data.message);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <>
       <div className="flex flex-wrap gap-4 justify-between items-center mb-4">
@@ -147,6 +188,7 @@ export const ClassesTable = ({
           }
         />
         <div className="flex gap-4 items-center justify-end flex-wrap">
+          <ExcelImporter handlePageChange={handlePageChange} handleUpload={handleUpload} title="Impor Data Kelas" description="Impor data kelas dari file Excel" isLoading={isLoading} linkTemplate="/templates/template_kelas.xlsx" />
           <Button
             className="bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded-lg transition-all flex items-center justify-center text-sm gap-2"
             asChild

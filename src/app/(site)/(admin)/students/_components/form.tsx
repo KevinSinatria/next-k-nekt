@@ -75,6 +75,8 @@ export function StudentForm({
   const { yearPeriods, loading } = useAuth();
   const router = useRouter();
 
+  console.log(form.formState.errors);
+
   function onCancel() {
     router.push(rootPath);
   }
@@ -141,11 +143,7 @@ export function StudentForm({
                 <FormItem className="max-w-[200px] w-full">
                   <FormLabel>Kelas</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Kelas"
-                      {...field}
-                      disabled={readOnly}
-                    />
+                    <Input placeholder="Kelas" {...field} disabled={readOnly} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

@@ -45,14 +45,21 @@ export const getAllStudentsForExport = async (year_period_id: string) => {
   }
 };
 
-export const getStudentsByComboboxSearch = async (search: string, limit: number, year_period_id: string) => {
+export const getStudentsByComboboxSearch = async (
+  search: string,
+  limit: number,
+  year_period_id: string
+) => {
   try {
-    const response = await api.get(`/students?search=${search}&limit=${limit}&year_id=${year_period_id}`, {
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    });
+    const response = await api.get(
+      `/students?search=${search}&limit=${limit}&year_id=${year_period_id}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     console.error(error);
@@ -60,7 +67,7 @@ export const getStudentsByComboboxSearch = async (search: string, limit: number,
       cause: error,
     });
   }
-}
+};
 
 export const getStudentByNIS = async (nis: string, year_period_id: number) => {
   try {
@@ -99,15 +106,20 @@ export const createStudent = async (data: z.infer<typeof formSchema>) => {
 
 export const updateStudentByNIS = async (
   nis: string,
-  data: z.infer<typeof formSchema>
+  data: z.infer<typeof formSchema>,
+  year_period_id: number
 ) => {
   try {
-    const response = await api.put(`/students/${nis}`, data, {
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    });
+    const response = await api.put(
+      `/students/${nis}?year=${year_period_id}`,
+      data,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     console.error(error);
