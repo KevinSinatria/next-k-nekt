@@ -54,6 +54,8 @@ import {
 import * as XLSX from "xlsx";
 import { useDebounce } from "use-debounce";
 import { Meta } from "../../classes/page";
+import { api } from "@/lib/api";
+import { ExcelImporter } from "@/components/ExcelImporter";
 
 type StudentsTableProps = {
   data: StudentType[];
@@ -79,8 +81,9 @@ export const StudentsTable = ({
   openMenuNIS,
 }: StudentsTableProps) => {
   const router = useRouter();
-  const { yearPeriods } = useAuth();
+  const { yearPeriods, loading } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [search] = useDebounce(searchQuery, 600);
 
   const onDetailClick = (nis: string) => {
@@ -158,6 +161,54 @@ export const StudentsTable = ({
     searchHandler(search);
   }, [search]);
 
+  const handleUpload = async (selectedFile: File) => {
+    if (!selectedFile) {
+      toast.error("Pilih file Excel terlebih dahulu!");
+      return;
+    }
+
+    setIsLoading(true);
+    toast.loading("Mengunggah dan memproses file...", {
+      id: "import-students",
+    });
+
+    const formData = new FormData();
+    formData.append("excelFile", selectedFile);
+
+    try {
+      if (!loading) {
+        const response = await api.post(
+          `/students/import?year_id=${yearPeriods!.id}`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+
+        if (!response.data.success) {
+          throw new Error("Gagal mengimpor data");
+        }
+
+        toast.dismiss("import-students");
+        toast.success(response.data.message);
+      } else {
+        toast.dismiss("import-students");
+        toast.error("Tidak dapat mengimpor data saat ini.");
+        return;
+      }
+    } catch (error) {
+      toast.dismiss("import-students");
+      console.log(error);
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data.message);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <>
       <div className="flex flex-wrap gap-4 justify-between items-center mb-4">
@@ -170,6 +221,14 @@ export const StudentsTable = ({
           }
         />
         <div className="flex gap-4 items-center justify-end flex-wrap">
+          <ExcelImporter
+            title="Impor Data Siswa"
+            description="Impor data siswa dari file Excel"
+            linkTemplate="/templates/template_siswa.xlsx"
+            isLoading={isLoading}
+            handleUpload={handleUpload}
+            handlePageChange={handlePageChange}
+          />
           <Button onClick={exportHandler} className="flex items-center gap-2">
             <FileSpreadsheet />
             Export ke Excel
