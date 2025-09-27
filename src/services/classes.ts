@@ -22,6 +22,26 @@ export const getAllClasses = async (page: number = 1, search: string = "") => {
   }
 };
 
+export const getClassesByComboboxSearch = async (
+  search: string,
+  limit: number
+) => {
+  try {
+    const response = await api.get(`/classes?search=${search}&limit=${limit}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error(String(error), {
+      cause: error,
+    });
+  }
+};
+
 export const getClassById = async (id: string, year_period_id: string) => {
   try {
     const response = await api.get(`/classes/${id}?year_id=${year_period_id}`, {

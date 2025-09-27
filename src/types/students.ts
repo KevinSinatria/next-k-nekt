@@ -1,7 +1,7 @@
 export interface StudentType {
   id: number;
   name: string;
-  nis: number;
+  nis: string;
   class: string;
   class_id: number;
   point: number;

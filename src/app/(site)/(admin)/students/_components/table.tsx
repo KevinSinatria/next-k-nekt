@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Table,
   TableBody,
@@ -8,8 +6,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Meta } from "../page";
-import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,15 +15,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { FileSpreadsheet, MoreHorizontal, Plus } from "lucide-react";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -43,88 +30,124 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { ChangeEvent, useEffect, useState } from "react";
-import { useDebounce } from "use-debounce";
-import { AxiosError } from "axios";
-import { useAuth } from "@/context/AuthContext";
 import { Input } from "@/components/ui/input";
-import { Class } from "./form";
-import { deleteClassById, getAllClasses } from "@/services/classes";
-import { ExcelImporter } from "@/components/ExcelImporter";
+import {
+  deleteStudentByNIS,
+  getAllStudents,
+  getAllStudentsForExport,
+} from "@/services/students";
+import { DetailClass } from "@/types/classes";
+import { Skeleton } from "@/components/ui/skeleton";
+import { AxiosError } from "axios";
+import { getClassById } from "@/services/classes";
+import { useAuth } from "@/context/AuthContext";
+import { StudentType } from "@/types/students";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import * as XLSX from "xlsx";
+import { useDebounce } from "use-debounce";
+import { Meta } from "../../classes/page";
 import { api } from "@/lib/api";
+import { ExcelImporter } from "@/components/ExcelImporter";
 
-type ClassesTableProps = {
-  data: Class[];
-  setClasses: (classes: Class[]) => void;
-  meta: Meta;
-  setMeta: (meta: Meta) => void;
-  handlePageChange: (page: number) => void;
+type StudentsTableProps = {
+  data: StudentType[];
   rootPath: string;
   minWidth: number;
+  meta: Meta;
+  handlePageChange: (page: number) => void;
+  deleteHandler: (nis: string) => void;
+  searchHandler: (search: string) => void;
+  setOpenMenuNIS: (id: string | null) => void;
+  openMenuNIS: string | null;
 };
 
-export const ClassesTable = ({
+export const StudentsTable = ({
   data,
-  setClasses,
-  meta,
-  setMeta,
-  handlePageChange,
   rootPath,
   minWidth,
-}: ClassesTableProps) => {
+  meta,
+  handlePageChange,
+  deleteHandler,
+  searchHandler,
+  setOpenMenuNIS,
+  openMenuNIS,
+}: StudentsTableProps) => {
   const router = useRouter();
-  const [openMenuId, setOpenMenuId] = useState<number | null>(null);
+  const { yearPeriods, loading } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
-  const [search] = useDebounce(searchQuery, 600);
   const [isLoading, setIsLoading] = useState(false);
-  const { setIsAuthenticated } = useAuth();
+  const [search] = useDebounce(searchQuery, 600);
 
-  const deleteHandler = async (id: string) => {
-    toast.loading("Loading...", { id: "deleteClass" });
+  const onDetailClick = (nis: string) => {
+    router.push(`${rootPath}/${nis}`);
+  };
+  const onEditClick = (nis: string) => {
+    router.push(`${rootPath}/${nis}/edit`);
+  };
+
+  const exportHandler = async () => {
+    toast.loading("Mempersiapkan data untuk diekspor...", { id: "export" });
+
     try {
-      const response = await deleteClassById(id);
+      // Fetching all students
+      const allStudents = await getAllStudentsForExport(
+        String(yearPeriods!.id)
+      );
 
-      if (response.success === true) {
-        toast.dismiss("deleteClass");
-        toast.success("Data berhasil dihapus");
-        setOpenMenuId(null);
-        handlePageChange(meta.page);
+      if (allStudents.data.length === 0) {
+        toast.info("Tidak ada data untuk diekspor.");
+        return;
       }
+
+      // Group students by class
+      const groupedByClass = allStudents.data.reduce(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (acc: { [key: string]: any[] }, student: StudentType) => {
+          const className = student.class;
+
+          if (!acc[className]) {
+            acc[className] = [];
+          }
+
+          acc[className].push({
+            NIS: student.nis,
+            Nama: student.name,
+            Kelas: student.class,
+            "Total Poin": student.point,
+            "Tahun Ajaran": student.year_period,
+          });
+
+          return acc;
+        },
+        {}
+      );
+
+      // Create a new Excel workbook
+      const workbook = XLSX.utils.book_new();
+
+      // Create a new worksheet for each class
+      for (const className in groupedByClass) {
+        const worksheet = XLSX.utils.json_to_sheet(groupedByClass[className]);
+        XLSX.utils.book_append_sheet(workbook, worksheet, className);
+      }
+
+      toast.dismiss("export");
+
+      // Save the workbook to a file
+      XLSX.writeFile(workbook, "data-siswa-k-nekat.xlsx");
+      toast.success("Data berhasil diekspor.");
     } catch (error) {
-      toast.dismiss("deleteClass");
-      toast.error("Data gagal dihapus");
-      setOpenMenuId(null);
-      console.error(error);
-      if (error instanceof Error) {
-        console.error(error.message);
-      }
-    }
-  };
-
-  const onDetailClick = (id: number) => {
-    router.push(`${rootPath}/${id}`);
-  };
-  const onEditClick = (id: number) => {
-    router.push(`${rootPath}/${id}/edit`);
-  };
-
-  const handleSearch = async (value: string) => {
-    toast.loading("Mencari data...", { id: "getClassesBySearch" });
-    try {
-      const response = await getAllClasses(1, value);
-      toast.dismiss("getClassesBySearch");
-      setClasses(response.data);
-      setMeta(response.meta);
-    } catch (error) {
-      toast.dismiss("getClassesBySearch");
-      if (
-        error instanceof Error &&
-        error instanceof AxiosError &&
-        error.status !== 401
-      ) {
-        toast.error("Gagal memuat data: " + error.response?.data.message);
-      } else {
-        setIsAuthenticated(false);
-      }
+      toast.dismiss("export");
+      toast.error("Gagal mengekspor data.");
+      console.error("Export error:", error);
     }
   };
 
@@ -135,7 +158,7 @@ export const ClassesTable = ({
       }
       return;
     }
-    handleSearch(search);
+    searchHandler(search);
   }, [search]);
 
   const handleUpload = async (selectedFile: File) => {
@@ -153,18 +176,28 @@ export const ClassesTable = ({
     formData.append("excelFile", selectedFile);
 
     try {
-      const response = await api.post(`/classes/import`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      if (!loading) {
+        const response = await api.post(
+          `/students/import?year_id=${yearPeriods!.id}`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
 
-      if (!response.data.success) {
-        throw new Error("Gagal mengimpor data");
+        if (!response.data.success) {
+          throw new Error("Gagal mengimpor data");
+        }
+
+        toast.dismiss("import-students");
+        toast.success(response.data.message);
+      } else {
+        toast.dismiss("import-students");
+        toast.error("Tidak dapat mengimpor data saat ini.");
+        return;
       }
-
-      toast.dismiss("import-students");
-      toast.success(response.data.message);
     } catch (error) {
       toast.dismiss("import-students");
       console.log(error);
@@ -181,14 +214,25 @@ export const ClassesTable = ({
       <div className="flex flex-wrap gap-4 justify-between items-center mb-4">
         <Input
           type="search"
-          placeholder="Cari kelas.. (Contoh: XII RPL 2)"
+          placeholder="Cari siswa, kelas atau lainnya..."
           className="flex-1 min-w-[260px]"
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             setSearchQuery(e.target.value)
           }
         />
         <div className="flex gap-4 items-center justify-end flex-wrap">
-          <ExcelImporter handlePageChange={handlePageChange} handleUpload={handleUpload} title="Impor Data Kelas" description="Impor data kelas dari file Excel" isLoading={isLoading} linkTemplate="/templates/template_kelas.xlsx" />
+          <ExcelImporter
+            title="Impor Data Siswa"
+            description="Impor data siswa dari file Excel"
+            linkTemplate="/templates/template_siswa.xlsx"
+            isLoading={isLoading}
+            handleUpload={handleUpload}
+            handlePageChange={handlePageChange}
+          />
+          <Button onClick={exportHandler} className="flex items-center gap-2">
+            <FileSpreadsheet />
+            Export ke Excel
+          </Button>
           <Button
             className="bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded-lg transition-all flex items-center justify-center text-sm gap-2"
             asChild
@@ -213,7 +257,7 @@ export const ClassesTable = ({
                     className={`${
                       meta.page === index + 1 ? "bg-gray-300 rounded-lg" : ""
                     }`}
-                    key={index}
+                    key={`page-${index}`}
                   >
                     <PaginationLink onClick={() => handlePageChange(index + 1)}>
                       {index + 1}
@@ -246,24 +290,28 @@ export const ClassesTable = ({
             <TableHead className="hidden sm:table-cell font-semibold">
               Id
             </TableHead>
+            <TableHead className="font-semibold">NIS</TableHead>
+            <TableHead className="font-semibold">Nama</TableHead>
             <TableHead className="font-semibold">Kelas</TableHead>
+            <TableHead className="font-semibold">Total Poin</TableHead>
+            <TableHead className="font-semibold">Tahun Ajaran</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {data.length === 0 ? (
             <TableRow className="text-sm">
               <TableCell colSpan={12} className="text-center h-24">
-                Tidak ada data kelas.
+                Tidak ada data siswa.
               </TableCell>
             </TableRow>
           ) : (
             data.map((row) => (
-              <TableRow key={row.id} className={`hover:bg-gray-100 text-sm`}>
+              <TableRow key={row.nis} className={`hover:bg-gray-100 text-sm`}>
                 <TableCell>
                   <DropdownMenu
-                    open={openMenuId === row.id}
+                    open={openMenuNIS === row.nis}
                     onOpenChange={(open) =>
-                      open ? setOpenMenuId(row.id) : setOpenMenuId(null)
+                      open ? setOpenMenuNIS(row.nis) : setOpenMenuNIS(null)
                     }
                   >
                     <DropdownMenuTrigger asChild>
@@ -276,13 +324,13 @@ export const ClassesTable = ({
                       <DropdownMenuLabel>Aksi</DropdownMenuLabel>
                       <DropdownMenuItem
                         className="cursor-pointer"
-                        onClick={() => onDetailClick(row.id)}
+                        onClick={() => onDetailClick(row.nis)}
                       >
                         Lihat Detail
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         className="cursor-pointer"
-                        onClick={() => onEditClick(row.id)}
+                        onClick={() => onEditClick(row.nis)}
                       >
                         Edit
                       </DropdownMenuItem>
@@ -308,7 +356,10 @@ export const ClassesTable = ({
                           <AlertDialogFooter>
                             <AlertDialogCancel>Batal</AlertDialogCancel>
                             <AlertDialogAction
-                              onClick={() => deleteHandler(String(row.id))}
+                              onClick={() => {
+                                deleteHandler(String(row.nis));
+                                setOpenMenuNIS(null);
+                              }}
                               className="bg-red-600 hover:bg-red-700"
                             >
                               Ya, Hapus
@@ -322,7 +373,11 @@ export const ClassesTable = ({
                 <TableCell className="hidden font-medium sm:table-cell">
                   {row.id}
                 </TableCell>
+                <TableCell>{row.nis}</TableCell>
+                <TableCell>{row.name}</TableCell>
                 <TableCell>{row.class}</TableCell>
+                <TableCell>{row.point}</TableCell>
+                <TableCell>{row.year_period}</TableCell>
               </TableRow>
             ))
           )}

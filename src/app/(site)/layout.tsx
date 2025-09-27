@@ -20,9 +20,18 @@ function DynamicHeader({
   isLoading,
 }: DynamicHeaderProps) {
   const { title } = useHeader();
+  const [yearPeriodDisplay, setYearPeriodDisplay] = useState<string | null>(
+    null
+  );
+
+  useEffect(() => {
+    if (yearPeriod && !isLoading && yearPeriod.display_name) {
+      setYearPeriodDisplay(yearPeriod.display_name);
+    }
+  }, [yearPeriod, isLoading]);
   return (
-    <header className="sticky top-0 z-10 w-full flex items-center gap-4 bg-white shadow-md p-4 border-b">
-      <div className="lg:hidden flex items-center justify-center  top-4 left-4 z-30">
+    <header className="sticky top-0 z-10 w-full flex items-center gap-8 bg-white shadow-md p-4 border-b">
+      <div className="lg:hidden flex items-center justify-center top-4 left-4 z-30">
         <button
           onClick={toggleSidebar}
           className="text-black focus:outline-none"
@@ -44,10 +53,10 @@ function DynamicHeader({
       </div>
       <h1 className="text-xl flex font-semibold">
         {title} -{" "}
-        {yearPeriod && !isLoading && yearPeriod.display_name ? (
-          yearPeriod.display_name
+        {yearPeriodDisplay ? (
+          yearPeriodDisplay
         ) : (
-          <Skeleton className="h-8 w-[250px]" />
+          <Skeleton className="w-32 h-6" />
         )}
       </h1>
     </header>
@@ -83,7 +92,11 @@ export default function RootLayout({
           suppressHydrationWarning
           className="flex h-screen bg-gray-50 texy-gray-950"
         >
-          <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
+          <Sidebar
+            isOpen={isSidebarOpen}
+            style="flat"
+            setIsOpen={setIsSidebarOpen}
+          />
           <main className="flex-1 flex flex-col overflow-y-hidden">
             <DynamicHeader
               yearPeriod={yearPeriods}

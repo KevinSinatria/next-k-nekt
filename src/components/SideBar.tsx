@@ -11,6 +11,7 @@ import {
   Clapperboard,
   LogOut,
   DoorOpen,
+  Users,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -33,23 +34,24 @@ const iconMap = {
   Pesanan: <PackageOpen size={18} />,
   "Kelola Iklan": <Clapperboard size={18} />,
   Kelas: <DoorOpen size={18} />,
+  Siswa: <Users size={18} />,
 };
 
 const navItems: NavItem[] = [
   { name: "Beranda", path: "/dashboard", role: ["admin"] },
   { name: "Pelanggaran", path: "/violations", role: ["admin", "kesiswaan"] },
   { name: "Kelas", path: "/classes", role: ["admin"] },
+  { name: "Siswa", path: "/students", role: ["admin"] },
 ];
-
-const ITEM_HEIGHT = 56;
-const ITEM_GAP = 11;
 
 const Sidebar = ({
   isOpen,
   setIsOpen,
+  style = "gradient", // 🔥 pilih: "flat" | "gradient" | "glass"
 }: {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  style?: "flat" | "gradient" | "glass";
 }) => {
   const pathname = usePathname();
   const router = useRouter();
@@ -83,79 +85,85 @@ const Sidebar = ({
       localStorage.removeItem("user");
       setIsAuthenticated(false);
       toast.dismiss("logout");
+      toast.success("Logout berhasil!");
       router.push("/login");
     } catch (error) {
+      toast.dismiss("logout");
+      toast.error("Gagal logout");
       console.error(error);
     }
   };
 
+  // ✅ Style variants
+  const baseStyle = {
+    flat: "bg-sky-600",
+    gradient: "bg-gradient-to-b from-sky-600 via-sky-700 to-sky-800",
+    glass: "bg-sky-600/80 backdrop-blur-xl border-r border-white/10",
+  }[style];
+
   const SidebarContent = (
     <>
       {/* Logo */}
-      <div className="text-center font-bold tracking-wide z-10">
-        <div className="py-3 rounded-lg w-20 mx-auto ml-16">
-          <Image
-            src="/Logo_Smk.png"
-            width={50}
-            height={50}
-            alt="Logo Jajankuy"
-            className="w-full object-contain"
-          />
-        </div>
+      <div className="flex items-center gap-3 px-6 py-5 border-b border-white/10">
+        <Image
+          src="/logo_nekat.webp"
+          width={200}
+          height={200}
+          alt="Logo"
+          className="rounded-lg w-9 h-9"
+        />
+        <span className="font-semibold text-lg tracking-wide">K-Nekat</span>
       </div>
 
-      <div className="relative h-full">
-        {/* Highlight Active */}
-        <AnimatePresence initial={false}>
-          {activeIndex !== -1 && (
-            <motion.div
-              layoutId="activeHighlight"
-              animate={{
-                top: `${activeIndex * (ITEM_HEIGHT + ITEM_GAP)}px`,
+      {/* Menu */}
+      <nav className="flex-1 overflow-y-auto px-3 py-6 space-y-1">
+        {isAccessible!.map((item, index) => {
+          const isActive = index === activeIndex;
+          return (
+            <button
+              key={item.path}
+              onClick={() => {
+                router.push(item.path!);
+                if (window.innerWidth < 1024) closeSidebar();
               }}
-              transition={{ type: "spring", stiffness: 400, damping: 35 }}
-              className="absolute w-[240px] h-[55px] bg-white text-black rounded-l-[32px] shadow-md z-0"
+              className={`group relative flex items-center gap-3 w-full px-8 py-3 rounded-xl text-sm font-medium transition-all
+        ${
+          isActive
+            ? "bg-white/15 text-white shadow"
+            : "text-white/70 hover:bg-white/10 hover:text-white"
+        }`}
             >
-              <span className="absolute top-[-50px] right-[8px] w-[33px] h-[50px] rounded-br-[200px] shadow-[15px_15px_0_15px_white] bg-transparent" />
-              <span className="absolute top-[55px] right-[8px] w-[33px] h-[50px] rounded-tr-[200px] shadow-[15px_-15px_0_15px_white] bg-transparent" />
-            </motion.div>
-          )}
-        </AnimatePresence>
+              <span className="text-lg">{iconMap[item.name]}</span>
+              {item.name}
 
-        {/* Menu */}
-        <nav className="relative flex flex-col gap-4 text-sm text-white z-10 mt-4">
-          {isAccessible!.map((item, index) => {
-            const isActive = index === activeIndex;
+              {/* 🔥 Animated Indicator */}
+              <AnimatePresence>
+                {isActive && (
+                  <motion.span
+                    layoutId="activeIndicator"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                    className="absolute left-2 w-1.5 h-6 bg-white rounded-full"
+                  />
+                )}
+              </AnimatePresence>
+            </button>
+          );
+        })}
+      </nav>
 
-            return (
-              <div
-                key={item.path} // ✅ pakai path biar selalu unik
-                onClick={() => {
-                  router.push(item.path!);
-                  if (window.innerWidth < 1024) closeSidebar();
-                }}
-                className={`relative flex items-center gap-3 py-[15.5px] px-4 cursor-pointer font-semibold transition-all ${
-                  isActive
-                    ? "text-black z-20"
-                    : "hover:bg-white/10 rounded-lg text-white font-normal"
-                }`}
-              >
-                {iconMap[item.name]}
-                {item.name}
-              </div>
-            );
-          })}
-        </nav>
-
-        <div className="mt-10 pr-6">
-          <button
-            className="flex items-center text-sm gap-2 px-4 py-2 bg-white text-black rounded-full shadow cursor-pointer font-semibold w-full"
-            onClick={handleLogout}
-          >
-            <LogOut className="w-6 h-6" />
-            <span>Logout</span>
-          </button>
-        </div>
+      {/* Logout */}
+      <div className="px-6 py-5 border-t border-white/10">
+        <button
+          onClick={handleLogout}
+          className="w-full flex items-center justify-center gap-2 px-4 py-3 
+            bg-white text-red-600 hover:text-red-100 rounded-xl text-sm font-semibold shadow-md hover:bg-red-500 cursor-pointer transition"
+        >
+          <LogOut className="w-5 h-5" />
+          Logout
+        </button>
       </div>
     </>
   );
@@ -163,21 +171,35 @@ const Sidebar = ({
   return (
     <>
       {/* Sidebar Mobile */}
-      {isOpen && (
-        <>
-          <div
-            className="fixed inset-0 bg-black/50 z-20 lg:hidden"
-            onClick={closeSidebar}
-          >
-            <aside className="fixed top-0 left-0 w-64 h-full bg-sky-600  pl-6 py-8 z-30 overflow-y-auto lg:hidden">
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            {/* 🔥 Overlay klik buat close */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/50 z-20 lg:hidden"
+              onClick={closeSidebar}
+            />
+
+            <motion.aside
+              initial={{ x: -280 }}
+              animate={{ x: 0 }}
+              exit={{ x: -280 }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              className={`fixed top-0 left-0 w-64 h-full ${baseStyle} text-white z-30 flex flex-col shadow-xl`}
+            >
               {SidebarContent}
-            </aside>
-          </div>
-        </>
-      )}
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* Sidebar Desktop */}
-      <aside className="hidden lg:block lg:sticky top-0 left-0 w-64 h-full min-h-screen bg-sky-600 pl-6 py-8 overflow-hidden">
+      <aside
+        className={`hidden lg:flex lg:flex-col lg:sticky top-0 left-0 w-64 h-screen ${baseStyle} text-white shadow-xl`}
+      >
         {SidebarContent}
       </aside>
     </>

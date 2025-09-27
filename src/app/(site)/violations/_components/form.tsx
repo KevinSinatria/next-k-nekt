@@ -136,7 +136,7 @@ export function ViolationsForm({
               <FormControl>
                 <Input
                   placeholder="NIS"
-                  className="bg-[#f0f0f0] cursor-not-allowed focus-visible:ring-0 focus-visible:border-0"
+                  className="bg-white/0 cursor-not-allowed border-gray-200 focus-visible:ring-0 focus-visible:border-0"
                   {...field}
                   readOnly
                 />
@@ -153,12 +153,16 @@ export function ViolationsForm({
               <FormItem className="max-w-[200px] w-full">
                 <FormLabel>Nama Siswa</FormLabel>
                 <FormControl>
-                  <Input placeholder="Nama Siswa" {...field} />
+                  <Input
+                    className="disabled:text-black"
+                    placeholder="Nama Siswa"
+                    disabled
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
-            disabled
           />
         ) : (
           <FormField
@@ -183,15 +187,15 @@ export function ViolationsForm({
               <FormLabel>Kelas</FormLabel>
               <FormControl>
                 <Input
-                  className="max-w-md w-full"
+                  className="max-w-md w-full disabled:text-black"
                   placeholder="Kelas"
+                  disabled
                   {...field}
                 />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
-          disabled
         />
         {readOnly ? (
           <FormField
@@ -201,12 +205,16 @@ export function ViolationsForm({
               <FormItem className="max-w-md w-full">
                 <FormLabel>Nama Pelanggaran</FormLabel>
                 <FormControl>
-                  <Input placeholder="Nama Pelanggaran" {...field} />
+                  <Input
+                    disabled
+                    placeholder="Nama Pelanggaran"
+                    className="disabled:text-black"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
-            disabled
           />
         ) : (
           <FormField
@@ -230,12 +238,16 @@ export function ViolationsForm({
             <FormItem className="max-w-md w-full">
               <FormLabel>Point Pelanggaran</FormLabel>
               <FormControl>
-                <Input placeholder="Point Pelanggaran" {...field} />
+                <Input
+                  disabled
+                  placeholder="Point Pelanggaran"
+                  className="disabled:text-black"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
-          disabled
         />
         <FormField
           control={form.control}
@@ -244,12 +256,16 @@ export function ViolationsForm({
             <FormItem className="max-w-md w-full">
               <FormLabel>Sanksi</FormLabel>
               <FormControl>
-                <Input placeholder="Sanksi" {...field} />
+                <Input
+                  placeholder="Sanksi"
+                  className="disabled:text-black"
+                  disabled
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
-          disabled
         />
         <FormField
           control={form.control}
@@ -258,12 +274,16 @@ export function ViolationsForm({
             <FormItem className="max-w-md w-full">
               <FormLabel>Kategori Pelanggaran</FormLabel>
               <FormControl>
-                <Input placeholder="Kategori Pelanggaran" {...field} />
+                <Input
+                  placeholder="Kategori Pelanggaran"
+                  className=" disabled:text-black"
+                  disabled
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
-          disabled
         />
         <FormField
           control={form.control}
