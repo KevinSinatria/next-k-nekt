@@ -1,0 +1,48 @@
+"use client";
+
+import { toast } from "sonner";
+import { useParams, useRouter } from "next/navigation";
+import z from "zod";
+import { createStudent, getStudentByNIS } from "@/services/students";
+import { AxiosError } from "axios";
+import { BreadcrumbContainer } from "@/components/ui/breadcrumbContainer";
+import { formSchema, StudentForm } from "../_components/form";
+import { useAuth } from "@/context/AuthContext";
+import { useEffect, useState } from "react";
+import { StudentType } from "@/types/students";
+
+export default function DetailStudentPage() {
+  const router = useRouter();
+  const { nis } = useParams();
+
+  const { yearPeriods, loading } = useAuth();
+  const [initialData, setInitialData] = useState<StudentType | null>(null);
+
+  const initialDataRender = async (nis: string, yearPeriodsId: number) => {
+    toast.loading("Memuat data siswa...", { id: "studentData" });
+    try {
+      const initialData = await getStudentByNIS(nis, yearPeriodsId);
+      toast.dismiss();
+      setInitialData(initialData.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    if (nis && !loading) {
+      initialDataRender(nis as string, yearPeriods!.id);
+    }
+  }, [nis, loading]);
+
+  return (
+    <div className="flex flex-col overflow-x-hidden gap-6">
+      <BreadcrumbContainer
+        link="/students"
+        prevPage="Siswa"
+        currentPage="Tambah Siswa"
+      />
+      <StudentForm rootPath={`/students`} initialData={initialData} readOnly={true} />
+    </div>
+  );
+}
