@@ -38,7 +38,7 @@ const iconMap = {
 };
 
 const navItems: NavItem[] = [
-  { name: "Beranda", path: "/dashboard", role: ["admin"] },
+  // { name: "Beranda", path: "/dashboard", role: ["admin"] },
   { name: "Pelanggaran", path: "/violations", role: ["admin", "kesiswaan"] },
   { name: "Kelas", path: "/classes", role: ["admin"] },
   { name: "Siswa", path: "/students", role: ["admin"] },
@@ -83,6 +83,8 @@ const Sidebar = ({
     try {
       localStorage.removeItem("access_token");
       localStorage.removeItem("user");
+      localStorage.removeItem("year_period");
+      localStorage.removeItem("year_id");
       setIsAuthenticated(false);
       toast.dismiss("logout");
       toast.success("Logout berhasil!");

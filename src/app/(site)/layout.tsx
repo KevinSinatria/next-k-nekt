@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { YearPeriodType } from "@/types/year-periods";
 import { Skeleton } from "@/components/ui/skeleton";
+import { JSX } from "react";
 
 type DynamicHeaderProps = {
   toggleSidebar: () => void;
@@ -20,13 +21,15 @@ function DynamicHeader({
   isLoading,
 }: DynamicHeaderProps) {
   const { title } = useHeader();
-  const [yearPeriodDisplay, setYearPeriodDisplay] = useState<string | null>(
+  const [yearPeriodDisplay, setYearPeriodDisplay] = useState<string | null | JSX.Element>(
     null
   );
 
   useEffect(() => {
     if (yearPeriod && !isLoading && yearPeriod.display_name) {
       setYearPeriodDisplay(yearPeriod.display_name);
+    } else {
+      setYearPeriodDisplay(<Skeleton className="w-32 h-6" />);
     }
   }, [yearPeriod, isLoading]);
   return (
@@ -53,11 +56,7 @@ function DynamicHeader({
       </div>
       <h1 className="text-xl flex font-semibold">
         {title} -{" "}
-        {yearPeriodDisplay ? (
-          yearPeriodDisplay
-        ) : (
-          <Skeleton className="w-32 h-6" />
-        )}
+        {yearPeriodDisplay}
       </h1>
     </header>
   );

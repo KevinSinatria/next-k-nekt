@@ -22,6 +22,27 @@ export const getAllClasses = async (page: number = 1, search: string = "") => {
   }
 };
 
+export const getNextClassesPromote = async (
+  nis: string,
+  year_period_id: string
+) => {
+  try {
+    const response = await api.get(
+      `/classes/next?nis=${nis}&year_id=${year_period_id}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
 export const getClassesByComboboxSearch = async (
   search: string,
   limit: number

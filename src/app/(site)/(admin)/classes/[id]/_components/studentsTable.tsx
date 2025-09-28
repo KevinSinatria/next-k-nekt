@@ -6,7 +6,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Meta } from "../../page";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,14 +29,16 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { ChangeEvent, useEffect, useState } from "react";
-import { Input } from "@/components/ui/input";
-import { deleteStudentByNIS, getAllStudents } from "@/services/students";
+import { useState } from "react";
+import { deleteStudentByNIS } from "@/services/students";
 import { DetailClass } from "@/types/classes";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AxiosError } from "axios";
 import { getClassById } from "@/services/classes";
 import { useAuth } from "@/context/AuthContext";
+import { Checkbox } from "@/components/ui/checkbox";
+import { read } from "fs";
+import { StudentsPromoteDialog } from "./StudentsPromoteDialog";
 
 type StudentsTableProps = {
   data: DetailClass;
@@ -59,7 +60,8 @@ export const StudentsTable = ({
   readOnly,
 }: StudentsTableProps) => {
   const router = useRouter();
-  const [openMenuId, setOpenMenuId] = useState<number | null>(null);
+  const [openMenuNIS, setOpenMenuNIS] = useState<string | null>(null);
+  const [selectedNISs, setSelectedNISs] = useState<string[]>([]);
   const { loading, yearPeriods } = useAuth();
 
   const deleteHandler = async (nis: string) => {
@@ -70,7 +72,7 @@ export const StudentsTable = ({
       if (response.success === true) {
         toast.dismiss("deleteStudent");
         toast.success("Data berhasil dihapus");
-        setOpenMenuId(null);
+        setOpenMenuNIS(null);
         if (!loading && setData) {
           const newData = await getClassById(
             String(data.id),
@@ -81,7 +83,7 @@ export const StudentsTable = ({
       }
     } catch (error) {
       toast.dismiss("deleteStudent");
-      setOpenMenuId(null);
+      setOpenMenuNIS(null);
       if (error instanceof AxiosError) {
         toast.error(error.response?.data.message);
         return;
@@ -89,10 +91,10 @@ export const StudentsTable = ({
       toast.error("Data gagal dihapus");
     }
   };
-  const onDetailClick = (nis: number) => {
+  const onDetailClick = (nis: string) => {
     router.push(`${rootPath}/students/${nis}`);
   };
-  const onEditClick = (nis: number) => {
+  const onEditClick = (nis: string) => {
     router.push(`${rootPath}/students/${nis}/edit`);
   };
 
@@ -116,10 +118,46 @@ export const StudentsTable = ({
             </Link>
           </Button>
         )}
+        <div className="flex items-center justify-center flex-row-reverse gap-4">
+          {!readOnly && (
+            <div className="sm:absolute sm:left-12">
+              <StudentsPromoteDialog
+                className={data.class}
+                setSelectedNISs={setSelectedNISs}
+                selectedNISs={selectedNISs}
+              />{" "}
+            </div>
+          )}
+          {!readOnly && (
+            <>
+              <Checkbox
+                className="sm:absolute sm:left-4 sm:mt-0 bg-gray-400 border-gray-500 hover:ring-gray-800 hover:ring-2 transition-all  cursor-pointer"
+                onCheckedChange={(checked) => {
+                  if (checked) {
+                    setSelectedNISs(
+                      data.students.map((student) => student.nis)
+                    );
+                  } else {
+                    setSelectedNISs([]);
+                  }
+                }}
+                checked={
+                  selectedNISs.length === data.students.length &&
+                  selectedNISs.length !== 0
+                }
+              />
+            </>
+          )}
+        </div>
       </div>
       <Table className={`min-w-[${minWidth}px] shadow-md relative bg-white`}>
         <TableHeader className="sticky shadow -top-[1px] bg-gray-100">
           <TableRow className="uppercase">
+            {!readOnly && (
+              <TableHead className="font-semibold">
+                <span className="sr-only">Checkbox</span>
+              </TableHead>
+            )}
             {!readOnly && (
               <TableHead className="font-semibold">
                 <span className="sr-only">Aksi</span>
@@ -146,10 +184,27 @@ export const StudentsTable = ({
               <TableRow key={index} className={`hover:bg-gray-100 text-sm`}>
                 {!readOnly && (
                   <TableCell>
+                    <Checkbox
+                      className="bg-gray-400 border-gray-500 hover:ring-gray-700 hover:ring-2 transition-all cursor-pointer"
+                      checked={selectedNISs.includes(row.nis)}
+                      onCheckedChange={(checked) => {
+                        if (checked) {
+                          setSelectedNISs((prev) => [...prev, row.nis]);
+                        } else {
+                          setSelectedNISs((prev) =>
+                            prev.filter((nis) => nis !== row.nis)
+                          );
+                        }
+                      }}
+                    />
+                  </TableCell>
+                )}
+                {!readOnly && (
+                  <TableCell>
                     <DropdownMenu
-                      open={openMenuId === row.id}
+                      open={openMenuNIS === row.nis}
                       onOpenChange={(open) =>
-                        open ? setOpenMenuId(row.id) : setOpenMenuId(null)
+                        open ? setOpenMenuNIS(row.nis) : setOpenMenuNIS(null)
                       }
                     >
                       <DropdownMenuTrigger asChild>
