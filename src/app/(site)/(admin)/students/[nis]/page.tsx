@@ -12,7 +12,6 @@ import { useEffect, useState } from "react";
 import { StudentType } from "@/types/students";
 
 export default function DetailStudentPage() {
-  const router = useRouter();
   const { nis } = useParams();
 
   const { yearPeriods, loading } = useAuth();

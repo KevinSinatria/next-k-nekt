@@ -7,7 +7,7 @@ import { ClassesForm, formSchema } from "../_components/form";
 import z from "zod";
 import { createClass } from "@/services/classes";
 
-export default function CreateViolationPage() {
+export default function CreateClassPage() {
   const router = useRouter();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

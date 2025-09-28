@@ -7,3 +7,8 @@ export interface StudentType {
   point: number;
   year_period: number;
 }
+
+export interface PromoteStudentsPayload {
+  nis: string[];
+  class_id_to: number;
+}

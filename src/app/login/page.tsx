@@ -62,7 +62,7 @@ export default function LoginPage() {
 
         if (!loading) {
           if (res.user.role === "admin") {
-            router.push("/dashboard");
+            router.push("/violations");
           } else {
             router.push("/violations");
           }
@@ -87,7 +87,7 @@ export default function LoginPage() {
       if (token) {
         const user = JSON.parse(String(localStorage.getItem("user")));
         if (user.role === "admin") {
-          router.push("/dashboard");
+          router.push("/violations");
         } else {
           router.push("/violations");
         }
@@ -104,12 +104,12 @@ export default function LoginPage() {
         className="w-full max-w-4xl bg-white rounded-md shadow-md flex flex-col md:flex-row overflow-hidden min-h-[300px] md:min-h-[500px]"
       >
         {/* Kiri */}
-        <div className="bg-sky-600 w-full md:w-1/2 p-6 flex flex-col justify-center items-center text-center">
+        <div className="bg-sky-600 rounded-b-[36px] md:rounded-none w-full md:w-1/2 p-6 flex flex-col justify-center items-center text-center">
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-4xl font-bold text-white "
+            className="text-2xl sm:text-3xl md:text-4xl font-bold text-white "
           >
             K-Nekat
           </motion.p>
@@ -134,7 +134,7 @@ export default function LoginPage() {
               width={500}
               height={500}
               priority
-              className="sm:w-[180px] sm:h-[180px]"
+              className="w-[130px] h-[130px] sm:w-[180px] sm:h-[180px]"
             />
           </motion.div>
         </div>

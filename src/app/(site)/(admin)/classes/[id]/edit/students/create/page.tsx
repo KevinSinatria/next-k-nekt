@@ -42,7 +42,7 @@ export default function CreateStudentPage() {
       />
       <StudentForm
         idClass={Number(id)}
-        rootPath={`/classes/${id}`}
+        rootPath={`/classes/${id}/edit`}
         onSubmit={onSubmit}
       />
     </div>

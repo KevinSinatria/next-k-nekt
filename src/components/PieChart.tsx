@@ -71,11 +71,13 @@ export default function PieChartt() {
           ],
         });
       } catch (error) {
+        console.error(error);
         toast.error("Gagal mengambil data pie chart.");
       }
     };
 
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!chartData) {
