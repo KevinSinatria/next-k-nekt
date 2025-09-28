@@ -9,7 +9,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Meta } from "../page";
-import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,7 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { FileSpreadsheet, MoreHorizontal, Plus } from "lucide-react";
+import {MoreHorizontal, Plus } from "lucide-react";
 import {
   Pagination,
   PaginationContent,
@@ -136,6 +135,7 @@ export const ClassesTable = ({
       return;
     }
     handleSearch(search);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
 
   const handleUpload = async (selectedFile: File) => {
