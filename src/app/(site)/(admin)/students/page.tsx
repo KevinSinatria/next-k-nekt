@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import { getAllViolations } from "@/services/violations";
 import { toast } from "sonner";
 import { useHeader } from "@/context/HeaderContext";
 import { AxiosError } from "axios";
@@ -123,6 +122,7 @@ export default function StudentsPage() {
     if (!loading) {
       getStudents();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
 
   useEffect(() => {
