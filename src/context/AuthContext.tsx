@@ -36,6 +36,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setLoading(false);
   }, []);
 
+  useEffect(() => {
+    const yearPeriod = JSON.parse(String(localStorage.getItem("year_period")));
+    setYearPeriods(yearPeriod);
+  }, [loading]);
+
   return (
     <AuthContext.Provider
       value={{
