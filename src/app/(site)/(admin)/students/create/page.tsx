@@ -10,8 +10,6 @@ import { formSchema, StudentForm } from "../_components/form";
 
 export default function CreateStudentPage() {
   const router = useRouter();
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     toast.loading("Loading...", { id: "createStudent" });
     try {

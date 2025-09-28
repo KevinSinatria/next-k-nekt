@@ -31,8 +31,8 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import {
   deleteViolationById,
-  getAllViolations,
   getAllViolationsWithoutPagination,
+  getFilterDataForm,
   implementViolationById,
   unimplementViolationById,
 } from "@/services/violations";
@@ -50,29 +50,39 @@ import {
 import { ChangeEvent, useEffect, useState } from "react";
 import { Violation } from "./form";
 import * as XLSX from "xlsx";
-import { useDebounce } from "use-debounce";
 import { AxiosError } from "axios";
-import { useAuth } from "@/context/AuthContext";
 import { Input } from "@/components/ui/input";
+import { FilterDialog, FilterType } from "./FilterDialog";
+import { ClassType } from "@/types/classes";
+import { ViolationCategoryType } from "@/types/violation-categories";
+import { TeacherType } from "@/types/users";
 
-export const ViolationsTable = ({
-  violations,
-  setViolations,
-  meta,
-  setMeta,
-  handlePageChange,
-}: {
+interface ViolationsTableProps {
   violations: Violation[];
   setViolations: (violations: Violation[]) => void;
   meta: Meta;
   setMeta: (meta: Meta) => void;
   handlePageChange: (page: number) => void;
-}) => {
+  filter: FilterType;
+  setFilter: (filter: FilterType) => void;
+  setSearchQuery: (query: string) => void;
+}
+
+export const ViolationsTable = ({
+  violations,
+  meta,
+  handlePageChange,
+  setFilter,
+  setSearchQuery
+}: ViolationsTableProps) => {
   const router = useRouter();
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [search] = useDebounce(searchQuery, 600);
-  const { setIsAuthenticated } = useAuth();
+  const [classes, setClasses] = useState<ClassType[]>([]);
+  const [violationCategories, setViolationCategories] = useState<
+    ViolationCategoryType[]
+  >([]);
+  const [teachers, setTeachers] = useState<TeacherType[]>([]);
+  const [openFilterDialog, setOpenFilterDialog] = useState<boolean>(false);
 
   const implementHandler = async (id: string) => {
     toast.loading("Loading...");
@@ -206,36 +216,26 @@ export const ViolationsTable = ({
     }
   };
 
-  const handleSearch = async (value: string) => {
-    toast.loading("Mencari data...", { id: "getViolationsBySearch" });
+  const initialDataFilterForm = async () => {
     try {
-      const response = await getAllViolations(1, value);
-      toast.dismiss("getViolationsBySearch");
-      setViolations(response.data);
-      setMeta(response.meta);
+      const response = await getFilterDataForm();
+      setClasses(response.data.classes);
+      setViolationCategories(response.data.categories);
+      setTeachers(response.data.teachers);
     } catch (error) {
-      toast.dismiss("getViolationsBySearch");
-      if (
-        error instanceof Error &&
-        error instanceof AxiosError &&
-        error.status !== 401
-      ) {
-        toast.error("Gagal memuat data: " + error.response?.data.message);
-      } else {
-        setIsAuthenticated(false);
+      console.error(error);
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data.message);
+        console.error(error.message);
       }
     }
   };
 
   useEffect(() => {
-    if (search.length < 2) {
-      if (search.length === 0) {
-        handlePageChange(1);
-      }
-      return;
+    if (openFilterDialog) {
+      initialDataFilterForm();
     }
-    handleSearch(search);
-  }, [search]);
+  }, [openFilterDialog]);
 
   return (
     <>
@@ -249,6 +249,14 @@ export const ViolationsTable = ({
           }
         />
         <div className="flex gap-4 items-center justify-end flex-wrap">
+          <FilterDialog
+            open={openFilterDialog}
+            setOpen={setOpenFilterDialog}
+            onApply={setFilter}
+            classOptions={classes}
+            categoryOptions={violationCategories}
+            teacherOptions={teachers}
+          />
           <Button onClick={exportHandler} className="flex items-center gap-2">
             <FileSpreadsheet />
             Export ke Excel

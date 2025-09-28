@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import { getAllViolations } from "@/services/violations";
 import { toast } from "sonner";
 import { useHeader } from "@/context/HeaderContext";
 import { AxiosError } from "axios";
