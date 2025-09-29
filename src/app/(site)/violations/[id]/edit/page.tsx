@@ -38,6 +38,7 @@ export default function EditViolationPage() {
     if (id) {
       initialDataRender(id as string);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const updateHandler = async (data: z.infer<typeof formSchema>) => {

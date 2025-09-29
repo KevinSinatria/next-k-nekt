@@ -44,6 +44,7 @@ export default function ViolationsPage() {
   const getViolations = async (page = 1, search = "") => {
     toast.loading("Loading...", { id: "getViolations" });
     try {
+      if (!yearPeriods) return;
       const violations = await getAllViolations({
         page,
         search,
@@ -88,6 +89,7 @@ export default function ViolationsPage() {
     if (!loading) {
       getViolations(1);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
 
   useEffect(() => {
@@ -132,6 +134,7 @@ export default function ViolationsPage() {
       return;
     }
     getViolations(1, search);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search, filter]);
 
   return (

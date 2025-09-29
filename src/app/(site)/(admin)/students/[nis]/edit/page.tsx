@@ -33,6 +33,7 @@ export default function EditStudentPage() {
     if (nis && !loading) {
       initialDataRender(nis as string, yearPeriods!.id);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nis, loading]);
 
   const updateHandler = async (data: z.infer<typeof formSchema>) => {

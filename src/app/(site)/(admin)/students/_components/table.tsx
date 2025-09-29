@@ -32,14 +32,9 @@ import {
 import { ChangeEvent, useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import {
-  deleteStudentByNIS,
-  getAllStudents,
   getAllStudentsForExport,
 } from "@/services/students";
-import { DetailClass } from "@/types/classes";
-import { Skeleton } from "@/components/ui/skeleton";
 import { AxiosError } from "axios";
-import { getClassById } from "@/services/classes";
 import { useAuth } from "@/context/AuthContext";
 import { StudentType } from "@/types/students";
 import {
@@ -159,6 +154,7 @@ export const StudentsTable = ({
       return;
     }
     searchHandler(search);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
 
   const handleUpload = async (selectedFile: File) => {

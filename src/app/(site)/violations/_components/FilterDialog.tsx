@@ -20,7 +20,6 @@ import {
 import { ClassType } from "@/types/classes";
 import { TeacherType } from "@/types/users";
 import { ViolationCategoryType } from "@/types/violation-categories";
-import { se } from "date-fns/locale";
 import { FilterIcon, FilterX } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
