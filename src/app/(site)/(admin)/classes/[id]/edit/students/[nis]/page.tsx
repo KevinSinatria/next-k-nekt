@@ -29,6 +29,7 @@ export default function StudentDetailPage() {
     if (nis && !loading) {
       initialDataRender(nis as string, yearPeriods!.id);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nis, loading]);
 
   return (

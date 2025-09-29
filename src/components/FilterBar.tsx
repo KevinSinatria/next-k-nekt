@@ -8,6 +8,7 @@ type FilterProps = {
     hukuman: string;
     tanggal: string;
   };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setFilters: (val: any) => void;
 };
 
