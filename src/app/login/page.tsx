@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/select";
 import { getAllYearPeriods, getYearPeriodById } from "@/services/year-periods";
 import { YearPeriodType } from "@/types/year-periods";
+import { AxiosError } from "axios";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -71,6 +72,14 @@ export default function LoginPage() {
         toast.error(res.message || "Login gagal!");
       }
     } catch (err) {
+      if (err instanceof AxiosError) {
+        if (err.response?.status === 401) {
+          toast.error("Username atau password salah! Silahkan coba lagi.");
+          return;
+        }
+        toast.error(err.response?.data.message);
+        return;
+      }
       toast.error(`Terjadi kesalahan server.${err}`);
     } finally {
       setIsLoading(false);

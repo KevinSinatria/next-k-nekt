@@ -4,12 +4,11 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
 import { BreadcrumbContainer } from "@/components/ui/breadcrumbContainer";
-import { ClassesForm, formSchema } from "../_components/form";
+import { ClassesForm} from "../_components/form";
 import { getClassById } from "@/services/classes";
 import { useAuth } from "@/context/AuthContext";
 import { StudentsTable } from "./_components/studentsTable";
 import { DetailClass } from "@/types/classes";
-import { Skeleton } from "@/components/ui/skeleton";
 
 export default function ClassDetailPage() {
   const [initialData, setInitialData] = useState<DetailClass | null>(null);
@@ -31,6 +30,7 @@ export default function ClassDetailPage() {
     if (id && !loading) {
       initialDataRender(id as string);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, loading]);
 
   return (

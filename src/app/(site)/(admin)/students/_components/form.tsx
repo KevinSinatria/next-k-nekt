@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useForm } from "react-hook-form";
@@ -90,6 +91,7 @@ export function StudentForm({
     if (!loading) {
       form.setValue("year_id", yearPeriods!.id);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialData, form, loading]);
 
   return (
@@ -141,11 +143,7 @@ export function StudentForm({
                 <FormItem className="max-w-[200px] w-full">
                   <FormLabel>Kelas</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Kelas"
-                      {...field}
-                      disabled={readOnly}
-                    />
+                    <Input placeholder="Kelas" {...field} disabled={readOnly} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

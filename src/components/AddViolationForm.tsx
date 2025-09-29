@@ -46,6 +46,7 @@ export default function AddViolationForm() {
       } else {
         toast.error(`Gagal: ${data.message || "Terjadi kesalahan"}`)
       }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       toast.error("Gagal menyimpan data.")
     } finally {
@@ -53,8 +54,8 @@ export default function AddViolationForm() {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [jumlahSiswa, setJumlahSiswa] = useState(0);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchDashboardData() {

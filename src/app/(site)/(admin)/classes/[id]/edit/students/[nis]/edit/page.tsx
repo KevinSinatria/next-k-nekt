@@ -3,11 +3,7 @@
 import { toast } from "sonner";
 import { useParams, useRouter } from "next/navigation";
 import z from "zod";
-import {
-  createStudent,
-  getStudentByNIS,
-  updateStudentByNIS,
-} from "@/services/students";
+import { getStudentByNIS, updateStudentByNIS } from "@/services/students";
 import { BreadcrumbDetailClassAction } from "../../../../_components/BreadcrumbDetailClassAction";
 import { formSchema, StudentForm } from "../../../../_components/studentForm";
 import { StudentType } from "@/types/students";
@@ -20,11 +16,14 @@ export default function EditStudentPage() {
   const { yearPeriods, loading } = useAuth();
   const [initialData, setInitialData] = useState<StudentType | null>(null);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     toast.loading("Loading...", { id: "createStudent" });
     try {
-      const response = await updateStudentByNIS(String(nis), data);
+      const response = await updateStudentByNIS(
+        String(nis),
+        data,
+        yearPeriods!.id
+      );
 
       if (response.success === true) {
         toast.dismiss("createStudent");
@@ -53,6 +52,7 @@ export default function EditStudentPage() {
     if (nis && !loading) {
       initialDataRender(nis as string);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nis, loading]);
 
   return (

@@ -37,7 +37,6 @@ import { AxiosError } from "axios";
 import { getClassById } from "@/services/classes";
 import { useAuth } from "@/context/AuthContext";
 import { Checkbox } from "@/components/ui/checkbox";
-import { read } from "fs";
 import { StudentsPromoteDialog } from "./StudentsPromoteDialog";
 
 type StudentsTableProps = {

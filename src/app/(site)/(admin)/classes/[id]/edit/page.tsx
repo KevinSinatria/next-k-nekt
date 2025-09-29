@@ -33,6 +33,7 @@ export default function ClassDetailPage() {
     if (id && !loading) {
       initialDataRender(id as string);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, loading]);
 
   const updateHandler = async (data: z.infer<typeof formSchema>) => {

@@ -1,12 +1,10 @@
 "use client";
 
 import { toast } from "sonner";
-import { useParams, useRouter } from "next/navigation";
-import z from "zod";
-import { createStudent, getStudentByNIS } from "@/services/students";
-import { AxiosError } from "axios";
+import { useParams,} from "next/navigation";
+import {  getStudentByNIS } from "@/services/students";
 import { BreadcrumbContainer } from "@/components/ui/breadcrumbContainer";
-import { formSchema, StudentForm } from "../_components/form";
+import { StudentForm } from "../_components/form";
 import { useAuth } from "@/context/AuthContext";
 import { useEffect, useState } from "react";
 import { StudentType } from "@/types/students";
@@ -32,6 +30,7 @@ export default function DetailStudentPage() {
     if (nis && !loading) {
       initialDataRender(nis as string, yearPeriods!.id);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nis, loading]);
 
   return (

@@ -86,6 +86,7 @@ export function StudentForm({
       form.setValue("year_id", yearPeriods!.id);
       form.setValue("class_id", idClass);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialData, form, loading, idClass]);
 
   return (
