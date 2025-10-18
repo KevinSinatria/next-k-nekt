@@ -57,6 +57,7 @@ import { ClassType } from "@/types/classes";
 import { ViolationCategoryType } from "@/types/violation-categories";
 import { TeacherType } from "@/types/users";
 import { usePagination } from "@/hooks/usePagination";
+import { useAuth } from "@/context/AuthContext";
 
 interface ViolationsTableProps {
   violations: Violation[];
@@ -154,6 +155,7 @@ export const ViolationsTable = ({
   >([]);
   const [teachers, setTeachers] = useState<TeacherType[]>([]);
   const [openFilterDialog, setOpenFilterDialog] = useState<boolean>(false);
+  const { user, loading } = useAuth();
 
   const implementHandler = async (id: string) => {
     toast.loading("Loading...");
@@ -357,9 +359,11 @@ export const ViolationsTable = ({
       <Table className="min-w-[1200px] shadow-md relative bg-white">
         <TableHeader className="sticky shadow -top-[1px] bg-gray-100">
           <TableRow className="uppercase">
-            <TableHead className="font-semibold">
-              <span className="sr-only">Aksi</span>
-            </TableHead>
+            {!loading && user!.role !== "kesiswaan" && (
+              <TableHead className="font-semibold">
+                <span className="sr-only">Aksi</span>
+              </TableHead>
+            )}
             <TableHead className="hidden sm:table-cell font-semibold">
               Id
             </TableHead>
@@ -402,84 +406,90 @@ export const ViolationsTable = ({
                     : "hover:bg-red-100/50"
                 } text-sm`}
               >
-                <TableCell>
-                  <DropdownMenu
-                    open={openMenuId === violation.id}
-                    onOpenChange={(open) =>
-                      open ? setOpenMenuId(violation.id) : setOpenMenuId(null)
-                    }
-                  >
-                    <DropdownMenuTrigger asChild>
-                      <Button aria-haspopup="true" size="icon" variant="ghost">
-                        <MoreHorizontal className="h-4 w-4" />
-                        <span className="sr-only">Toggle menu</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuLabel>Aksi</DropdownMenuLabel>
-                      <DropdownMenuItem
-                        className="cursor-pointer"
-                        onClick={() => onDetailClick(violation.id)}
-                      >
-                        Lihat Detail
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        className="cursor-pointer"
-                        onClick={() => onEditClick(violation.id)}
-                      >
-                        Edit
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        className={`cursor-pointer ${
-                          violation.implemented
-                            ? "text-red-600"
-                            : "text-green-600"
-                        }`}
-                        onClick={
-                          violation.implemented
-                            ? () => unimplementHandler(String(violation.id))
-                            : () => implementHandler(String(violation.id))
-                        }
-                      >
-                        {violation.implemented
-                          ? "Belum Ditindak"
-                          : "Sudah Ditindak"}
-                      </DropdownMenuItem>
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <DropdownMenuItem
-                            className="text-red-600 cursor-pointer"
-                            onSelect={(e) => e.preventDefault()}
-                          >
-                            Hapus
-                          </DropdownMenuItem>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>
-                              Apakah Anda Yakin?
-                            </AlertDialogTitle>
-                            <AlertDialogDescription>
-                              Aksi ini tidak dapat dibatalkan. Data yang sudah
-                              dihapus tidak akan bisa dikembalikan lagi.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Batal</AlertDialogCancel>
-                            <AlertDialogAction
-                              onClick={() =>
-                                deleteHandler(String(violation.id))
-                              }
-                              className="bg-red-600 hover:bg-red-700"
+                {!loading && user!.role !== "kesiswaan" && (
+                  <TableCell>
+                    <DropdownMenu
+                      open={openMenuId === violation.id}
+                      onOpenChange={(open) =>
+                        open ? setOpenMenuId(violation.id) : setOpenMenuId(null)
+                      }
+                    >
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          aria-haspopup="true"
+                          size="icon"
+                          variant="ghost"
+                        >
+                          <MoreHorizontal className="h-4 w-4" />
+                          <span className="sr-only">Toggle menu</span>
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Aksi</DropdownMenuLabel>
+                        <DropdownMenuItem
+                          className="cursor-pointer"
+                          onClick={() => onDetailClick(violation.id)}
+                        >
+                          Lihat Detail
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          className="cursor-pointer"
+                          onClick={() => onEditClick(violation.id)}
+                        >
+                          Edit
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          className={`cursor-pointer ${
+                            violation.implemented
+                              ? "text-red-600"
+                              : "text-green-600"
+                          }`}
+                          onClick={
+                            violation.implemented
+                              ? () => unimplementHandler(String(violation.id))
+                              : () => implementHandler(String(violation.id))
+                          }
+                        >
+                          {violation.implemented
+                            ? "Belum Ditindak"
+                            : "Sudah Ditindak"}
+                        </DropdownMenuItem>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <DropdownMenuItem
+                              className="text-red-600 cursor-pointer"
+                              onSelect={(e) => e.preventDefault()}
                             >
-                              Ya, Hapus
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
+                              Hapus
+                            </DropdownMenuItem>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>
+                                Apakah Anda Yakin?
+                              </AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Aksi ini tidak dapat dibatalkan. Data yang sudah
+                                dihapus tidak akan bisa dikembalikan lagi.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Batal</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() =>
+                                  deleteHandler(String(violation.id))
+                                }
+                                className="bg-red-600 hover:bg-red-700"
+                              >
+                                Ya, Hapus
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                )}
                 <TableCell className="hidden font-medium sm:table-cell">
                   {violation.id}
                 </TableCell>

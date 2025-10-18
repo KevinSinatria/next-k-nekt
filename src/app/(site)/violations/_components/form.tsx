@@ -19,6 +19,7 @@ import { ComboboxSearchViolation } from "./ui/ComboboxSearchViolation";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { Textarea } from "@/components/ui/textarea";
 
 export const formSchema = z.object({
   nis: z.string({
@@ -35,6 +36,7 @@ export const formSchema = z.object({
   violation_type_id: z.number(),
   punishment_point: z.number(),
   punishment: z.string(),
+  description: z.string(),
   violation_category: z.string(),
   implemented: z.boolean(),
   teacher: z.string(),
@@ -54,6 +56,7 @@ export type Violation = {
   violation_category: string;
   implemented: boolean;
   teacher: string;
+  description: string;
   created_at: string;
   updated_at: string;
   teacher_id: number;
@@ -82,6 +85,7 @@ export function ViolationsForm({
       violation_category: "",
       implemented: false,
       teacher: "",
+      description: "",
       teacher_id: 0,
       student_id: 0,
       violation_type_id: 0,
@@ -114,6 +118,7 @@ export function ViolationsForm({
       form.setValue("punishment_point", initialData.punishment_point);
       form.setValue("punishment", initialData.punishment);
       form.setValue("violation_category", initialData.violation_category);
+      form.setValue("description", initialData.description);
       form.setValue("implemented", initialData.implemented);
       form.setValue("teacher", initialData.teacher);
       form.setValue("teacher_id", initialData.teacher_id);
@@ -279,6 +284,24 @@ export function ViolationsForm({
                   placeholder="Kategori Pelanggaran"
                   className=" disabled:text-black"
                   disabled
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem className="max-w-xl w-full">
+              <FormLabel>Deskripsi Pelanggaran</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="Deskripsi"
+                  className="disabled:text-black"
+                  disabled={readOnly}
                   {...field}
                 />
               </FormControl>
