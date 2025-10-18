@@ -17,7 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import {MoreHorizontal, Plus } from "lucide-react";
+import { MoreHorizontal, Plus, Search } from "lucide-react";
 import {
   Pagination,
   PaginationContent,
@@ -50,6 +50,7 @@ import { Class } from "./form";
 import { deleteClassById, getAllClasses } from "@/services/classes";
 import { ExcelImporter } from "@/components/ExcelImporter";
 import { api } from "@/lib/api";
+import { usePagination } from "@/hooks/usePagination";
 
 type ClassesTableProps = {
   data: Class[];
@@ -59,6 +60,76 @@ type ClassesTableProps = {
   handlePageChange: (page: number) => void;
   rootPath: string;
   minWidth: number;
+};
+
+const ClassesPagination = ({
+  meta,
+  handlePageChange,
+}: {
+  meta: Meta;
+  handlePageChange: (page: number) => void;
+}) => {
+  const paginationRange = usePagination({
+    currentPage: meta.page,
+    totalPage: meta.totalPage,
+    siblingCount: 1, // Opsional, defaultnya 1
+  });
+
+  if (meta.page === 0 || paginationRange!.length < 2) {
+    return null;
+  }
+
+  return (
+    <Pagination className="cursor-pointer transition-all">
+      <PaginationContent>
+        {/* Tombol Sebelumnya */}
+        {meta.page > 1 && (
+          <PaginationItem>
+            <PaginationPrevious
+              onClick={() => handlePageChange(meta.page - 1)}
+            />
+          </PaginationItem>
+        )}
+
+        {/* Nomor Halaman */}
+        {paginationRange!.map((pageNumber, index) => {
+          // Jika item adalah elipsis, render komponen elipsis
+          if (pageNumber === "...") {
+            return (
+              <PaginationItem key={`dots-${index}`}>
+                <PaginationEllipsis />
+              </PaginationItem>
+            );
+          }
+
+          // Jika item adalah nomor halaman, render link halaman
+          return (
+            <PaginationItem
+              key={`page-${pageNumber}`}
+              className={
+                meta.page === pageNumber
+                  ? "bg-neutral-100 rounded-md dark:bg-neutral-800"
+                  : ""
+              }
+            >
+              <PaginationLink
+                onClick={() => handlePageChange(Number(pageNumber))}
+              >
+                {pageNumber}
+              </PaginationLink>
+            </PaginationItem>
+          );
+        })}
+
+        {/* Tombol Selanjutnya */}
+        {meta.page < meta.totalPage && (
+          <PaginationItem>
+            <PaginationNext onClick={() => handlePageChange(meta.page + 1)} />
+          </PaginationItem>
+        )}
+      </PaginationContent>
+    </Pagination>
+  );
 };
 
 export const ClassesTable = ({
@@ -135,7 +206,7 @@ export const ClassesTable = ({
       return;
     }
     handleSearch(search);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
 
   const handleUpload = async (selectedFile: File) => {
@@ -179,16 +250,28 @@ export const ClassesTable = ({
   return (
     <>
       <div className="flex flex-wrap gap-4 justify-between items-center mb-4">
-        <Input
-          type="search"
-          placeholder="Cari kelas.. (Contoh: XII RPL 2)"
-          className="flex-1 min-w-[260px]"
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            setSearchQuery(e.target.value)
-          }
-        />
+        <div className="relative flex-1 min-w-[260px]">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 pointer-events-none" />
+          <Input
+            type="search"
+            placeholder="Cari kelas..."
+            className="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-200 bg-white shadow-sm
+               focus:border-sky-500 focus:ring-2 focus:ring-sky-500/30 
+               transition-all duration-200 placeholder:text-gray-400"
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              setSearchQuery(e.target.value)
+            }
+          />
+        </div>
         <div className="flex gap-4 items-center justify-end flex-wrap">
-          <ExcelImporter handlePageChange={handlePageChange} handleUpload={handleUpload} title="Impor Data Kelas" description="Impor data kelas dari file Excel" isLoading={isLoading} linkTemplate="/templates/template_kelas.xlsx" />
+          <ExcelImporter
+            handlePageChange={handlePageChange}
+            handleUpload={handleUpload}
+            title="Impor Data Kelas"
+            description="Impor data kelas dari file Excel"
+            isLoading={isLoading}
+            linkTemplate="/templates/template_kelas.xlsx"
+          />
           <Button
             className="bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded-lg transition-all flex items-center justify-center text-sm gap-2"
             asChild
@@ -199,41 +282,10 @@ export const ClassesTable = ({
             </Link>
           </Button>
           <div className="bg-gray-200 p-1 flex items-center justify-center rounded-lg">
-            <Pagination className="cursor-pointer transition-all">
-              <PaginationContent>
-                {meta.page > 1 && (
-                  <PaginationItem>
-                    <PaginationPrevious
-                      onClick={() => handlePageChange(meta.page - 1)}
-                    />
-                  </PaginationItem>
-                )}
-                {Array.from({ length: meta.totalPage }, (_, index) => (
-                  <PaginationItem
-                    className={`${
-                      meta.page === index + 1 ? "bg-gray-300 rounded-lg" : ""
-                    }`}
-                    key={index}
-                  >
-                    <PaginationLink onClick={() => handlePageChange(index + 1)}>
-                      {index + 1}
-                    </PaginationLink>
-                  </PaginationItem>
-                ))}
-                {meta.totalPage > 5 && (
-                  <PaginationItem>
-                    <PaginationEllipsis />
-                  </PaginationItem>
-                )}
-                {meta.page != meta.totalPage && (
-                  <PaginationItem>
-                    <PaginationNext
-                      onClick={() => handlePageChange(meta.page + 1)}
-                    />
-                  </PaginationItem>
-                )}
-              </PaginationContent>
-            </Pagination>
+            <ClassesPagination
+              meta={meta}
+              handlePageChange={handlePageChange}
+            />
           </div>
         </div>
       </div>
