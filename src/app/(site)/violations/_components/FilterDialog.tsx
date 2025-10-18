@@ -127,15 +127,15 @@ export const FilterDialog = ({
               </Select>
             </div>
             <div className="grid gap-3">
-              <Label>Status Dilaksanakan</Label>
+              <Label>Status Ditindak</Label>
               <Select value={status} onValueChange={setStatus}>
                 <SelectTrigger>
                   <SelectValue placeholder="Pilih Status" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Semua Status</SelectItem>
-                  <SelectItem value="true">Dilaksanakan</SelectItem>
-                  <SelectItem value="false">Belum Dilaksanakan</SelectItem>
+                  <SelectItem value="true">Ditindak</SelectItem>
+                  <SelectItem value="false">Belum Ditindak</SelectItem>
                 </SelectContent>
               </Select>
             </div>

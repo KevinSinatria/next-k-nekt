@@ -16,7 +16,9 @@ export default function CreateViolationPage() {
 
       if (response.success === true) {
         toast.dismiss();
-        toast.success("Data berhasil disimpan");
+        toast.success(
+          `Data berhasil disimpan! Siswa ini sudah memiliki ${response.totalPoints} point`
+        );
         router.push("/violations");
       }
     } catch (error) {
