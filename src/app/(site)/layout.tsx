@@ -9,6 +9,19 @@ import { useEffect, useState } from "react";
 import { YearPeriodType } from "@/types/year-periods";
 import { Skeleton } from "@/components/ui/skeleton";
 import { JSX } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import Image from "next/image";
+import Link from "next/link";
+import { LogOut } from "lucide-react";
+import { api } from "@/lib/api";
 
 type DynamicHeaderProps = {
   toggleSidebar: () => void;
@@ -21,9 +34,37 @@ function DynamicHeader({
   isLoading,
 }: DynamicHeaderProps) {
   const { title } = useHeader();
-  const [yearPeriodDisplay, setYearPeriodDisplay] = useState<string | null | JSX.Element>(
-    null
-  );
+  const [yearPeriodDisplay, setYearPeriodDisplay] = useState<
+    string | null | JSX.Element
+  >(null);
+  const { user, setIsAuthenticated } = useAuth();
+  const initials =
+    user?.fullname
+      ?.split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase() ||
+    user?.username?.[0].toUpperCase() ||
+    "U";
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    toast.loading("Loading...", { id: "logout" });
+    try {
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("user");
+      localStorage.removeItem("year_period");
+      localStorage.removeItem("year_id");
+      setIsAuthenticated(false);
+      toast.dismiss("logout");
+      toast.success("Berhasil logout!");
+      router.push("/login");
+    } catch (error) {
+      toast.dismiss("logout");
+      toast.error("Gagal logout");
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
     if (yearPeriod && !isLoading && yearPeriod.display_name) {
@@ -33,7 +74,7 @@ function DynamicHeader({
     }
   }, [yearPeriod, isLoading]);
   return (
-    <header className="sticky top-0 z-10 w-full flex items-center gap-8 bg-white shadow-md p-4 border-b">
+    <header className="sticky top-0 z-10 w-full flex items-center gap-8 bg-white shadow-md px-4 py-2 border-b">
       <div className="lg:hidden flex items-center justify-center top-4 left-4 z-30">
         <button
           onClick={toggleSidebar}
@@ -54,10 +95,49 @@ function DynamicHeader({
           </svg>
         </button>
       </div>
-      <h1 className="text-xl flex font-semibold">
-        {title} -{" "}
-        {yearPeriodDisplay}
-      </h1>
+      <div className="flex justify-between w-full items-center">
+        <h1 className="text-xl flex font-semibold">
+          {title} - {yearPeriodDisplay}
+        </h1>
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <Avatar className="h-10 w-10 ring-0 outline-none">
+              <AvatarImage src="" alt={user?.fullname || "User"} />
+              <AvatarFallback className="bg-blue-600 text-white text-xl">
+                {initials}
+              </AvatarFallback>
+            </Avatar>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="absolute right-0 max-w-[80vw] w-60">
+            <DropdownMenuItem
+              className="flex items-center justify-start"
+              asChild
+            >
+              <Link href={"/profile"}>
+                <div className="w-12 flex flex-col items-center justify-center">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src="" alt={user?.fullname || "User"} />
+                    <AvatarFallback className="bg-blue-600 text-white text-xl">
+                      {initials}
+                    </AvatarFallback>
+                  </Avatar>
+                </div>
+                <div className="flex flex-col justify-center items-start">
+                  <span className="font-medium capitalize">
+                    {user?.username}
+                  </span>
+                  <span className="text-sm text-gray-600">{user?.role}</span>
+                </div>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={handleLogout} variant="destructive">
+              <LogOut size={18} />
+              Logout
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     </header>
   );
 }
@@ -71,18 +151,17 @@ export default function RootLayout({
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    if (
-      !isAuthenticated &&
-      !loading &&
-      localStorage.getItem("access_token") !== null
-    ) {
-      router.push("/login");
-      toast.error("Anda belum login, silahkan login terlebih dahulu.");
-    }
-  }, [isAuthenticated, router, loading]);
-
   const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
+
+  if (loading) return <div>Loading...</div>;
+  if (!isAuthenticated) {
+    if (!toast.getToasts().find((toast) => toast.id === "unauthorized")) {
+      toast.error("Anda belum login, silahkan login terlebih dahulu.", {
+        id: "unauthorized",
+      });
+    }
+    return router.push("/login");
+  }
 
   return (
     <AuthProvider>
