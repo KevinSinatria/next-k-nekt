@@ -1,5 +1,6 @@
 "use client";
 
+import { api } from "@/lib/api";
 import { YearPeriodType } from "@/types/year-periods";
 import { createContext, useContext, useState, useEffect } from "react";
 
@@ -8,12 +9,14 @@ interface AuthContextType {
   user: {
     id: string;
     username: string;
+    fullname: string;
     role: string;
   } | null;
   setIsAuthenticated: (isAuthenticated: boolean) => void;
   loading: boolean;
   setLoading: (loading: boolean) => void;
   yearPeriods: YearPeriodType | null;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -41,6 +44,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setYearPeriods(yearPeriod);
   }, [loading]);
 
+  const refreshUser = async () => {
+    const user = await api.get("/users/me");
+    localStorage.setItem("user", JSON.stringify(user.data.data));
+    setUser(user.data.data);
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -50,6 +59,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         loading,
         setLoading,
         yearPeriods,
+        refreshUser,
       }}
     >
       {children}
