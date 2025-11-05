@@ -12,6 +12,7 @@ import {
   LogOut,
   DoorOpen,
   Users,
+  User,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -35,6 +36,7 @@ const iconMap = {
   "Kelola Iklan": <Clapperboard size={18} />,
   Kelas: <DoorOpen size={18} />,
   Siswa: <Users size={18} />,
+  Profil: <User size={18} />,
 };
 
 const navItems: NavItem[] = [
@@ -42,6 +44,7 @@ const navItems: NavItem[] = [
   { name: "Pelanggaran", path: "/violations", role: ["admin", "kesiswaan"] },
   { name: "Kelas", path: "/classes", role: ["admin"] },
   { name: "Siswa", path: "/students", role: ["admin"] },
+  { name: "Profil", path: "/profile", role: ["admin", "kesiswaan", "kedisiplinan"] },
 ];
 
 const Sidebar = ({
