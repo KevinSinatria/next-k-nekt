@@ -165,10 +165,10 @@ export default function ProfilePage() {
     "U";
 
   return (
-    <div className="space-y-6 max-w-4xl">
+    <div className="space-y-6 max-w-4xl bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
       <div>
-        <h1 className="text-3xl font-bold text-slate-900">Profil Saya</h1>
-        <p className="text-slate-600 mt-2">Kelola informasi akun Anda</p>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Profil Saya</h1>
+        <p className="text-gray-600 dark:text-gray-300 mt-2">Kelola informasi akun Anda</p>
       </div>
 
       {message && (
@@ -189,10 +189,10 @@ export default function ProfilePage() {
         </Alert>
       )}
 
-      <Card>
+      <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
         <CardHeader>
-          <CardTitle>Informasi Akun</CardTitle>
-          <CardDescription>Detail akun saat ini</CardDescription>
+          <CardTitle className="text-gray-900 dark:text-gray-100">Informasi Akun</CardTitle>
+          <CardDescription className="text-gray-600 dark:text-gray-300">Detail akun saat ini</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex items-center gap-4 mb-6">
@@ -203,9 +203,9 @@ export default function ProfilePage() {
               </AvatarFallback>
             </Avatar>
             <div>
-              <p className="font-medium text-lg">{user?.fullname || "User"}</p>
-              <p className="text-sm text-slate-600">{user?.username}</p>
-              <p className="text-xs text-slate-500 capitalize mt-1">
+              <p className="font-medium text-lg text-gray-900 dark:text-gray-100">{user?.fullname || "User"}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-300">{user?.username}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 capitalize mt-1">
                 Role: {user?.role}
               </p>
             </div>
@@ -220,10 +220,10 @@ export default function ProfilePage() {
         </TabsList>
 
         <TabsContent value="profile">
-          <Card>
+          <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
             <CardHeader>
-              <CardTitle>Edit Profil</CardTitle>
-              <CardDescription>Perbarui informasi profil Anda</CardDescription>
+              <CardTitle className="text-gray-900 dark:text-gray-100">Edit Profil</CardTitle>
+              <CardDescription className="text-gray-600 dark:text-gray-300">Perbarui informasi profil Anda</CardDescription>
             </CardHeader>
             <CardContent>
               <form className="space-y-4">
@@ -302,10 +302,10 @@ export default function ProfilePage() {
         </TabsContent>
 
         <TabsContent value="password">
-          <Card>
+          <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
             <CardHeader>
-              <CardTitle>Ubah Password</CardTitle>
-              <CardDescription>Perbarui password akun Anda</CardDescription>
+              <CardTitle className="text-gray-900 dark:text-gray-100">Ubah Password</CardTitle>
+              <CardDescription className="text-gray-600 dark:text-gray-300">Perbarui password akun Anda</CardDescription>
             </CardHeader>
             <CardContent>
               <form className="space-y-4">

@@ -61,7 +61,7 @@ export default function ClassesPage() {
   }, [setTitle]);
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
       <ClassesTable
         rootPath="/classes"
         minWidth={280}

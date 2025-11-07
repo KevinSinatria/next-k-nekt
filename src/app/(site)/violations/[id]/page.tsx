@@ -7,6 +7,7 @@ import { useParams } from "next/navigation";
 import { getViolationById } from "@/services/violations";
 import { toast } from "sonner";
 import { BreadcrumbContainer } from "@/components/ui/breadcrumbContainer";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function ViolationDetailPage() {
   const [initialData, setInitialData] = useState<z.infer<
@@ -32,13 +33,17 @@ export default function ViolationDetailPage() {
   }, [id]);
 
   return (
-    <div className="flex flex-col overflow-x-hidden gap-6">
+    <div className="flex flex-col overflow-x-hidden gap-6 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
       <BreadcrumbContainer
         link="/violations"
         prevPage="Pelanggaran"
         currentPage={`Detail Pelanggaran - ID ${id}`}
       />
-      <ViolationsForm readOnly={true} initialData={initialData} />
+      <Card>
+        <CardContent>
+          <ViolationsForm readOnly={true} initialData={initialData} />
+        </CardContent>
+      </Card>
     </div>
   );
 }

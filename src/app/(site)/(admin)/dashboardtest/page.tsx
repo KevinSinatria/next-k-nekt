@@ -65,47 +65,47 @@ export default function Beranda() {
   }, [user]);
 
   return (
-    <div className="p-6 space-y-6">
-      <h1 className="text-2xl font-semibold mb-4">Beranda Admin</h1>
+    <div className="p-6 space-y-6 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+      <h1 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Beranda Admin</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="p-4 flex flex-col justify-center items-center text-center shadow">
-          <span className="text-sm text-muted-foreground">Total Siswa</span>
+        <Card className="p-4 flex flex-col justify-center items-center text-center shadow bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+          <span className="text-sm text-gray-600 dark:text-gray-300">Total Siswa</span>
           <CountUp
             from={0}
             to={jumlahSiswa}
             duration={1}
-            className="text-3xl font-bold"
+            className="text-3xl font-bold text-gray-900 dark:text-gray-100"
           />
         </Card>
 
-        <Card className="p-4 flex flex-col justify-center items-center text-center shadow">
-          <span className="text-sm text-muted-foreground">
+        <Card className="p-4 flex flex-col justify-center items-center text-center shadow bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+          <span className="text-sm text-gray-600 dark:text-gray-300">
             Total Pelanggaran
           </span>
           <CountUp
             from={0}
             to={jumlahPelanggaran}
             duration={1}
-            className="text-3xl font-bold"
+            className="text-3xl font-bold text-gray-900 dark:text-gray-100"
           />
         </Card>
 
-        <Card className="p-4 flex flex-col justify-center items-center text-center shadow">
-          <span className="text-sm text-muted-foreground">Total Kelas</span>
+        <Card className="p-4 flex flex-col justify-center items-center text-center shadow bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+          <span className="text-sm text-gray-600 dark:text-gray-300">Total Kelas</span>
           <CountUp
             from={0}
             to={jumlahKelas}
             duration={1}
-            className="text-3xl font-bold"
+            className="text-3xl font-bold text-gray-900 dark:text-gray-100"
           />
         </Card>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <Card className="md:col-span-3 p-4 ">
+        <Card className="md:col-span-3 p-4 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
           <div className="flex justify-between items-center mb-2">
-            <h2 className="text-lg font-semibold">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
               statistik pelanggaran yang dilakukan
             </h2>
             <span className="text-sm text-blue-500 cursor-pointer hover:underline">
@@ -119,8 +119,8 @@ export default function Beranda() {
 
         <div className="md:col-span-2 flex flex-col gap-4">
           <div className="grid grid-cols-1 ">
-            <Card className="p-4 h-70">
-              <h2 className="font-semibold mb-2">Pelanggaran per Kategori</h2>
+            <Card className="p-4 h-70 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+              <h2 className="font-semibold mb-2 text-gray-900 dark:text-gray-100">Pelanggaran per Kategori</h2>
               <PieChartt />
             </Card>
           </div>

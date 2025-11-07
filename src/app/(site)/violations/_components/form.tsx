@@ -142,7 +142,7 @@ export function ViolationsForm({
               <FormControl>
                 <Input
                   placeholder="NIS"
-                  className="bg-white/0 cursor-not-allowed border-gray-200 focus-visible:ring-0 focus-visible:border-0"
+                  className="bg-white/0 cursor-not-allowed border-gray-200 dark:border-slate-800 focus-visible:ring-0 focus-visible:border-0"
                   {...field}
                   readOnly
                 />
@@ -160,7 +160,7 @@ export function ViolationsForm({
                 <FormLabel>Nama Siswa</FormLabel>
                 <FormControl>
                   <Input
-                    className="disabled:text-black"
+                    className="disabled:text-black dark:disabled:text-white"
                     placeholder="Nama Siswa"
                     disabled
                     {...field}
@@ -193,7 +193,7 @@ export function ViolationsForm({
               <FormLabel>Kelas</FormLabel>
               <FormControl>
                 <Input
-                  className="max-w-md w-full disabled:text-black"
+                  className="max-w-md w-full disabled:text-black dark:disabled:text-white"
                   placeholder="Kelas"
                   disabled
                   {...field}
@@ -214,7 +214,7 @@ export function ViolationsForm({
                   <Input
                     disabled
                     placeholder="Nama Pelanggaran"
-                    className="disabled:text-black"
+                    className="disabled:text-black dark:disabled:text-white"
                     {...field}
                   />
                 </FormControl>
@@ -247,7 +247,7 @@ export function ViolationsForm({
                 <Input
                   disabled
                   placeholder="Point Pelanggaran"
-                  className="disabled:text-black"
+                  className="disabled:text-black dark:disabled:text-white"
                   {...field}
                 />
               </FormControl>
@@ -264,7 +264,7 @@ export function ViolationsForm({
               <FormControl>
                 <Input
                   placeholder="Sanksi"
-                  className="disabled:text-black"
+                  className="disabled:text-black dark:disabled:text-white"
                   disabled
                   {...field}
                 />
@@ -282,7 +282,7 @@ export function ViolationsForm({
               <FormControl>
                 <Input
                   placeholder="Kategori Pelanggaran"
-                  className=" disabled:text-black"
+                  className=" disabled:text-black dark:disabled:text-white"
                   disabled
                   {...field}
                 />
