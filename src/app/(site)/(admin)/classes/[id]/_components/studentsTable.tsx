@@ -99,7 +99,7 @@ export const StudentsTable = ({
 
   return (
     <>
-      <div className="flex sm:flex-row flex-col sm:gap-0 gap-2 justify-center bg-gray-200 py-2 relative rounded-md items-center">
+      <div className="flex sm:flex-row flex-col sm:gap-0 gap-2 justify-center bg-gray-200 py-2 relative rounded-md items-center dark:bg-gray-700">
         <h2 className="font-semibold text-lg">
           Siswa kelas{" "}
           <span className="text-sky-600">
@@ -149,8 +149,8 @@ export const StudentsTable = ({
           )}
         </div>
       </div>
-      <Table className={`min-w-[${minWidth}px] shadow-md relative bg-white`}>
-        <TableHeader className="sticky shadow -top-[1px] bg-gray-100">
+      <Table className={`min-w-[${minWidth}px] shadow-md relative bg-white dark:bg-gray-800`}>
+        <TableHeader className="sticky shadow -top-[1px] bg-gray-100 dark:bg-gray-700">
           <TableRow className="uppercase">
             {!readOnly && (
               <TableHead className="font-semibold">
@@ -180,7 +180,7 @@ export const StudentsTable = ({
             </TableRow>
           ) : (
             data.students.map((row, index) => (
-              <TableRow key={index} className={`hover:bg-gray-100 text-sm`}>
+              <TableRow key={index} className={`hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-300 dark:bg-gray-800 text-sm`}>
                 {!readOnly && (
                   <TableCell>
                     <Checkbox

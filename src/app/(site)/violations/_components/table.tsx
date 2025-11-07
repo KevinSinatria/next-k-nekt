@@ -142,6 +142,7 @@ const ViolationsPagination = ({
 
 export const ViolationsTable = ({
   violations,
+  setViolations,
   meta,
   handlePageChange,
   setFilter,
@@ -201,6 +202,12 @@ export const ViolationsTable = ({
 
   const deleteHandler = async (id: string) => {
     toast.loading("Loading...");
+    const originalViolations = [...violations];
+    const newViolations = violations.filter(
+      (violation) => violation.id !== parseInt(id)
+    );
+    setViolations(newViolations);
+
     try {
       const response = await deleteViolationById(id);
 
@@ -213,12 +220,14 @@ export const ViolationsTable = ({
         }, 1000);
       }
     } catch (error) {
-      toast.error("Data gagal dihapus");
       setOpenMenuId(null);
+      setViolations(originalViolations);
       console.error(error);
-      if (error instanceof Error) {
-        console.error(error.message);
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data.message);
+        return;
       }
+      toast.error("Data gagal dihapus");
     }
   };
 
@@ -348,7 +357,7 @@ export const ViolationsTable = ({
               Buat Data
             </Link>
           </Button>
-          <div className="bg-gray-200 p-1 flex items-center justify-center rounded-lg">
+          <div className="bg-gray-200 p-1 flex items-center justify-center rounded-lg dark:bg-gray-700">
             <ViolationsPagination
               meta={meta}
               handlePageChange={handlePageChange}
@@ -356,20 +365,26 @@ export const ViolationsTable = ({
           </div>
         </div>
       </div>
-      <Table className="min-w-[1200px] shadow-md relative bg-white">
-        <TableHeader className="sticky shadow -top-[1px] bg-gray-100">
-          <TableRow className="uppercase">
+      <Table className="min-w-[1200px] shadow-md relative bg-white dark:bg-gray-800">
+        <TableHeader className="sticky shadow -top-[1px] bg-gray-100 dark:bg-gray-700">
+          <TableRow className="uppercase text-gray-900 dark:text-gray-100">
             {!loading && user!.role !== "kesiswaan" && (
               <TableHead className="font-semibold">
                 <span className="sr-only">Aksi</span>
               </TableHead>
             )}
-            <TableHead className="hidden sm:table-cell font-semibold">
+            <TableHead className="hidden sm:table-cell font-semibold text-gray-900 dark:text-gray-100">
               Id
             </TableHead>
-            <TableHead className="font-semibold">NIS</TableHead>
-            <TableHead className="font-semibold">Nama</TableHead>
-            <TableHead className="font-semibold">Kelas</TableHead>
+            <TableHead className="font-semibold text-gray-900 dark:text-gray-100">
+              NIS
+            </TableHead>
+            <TableHead className="font-semibold text-gray-900 dark:text-gray-100">
+              Nama
+            </TableHead>
+            <TableHead className="font-semibold text-gray-900 dark:text-gray-100">
+              Kelas
+            </TableHead>
             <TableHead className="font-semibold">Nama Pelanggaran</TableHead>
             <TableHead className="text-center font-semibold">Poin</TableHead>
             <TableHead className="hidden lg:table-cell font-semibold">
@@ -392,7 +407,10 @@ export const ViolationsTable = ({
         <TableBody>
           {violations.length === 0 ? (
             <TableRow className="text-sm">
-              <TableCell colSpan={12} className="text-center h-24">
+              <TableCell
+                colSpan={12}
+                className="text-center h-24 text-gray-600 dark:text-gray-300"
+              >
                 Tidak ada data pelanggaran.
               </TableCell>
             </TableRow>
@@ -402,9 +420,9 @@ export const ViolationsTable = ({
                 key={violation.id}
                 className={`${
                   violation.implemented
-                    ? "hover:bg-green-100/50"
-                    : "hover:bg-red-100/50"
-                } text-sm`}
+                    ? "hover:bg-green-100/50 dark:hover:bg-green-900/20"
+                    : "hover:bg-red-100/50 dark:hover:bg-red-900/20"
+                } text-sm text-gray-900 dark:text-gray-100`}
               >
                 {!loading && user!.role !== "kesiswaan" && (
                   <TableCell>

@@ -40,7 +40,7 @@ const iconMap = {
 };
 
 const navItems: NavItem[] = [
-  // { name: "Beranda", path: "/dashboard", role: ["admin"] },
+  { name: "Beranda", path: "/dashboard", role: ["admin", "kesiswaan", "kedisiplinan"] },
   { name: "Pelanggaran", path: "/violations", role: ["admin", "kesiswaan"] },
   { name: "Kelas", path: "/classes", role: ["admin"] },
   { name: "Siswa", path: "/students", role: ["admin"] },
@@ -101,15 +101,15 @@ const Sidebar = ({
 
   // ✅ Style variants
   const baseStyle = {
-    flat: "bg-sky-600",
-    gradient: "bg-gradient-to-b from-sky-600 via-sky-700 to-sky-800",
-    glass: "bg-sky-600/80 backdrop-blur-xl border-r border-white/10",
+    flat: "bg-sky-600 dark:bg-gray-800",
+    gradient: "bg-gradient-to-b from-sky-600 via-sky-700 to-sky-800 dark:from-gray-800 dark:via-gray-900 dark:to-gray-950",
+    glass: "bg-sky-600/80 dark:bg-gray-800/80 backdrop-blur-xl border-r border-white/10 dark:border-gray-700/50",
   }[style];
 
   const SidebarContent = (
     <>
       {/* Logo */}
-      <div className="flex items-center gap-3 px-6 py-5 border-b border-white/10">
+      <div className="flex items-center gap-3 px-6 py-5 border-b border-white/10 dark:border-gray-700/50">
         <Image
           src="/logo_nekat.webp"
           width={200}
@@ -117,7 +117,7 @@ const Sidebar = ({
           alt="Logo"
           className="rounded-lg w-9 h-9"
         />
-        <span className="font-semibold text-lg tracking-wide">K-Nekat</span>
+        <span className="font-semibold text-lg tracking-wide text-white dark:text-gray-100">Kesiswaan</span>
       </div>
 
       {/* Menu */}
@@ -134,8 +134,8 @@ const Sidebar = ({
               className={`group relative flex items-center gap-3 w-full px-8 py-3 rounded-xl text-sm font-medium transition-all
         ${
           isActive
-            ? "bg-white/15 text-white shadow"
-            : "text-white/70 hover:bg-white/10 hover:text-white"
+            ? "bg-white/15 dark:bg-gray-700/50 text-white dark:text-gray-100 shadow"
+            : "text-white/70 dark:text-gray-300 hover:bg-white/10 dark:hover:bg-gray-700/30 hover:text-white dark:hover:text-gray-100"
         }`}
             >
               <span className="text-lg">{iconMap[item.name]}</span>
@@ -150,7 +150,7 @@ const Sidebar = ({
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                    className="absolute left-2 w-1.5 h-6 bg-white rounded-full"
+                    className="absolute left-2 w-1.5 h-6 bg-white dark:bg-gray-100 rounded-full"
                   />
                 )}
               </AnimatePresence>
@@ -160,15 +160,16 @@ const Sidebar = ({
       </nav>
 
       {/* Logout */}
-      <div className="px-6 py-5 border-t border-white/10">
-        <button
+      <div className="px-6 py-5 border-t border-white/10 dark:border-gray-700/50">
+        {/* <button
           onClick={handleLogout}
           className="w-full flex items-center justify-center gap-2 px-4 py-3 
             bg-white text-red-600 hover:text-red-100 rounded-xl text-sm font-semibold shadow-md hover:bg-red-500 cursor-pointer transition"
         >
           <LogOut className="w-5 h-5" />
           Logout
-        </button>
+        </button> */}
+        <small className="text-white/70 dark:text-gray-400">&copy; {new Date().getFullYear()} Tefa RPL Nekat</small>
       </div>
     </>
   );
@@ -193,7 +194,7 @@ const Sidebar = ({
               animate={{ x: 0 }}
               exit={{ x: -280 }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className={`fixed top-0 left-0 w-64 h-full ${baseStyle} text-white z-30 flex flex-col shadow-xl`}
+              className={`fixed top-0 left-0 w-64 h-full ${baseStyle} text-white dark:text-gray-100 z-30 flex flex-col shadow-xl`}
             >
               {SidebarContent}
             </motion.aside>
@@ -203,7 +204,7 @@ const Sidebar = ({
 
       {/* Sidebar Desktop */}
       <aside
-        className={`hidden lg:flex lg:flex-col lg:sticky top-0 left-0 w-64 h-screen ${baseStyle} text-white shadow-xl`}
+        className={`hidden lg:flex lg:flex-col lg:sticky top-0 left-0 w-64 h-screen ${baseStyle} text-white dark:text-gray-100 dark:border-r dark:border-r-gray-700 shadow-xl`}
       >
         {SidebarContent}
       </aside>
