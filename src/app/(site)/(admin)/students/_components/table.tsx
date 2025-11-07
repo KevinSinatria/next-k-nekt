@@ -312,7 +312,7 @@ export const StudentsTable = ({
               Buat Data
             </Link>
           </Button>
-          <div className="bg-gray-200 p-1 flex items-center justify-center rounded-lg">
+          <div className="bg-gray-200 p-1 flex items-center justify-center rounded-lg dark:bg-gray-700">
             <StudentsPagination
               meta={meta}
               handlePageChange={handlePageChange}
@@ -320,32 +320,32 @@ export const StudentsTable = ({
           </div>
         </div>
       </div>
-      <Table className={`min-w-[${minWidth}px] shadow-md relative bg-white`}>
-        <TableHeader className="sticky shadow -top-[1px] bg-gray-100">
-          <TableRow className="uppercase">
-            <TableHead className="font-semibold">
+      <Table className={`min-w-[${minWidth}px] shadow-md relative bg-white dark:bg-gray-800`}>
+        <TableHeader className="sticky shadow -top-[1px] bg-gray-100 dark:bg-gray-700">
+          <TableRow className="uppercase text-gray-900 dark:text-gray-100">
+            <TableHead className="font-semibold text-gray-900 dark:text-gray-100">
               <span className="sr-only">Aksi</span>
             </TableHead>
-            <TableHead className="hidden sm:table-cell font-semibold">
+            <TableHead className="hidden sm:table-cell font-semibold text-gray-900 dark:text-gray-100">
               Id
             </TableHead>
-            <TableHead className="font-semibold">NIS</TableHead>
-            <TableHead className="font-semibold">Nama</TableHead>
-            <TableHead className="font-semibold">Kelas</TableHead>
-            <TableHead className="font-semibold">Total Poin</TableHead>
-            <TableHead className="font-semibold">Tahun Ajaran</TableHead>
+            <TableHead className="font-semibold text-gray-900 dark:text-gray-100">NIS</TableHead>
+            <TableHead className="font-semibold text-gray-900 dark:text-gray-100">Nama</TableHead>
+            <TableHead className="font-semibold text-gray-900 dark:text-gray-100">Kelas</TableHead>
+            <TableHead className="font-semibold text-gray-900 dark:text-gray-100">Total Poin</TableHead>
+            <TableHead className="font-semibold text-gray-900 dark:text-gray-100">Tahun Ajaran</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {data.length === 0 ? (
             <TableRow className="text-sm">
-              <TableCell colSpan={12} className="text-center h-24">
+              <TableCell colSpan={12} className="text-center h-24 text-gray-600 dark:text-gray-300">
                 Tidak ada data siswa.
               </TableCell>
             </TableRow>
           ) : (
             data.map((row) => (
-              <TableRow key={row.nis} className={`hover:bg-gray-100 text-sm`}>
+              <TableRow key={row.nis} className={`hover:bg-gray-100 dark:hover:bg-gray-700 text-sm text-gray-900 dark:text-gray-100`}>
                 <TableCell>
                   <DropdownMenu
                     open={openMenuNIS === row.nis}

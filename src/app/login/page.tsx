@@ -63,9 +63,9 @@ export default function LoginPage() {
 
         if (!loading) {
           if (res.user.role === "admin") {
-            router.push("/violations");
+            router.push("/dashboard");
           } else {
-            router.push("/violations");
+            router.push("/dashboard");
           }
         }
       } else {

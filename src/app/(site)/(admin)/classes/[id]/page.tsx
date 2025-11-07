@@ -34,7 +34,7 @@ export default function ClassDetailPage() {
   }, [id, loading]);
 
   return (
-    <div className="flex flex-col overflow-x-hidden gap-6">
+    <div className="flex flex-col overflow-x-hidden gap-6 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
       <BreadcrumbContainer
         link="/classes"
         prevPage="Kelas"

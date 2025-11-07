@@ -14,6 +14,8 @@ import {
 } from "@/components/ui/breadcrumb";
 import { formSchema, ViolationsForm } from "../../_components/form";
 import z from "zod";
+import { BreadcrumbContainer } from "@/components/ui/breadcrumbContainer";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function EditViolationPage() {
   const [initialData, setInitialData] = useState<z.infer<
@@ -58,19 +60,17 @@ export default function EditViolationPage() {
   };
 
   return (
-    <div className="flex flex-col overflow-x-hidden gap-6">
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/violations">Pelanggaran</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>Edit Data Pelanggaran {id}</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
-      <ViolationsForm onSubmit={updateHandler} initialData={initialData} />
+    <div className="flex flex-col overflow-x-hidden gap-6 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+      <BreadcrumbContainer
+        link="/violations"
+        prevPage="Pelanggaran"
+        currentPage={`Edit Pelanggaran - ID ${id}`}
+      />
+      <Card>
+        <CardContent>
+          <ViolationsForm onSubmit={updateHandler} initialData={initialData} />
+        </CardContent>
+      </Card>
     </div>
   );
 }
