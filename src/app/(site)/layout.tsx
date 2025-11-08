@@ -98,7 +98,7 @@ function DynamicHeader({
       </div>
       <div className="flex justify-between w-full items-center">
         <h1 className="text-lg flex font-semibold text-gray-900 dark:text-gray-100">
-          {title} - {yearPeriodDisplay}
+          {yearPeriodDisplay} - {title}
         </h1>
         <div className="flex items-center justify-between gap-4">
           <ThemeToggle />
