@@ -14,3 +14,13 @@ export const login = async ({ username, password }: User) => {
     throw error;
   }
 };
+
+export const getUserData = async () => {
+  try {
+    const response = await api.get("/auth/me");
+    return response.data;
+  } catch (error) {
+    if (process.env.NODE_ENV === "development") console.error(error);
+    throw error;
+  }
+};
