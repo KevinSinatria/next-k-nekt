@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { login } from "@/services/auth";
+import { getUserData, login } from "@/services/auth";
 import { useAuth } from "@/context/AuthContext";
 import {
   Select,
@@ -90,17 +90,39 @@ export default function LoginPage() {
     fetchYearPeriods();
   }, []);
 
-  useEffect(() => {
-    if (pathname === "/login") {
-      const token = localStorage.getItem("access_token");
-      if (token) {
-        const user = JSON.parse(String(localStorage.getItem("user")));
+  const getAuthUserData = async () => {
+    try {
+      const user = await getUserData();
+      if (user) {
         if (user.role === "admin") {
-          router.push("/violations");
+          router.push("/dashboard");
         } else {
-          router.push("/violations");
+          router.push("/dashboard");
         }
       }
+    } catch (error) {
+      console.error(error);
+      if (error instanceof AxiosError) {
+        if (error.response?.status === 401) {
+          return;
+        }
+      }
+      toast.error("Terjadi kesalahan server.");
+    }
+  };
+
+  useEffect(() => {
+    if (pathname === "/login") {
+      // const token = localStorage.getItem("access_token");
+      // if (token) {
+      //   const user = JSON.parse(String(localStorage.getItem("user")));
+      //   if (user.role === "admin") {
+      //     router.push("/dashboard");
+      //   } else {
+      //     router.push("/dashboard");
+      //   }
+      // }
+      getAuthUserData();
     }
   }, [pathname, router]);
 

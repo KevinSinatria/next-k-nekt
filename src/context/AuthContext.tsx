@@ -1,8 +1,11 @@
 "use client";
 
 import { api } from "@/lib/api";
+import { getUserData } from "@/services/auth";
 import { YearPeriodType } from "@/types/year-periods";
+import { AxiosError } from "axios";
 import { createContext, useContext, useState, useEffect } from "react";
+import { toast } from "sonner";
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -27,16 +30,37 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState(null);
   const [yearPeriods, setYearPeriods] = useState<YearPeriodType | null>(null);
 
+  const getAuthUserData = async () => {
+    try {
+      const user = await getUserData();
+      setUser(user.data);
+      localStorage.setItem("user", JSON.stringify(user.data));
+      if (user) {
+        if (user.role === "admin") {
+          setIsAuthenticated(true);
+        } else {
+          setIsAuthenticated(true);
+        }
+      }
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+      if (error instanceof AxiosError) {
+        if (error.response?.status === 401) {
+          setIsAuthenticated(false);
+          setLoading(false);
+        }
+      }
+      toast.error("Terjadi kesalahan server.");
+    }
+  };
+
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
     const year_period = JSON.parse(String(localStorage.getItem("year_period")));
-    const user = JSON.parse(String(localStorage.getItem("user")));
-    if (token) {
-      setIsAuthenticated(true);
-      setUser(user);
+    if (year_period) {
       setYearPeriods(year_period);
     }
-    setLoading(false);
+    getAuthUserData();
   }, []);
 
   useEffect(() => {
@@ -45,7 +69,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, [loading]);
 
   const refreshUser = async () => {
-    const user = await api.get("/users/me");
+    const user = await api.get("/auth/me");
     localStorage.setItem("user", JSON.stringify(user.data.data));
     setUser(user.data.data);
   };
