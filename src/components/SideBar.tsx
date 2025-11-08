@@ -13,6 +13,8 @@ import {
   DoorOpen,
   Users,
   User,
+  Tag,
+  ReceiptText,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -36,15 +38,31 @@ const iconMap = {
   "Kelola Iklan": <Clapperboard size={18} />,
   Kelas: <DoorOpen size={18} />,
   Siswa: <Users size={18} />,
+  "Kategori Pelanggaran": <Tag size={18} />,
+  "Tipe Pelanggaran": <ReceiptText size={18} />,
   Profil: <User size={18} />,
 };
 
 const navItems: NavItem[] = [
-  { name: "Beranda", path: "/dashboard", role: ["admin", "kesiswaan", "kedisiplinan"] },
+  {
+    name: "Beranda",
+    path: "/dashboard",
+    role: ["admin", "kesiswaan", "kedisiplinan"],
+  },
   { name: "Pelanggaran", path: "/violations", role: ["admin", "kesiswaan"] },
   { name: "Kelas", path: "/classes", role: ["admin"] },
   { name: "Siswa", path: "/students", role: ["admin"] },
-  { name: "Profil", path: "/profile", role: ["admin", "kesiswaan", "kedisiplinan"] },
+  {
+    name: "Kategori Pelanggaran",
+    path: "/violation-categories",
+    role: ["admin"],
+  },
+  { name: "Tipe Pelanggaran", path: "/violations-type", role: ["admin"] },
+  {
+    name: "Profil",
+    path: "/profile",
+    role: ["admin", "kesiswaan", "kedisiplinan"],
+  },
 ];
 
 const Sidebar = ({
@@ -68,7 +86,9 @@ const Sidebar = ({
   useEffect(() => {
     if (!isAccessible) return;
     const index = isAccessible.findIndex(
-      (item) => item.path === pathname || pathname.includes(item.path!)
+      (item) =>
+        item.path === pathname ||
+        (pathname.includes(item.path!) && pathname.endsWith(item.path!))
     );
     setActiveIndex(index);
   }, [pathname, isAccessible]);
@@ -102,8 +122,10 @@ const Sidebar = ({
   // ✅ Style variants
   const baseStyle = {
     flat: "bg-sky-600 dark:bg-gray-800",
-    gradient: "bg-gradient-to-b from-sky-600 via-sky-700 to-sky-800 dark:from-gray-800 dark:via-gray-900 dark:to-gray-950",
-    glass: "bg-sky-600/80 dark:bg-gray-800/80 backdrop-blur-xl border-r border-white/10 dark:border-gray-700/50",
+    gradient:
+      "bg-gradient-to-b from-sky-600 via-sky-700 to-sky-800 dark:from-gray-800 dark:via-gray-900 dark:to-gray-950",
+    glass:
+      "bg-sky-600/80 dark:bg-gray-800/80 backdrop-blur-xl border-r border-white/10 dark:border-gray-700/50",
   }[style];
 
   const SidebarContent = (
@@ -117,7 +139,9 @@ const Sidebar = ({
           alt="Logo"
           className="rounded-lg w-9 h-9"
         />
-        <span className="font-semibold text-lg tracking-wide text-white dark:text-gray-100">Kesiswaan</span>
+        <span className="font-semibold text-lg tracking-wide text-white dark:text-gray-100">
+          Kesiswaan
+        </span>
       </div>
 
       {/* Menu */}
@@ -131,7 +155,7 @@ const Sidebar = ({
                 router.push(item.path!);
                 if (window.innerWidth < 1024) closeSidebar();
               }}
-              className={`group relative flex items-center gap-3 w-full px-8 py-3 rounded-xl text-sm font-medium transition-all
+              className={`group whitespace-nowrap relative flex items-center gap-3 w-full px-8 py-3 rounded-xl text-sm font-medium transition-all
         ${
           isActive
             ? "bg-white/15 dark:bg-gray-700/50 text-white dark:text-gray-100 shadow"
@@ -169,7 +193,9 @@ const Sidebar = ({
           <LogOut className="w-5 h-5" />
           Logout
         </button> */}
-        <small className="text-white/70 dark:text-gray-400">&copy; {new Date().getFullYear()} Tefa RPL Nekat</small>
+        <small className="text-white/70 dark:text-gray-400">
+          &copy; {new Date().getFullYear()} Tefa RPL Nekat
+        </small>
       </div>
     </>
   );

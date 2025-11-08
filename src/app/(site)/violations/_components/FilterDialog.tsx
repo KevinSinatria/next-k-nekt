@@ -54,14 +54,31 @@ export const FilterDialog = ({
   const [categoryId, setCategoryId] = useState<string | undefined>();
   const [teacherId, setTeacherId] = useState<string | undefined>();
   const [status, setStatus] = useState<string | undefined>();
+  const [applied, setApplied] = useState(false);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <form>
         <DialogTrigger asChild>
-          <Button variant="outline">
-            <FilterIcon />
-            Filter
+          <Button
+            variant={
+              (timePreset || classId || categoryId || teacherId || status) &&
+              applied
+                ? "default"
+                : "outline"
+            }
+          >
+            {(timePreset || classId || categoryId || teacherId || status) &&
+            applied ? (
+              <FilterX className="mr-2 h-4 w-4" />
+            ) : (
+              <FilterIcon />
+            )}
+            Filter{" "}
+            {(timePreset || classId || categoryId || teacherId || status) &&
+            applied
+              ? "Diterapkan"
+              : "Data"}
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
@@ -177,6 +194,7 @@ export const FilterDialog = ({
                 });
                 setOpen(false);
                 toast.success("Filter direset");
+                setApplied(false);
               }}
             >
               <FilterX className="mr-2 h-4 w-4" />
@@ -206,6 +224,7 @@ export const FilterDialog = ({
                 };
                 onApply!(data);
                 setOpen(false);
+                setApplied(true);
               }}
             >
               Terapkan Filter
