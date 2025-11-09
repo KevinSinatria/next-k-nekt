@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, Moon, Sun } from "lucide-react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { getUserData, login } from "@/services/auth";
@@ -21,6 +21,7 @@ import {
 import { getAllYearPeriods, getYearPeriodById } from "@/services/year-periods";
 import { YearPeriodType } from "@/types/year-periods";
 import { AxiosError } from "axios";
+import { useTheme } from "next-themes";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -31,6 +32,7 @@ export default function LoginPage() {
   const router = useRouter();
   const pathname = usePathname();
   const { loading, setLoading, setIsAuthenticated } = useAuth();
+  const {setTheme, theme} = useTheme();
 
   const fetchYearPeriods = async () => {
     try {
@@ -127,15 +129,18 @@ export default function LoginPage() {
   }, [pathname, router]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-300 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-300 dark:bg-neutral-900 p-4">
+      <Button className="rounded-full absolute top-8 right-8" onClick={() => setTheme(theme === "light" ? "dark" : "light")}>
+        {theme === "light" ? <Moon /> : <Sun />}
+      </Button>
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.3 }}
-        className="w-full max-w-4xl bg-white rounded-md shadow-md flex flex-col md:flex-row overflow-hidden min-h-[300px] md:min-h-[500px]"
+        className="w-full max-w-4xl bg-white dark:bg-neutral-700 rounded-md shadow-md flex flex-col md:flex-row overflow-hidden min-h-[300px] md:min-h-[500px]"
       >
         {/* Kiri */}
-        <div className="bg-sky-600 rounded-b-[36px] md:rounded-none w-full md:w-1/2 p-6 flex flex-col justify-center items-center text-center">
+        <div className="bg-sky-600 dark:bg-neutral-800 rounded-b-[36px] md:rounded-none w-full md:w-1/2 p-6 flex flex-col justify-center items-center text-center">
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -192,7 +197,7 @@ export default function LoginPage() {
               visible: { opacity: 1, y: 0 },
             }}
             transition={{ duration: 0.5 }}
-            className="text-2xl font-semibold mb-6 text-center md:text-left"
+            className="text-2xl font-semibold mb-6 dark:text-white text-center md:text-left"
           >
             Login
           </motion.h1>
@@ -213,6 +218,7 @@ export default function LoginPage() {
               placeholder="Masukkan username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
+              className="dark:text-white"
               required
             />
           </motion.div>
@@ -232,6 +238,8 @@ export default function LoginPage() {
               type="password"
               value={password}
               placeholder="Masukkan password"
+              className="dark:text-white"
+
               onChange={(e) => setPassword(e.target.value)}
               required
             />
@@ -280,7 +288,7 @@ export default function LoginPage() {
               visible: { opacity: 1 },
             }}
             transition={{ duration: 0.4 }}
-            className="text-sm text-gray-500 text-center mt-4"
+            className="text-sm text-gray-500 text-center mt-4 dark:text-gray-400"
           >
             Akun ini hanya diberikan oleh pihak kesiswaan. Pastikan Anda sudah
             terdaftar.

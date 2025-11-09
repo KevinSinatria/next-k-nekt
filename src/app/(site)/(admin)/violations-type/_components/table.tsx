@@ -221,7 +221,7 @@ export const ViolationTypesTable = ({
               Buat Data
             </Link>
           </Button>
-          <div className="bg-gray-200 p-1 flex items-center justify-center rounded-lg dark:bg-gray-700">
+          <div className="bg-gray-200 p-1 flex items-center justify-center rounded-lg dark:bg-neutral-700">
             <ViolationTypesPagination
               meta={meta}
               handlePageChange={handlePageChange}
@@ -229,8 +229,8 @@ export const ViolationTypesTable = ({
           </div>
         </div>
       </div>
-      <Table className={`min-w-[${minWidth}px] shadow-md relative bg-white dark:bg-gray-800`}>
-        <TableHeader className="sticky shadow -top-[1px] bg-gray-100 dark:bg-gray-700">
+      <Table className={`min-w-[${minWidth}px] shadow-md relative bg-white dark:bg-neutral-800`}>
+        <TableHeader className="sticky shadow -top-[1px] bg-gray-100 dark:bg-neutral-700">
           <TableRow className="uppercase text-gray-900 dark:text-gray-100">
             <TableHead className="font-semibold text-gray-900 dark:text-gray-100">
               <span className="sr-only">Aksi</span>
@@ -253,7 +253,7 @@ export const ViolationTypesTable = ({
             </TableRow>
           ) : (
             data.map((row) => (
-              <TableRow key={row.id} className={`hover:bg-gray-100 dark:hover:bg-gray-700 text-sm text-gray-900 dark:text-gray-100`}>
+              <TableRow key={row.id} className={`hover:bg-gray-100 dark:hover:bg-neutral-700 text-sm text-gray-900 dark:text-gray-100`}>
                 <TableCell>
                   <DropdownMenu
                     open={openMenuId === row.id}
