@@ -138,7 +138,7 @@ export default function ViolationsPage() {
   }, [search, filter]);
 
   return (
-    <div className="flex flex-col h-full bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+    <div className="flex flex-col h-full bg-gray-50 dark:bg-neutral-900 text-gray-900 dark:text-gray-100">
       <ViolationsTable
         violations={violations}
         setViolations={setViolations}

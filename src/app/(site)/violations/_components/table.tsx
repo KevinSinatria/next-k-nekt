@@ -357,7 +357,7 @@ export const ViolationsTable = ({
               Buat Data
             </Link>
           </Button>
-          <div className="bg-gray-200 p-1 flex items-center justify-center rounded-lg dark:bg-gray-700">
+          <div className="bg-gray-200 p-1 flex items-center justify-center rounded-lg dark:bg-neutral-700">
             <ViolationsPagination
               meta={meta}
               handlePageChange={handlePageChange}
@@ -365,8 +365,8 @@ export const ViolationsTable = ({
           </div>
         </div>
       </div>
-      <Table className="min-w-[1200px] shadow-md relative bg-white dark:bg-gray-800">
-        <TableHeader className="sticky shadow -top-[1px] bg-gray-100 dark:bg-gray-700">
+      <Table className="min-w-[1200px] shadow-md relative bg-white dark:bg-neutral-800">
+        <TableHeader className="sticky shadow -top-[1px] bg-gray-100 dark:bg-neutral-700">
           <TableRow className="uppercase text-gray-900 dark:text-gray-100">
             {!loading && user!.role !== "kesiswaan" && (
               <TableHead className="font-semibold">
@@ -374,7 +374,7 @@ export const ViolationsTable = ({
               </TableHead>
             )}
             <TableHead className="hidden sm:table-cell font-semibold text-gray-900 dark:text-gray-100">
-              Id
+              #
             </TableHead>
             <TableHead className="font-semibold text-gray-900 dark:text-gray-100">
               NIS
@@ -409,13 +409,13 @@ export const ViolationsTable = ({
             <TableRow className="text-sm">
               <TableCell
                 colSpan={12}
-                className="text-center h-24 text-gray-600 dark:text-gray-300"
+                className="text-center h-24 text-gray-600 dark:text-neutral-300"
               >
                 Tidak ada data pelanggaran.
               </TableCell>
             </TableRow>
           ) : (
-            violations.map((violation) => (
+            violations.map((violation, index) => (
               <TableRow
                 key={violation.id}
                 className={`${
@@ -509,7 +509,7 @@ export const ViolationsTable = ({
                   </TableCell>
                 )}
                 <TableCell className="hidden font-medium sm:table-cell">
-                  {violation.id}
+                  {(meta.page - 1) * meta.limit + index + 1}
                 </TableCell>
                 <TableCell>{violation.nis}</TableCell>
                 <TableCell className="font-medium">{violation.name}</TableCell>

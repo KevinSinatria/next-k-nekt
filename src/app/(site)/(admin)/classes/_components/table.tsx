@@ -281,7 +281,7 @@ export const ClassesTable = ({
               Buat Data
             </Link>
           </Button>
-          <div className="bg-gray-200 p-1 flex items-center justify-center rounded-lg dark:bg-gray-700">
+          <div className="bg-gray-200 p-1 flex items-center justify-center rounded-lg dark:bg-neutral-700">
             <ClassesPagination
               meta={meta}
               handlePageChange={handlePageChange}
@@ -289,28 +289,38 @@ export const ClassesTable = ({
           </div>
         </div>
       </div>
-      <Table className={`min-w-[${minWidth}px] shadow-md relative bg-white dark:bg-gray-800`}>
-        <TableHeader className="sticky shadow -top-[1px] bg-gray-100 dark:bg-gray-700">
+      <Table
+        className={`min-w-[${minWidth}px] shadow-md relative bg-white dark:bg-neutral-800`}
+      >
+        <TableHeader className="sticky shadow -top-[1px] bg-gray-100 dark:bg-neutral-700 dark:hover:bg-neutral-700">
           <TableRow className="uppercase text-gray-900 dark:text-gray-100">
             <TableHead className="font-semibold text-gray-900 dark:text-gray-100">
               <span className="sr-only">Aksi</span>
             </TableHead>
             <TableHead className="hidden sm:table-cell font-semibold text-gray-900 dark:text-gray-100">
-              Id
+              #
             </TableHead>
-            <TableHead className="font-semibold text-gray-900 dark:text-gray-100">Kelas</TableHead>
+            <TableHead className="font-semibold text-gray-900 dark:text-gray-100">
+              Kelas
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {data.length === 0 ? (
             <TableRow className="text-sm">
-              <TableCell colSpan={12} className="text-center h-24 text-gray-600 dark:text-gray-300">
+              <TableCell
+                colSpan={12}
+                className="text-center h-24 text-gray-600 dark:text-gray-300"
+              >
                 Tidak ada data kelas.
               </TableCell>
             </TableRow>
           ) : (
-            data.map((row) => (
-              <TableRow key={row.id} className={`hover:bg-gray-100 dark:hover:bg-gray-700 text-sm text-gray-900 dark:text-gray-100`}>
+            data.map((row, index) => (
+              <TableRow
+                key={row.id}
+                className={`hover:bg-gray-100 dark:hover:bg-neutral-900 text-sm text-gray-900 dark:text-gray-100`}
+              >
                 <TableCell>
                   <DropdownMenu
                     open={openMenuId === row.id}
@@ -372,7 +382,7 @@ export const ClassesTable = ({
                   </DropdownMenu>
                 </TableCell>
                 <TableCell className="hidden font-medium sm:table-cell">
-                  {row.id}
+                  {(meta.page - 1) * meta.limit + index + 1}
                 </TableCell>
                 <TableCell>{row.class}</TableCell>
               </TableRow>

@@ -88,7 +88,7 @@ export const StudentsPromoteDialog = ({
     <Dialog open={open} onOpenChange={setOpen}>
       <form>
         <DialogTrigger asChild>
-          <Button variant="outline" disabled={selectedNISs.length === 0}>
+          <Button variant="outline" disabled={selectedNISs.length === 0} className="dark:bg-neutral-500">
             Naikkan kelas dari
             {selectedNISs.length ? ` ${selectedNISs.length} ` : " "}siswa
           </Button>
