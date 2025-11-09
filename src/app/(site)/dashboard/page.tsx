@@ -43,7 +43,7 @@ export default function DashboardPage() {
   const { cards, charts } = data;
 
   return (
-    <div className="p-4 md:p-6 space-y-8 overflow-hidden dark:text-gray-300">
+    <div className="relative p-4 md:p-6 space-y-8 overflow-hidden dark:text-neutral-300">
       <WelcomeSection userName={user?.fullname} />
 
       {/* Header */}

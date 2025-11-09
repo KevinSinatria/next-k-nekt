@@ -75,7 +75,7 @@ function DynamicHeader({
     }
   }, [yearPeriod, isLoading]);
   return (
-    <header className="sticky top-0 z-10 w-full flex items-center gap-8 bg-white dark:bg-gray-800 shadow-md px-4 py-2 border-b border-gray-200 dark:border-gray-700">
+    <header className="sticky top-0 z-10 w-full flex items-center gap-8 bg-white dark:bg-neutral-800 shadow-md px-4 py-3.5 border-b border-gray-200 dark:border-gray-700">
       <div className="lg:hidden flex items-center justify-center top-4 left-4 z-30">
         <button
           onClick={toggleSidebar}
@@ -102,7 +102,7 @@ function DynamicHeader({
         </h1>
         <div className="flex items-center justify-between gap-4">
           <ThemeToggle />
-          <DropdownMenu>
+          {/* <DropdownMenu>
             <DropdownMenuTrigger>
               <Avatar className="h-12 w-12 ring-0 outline-none">
                 <AvatarImage src="" alt={user?.fullname || "User"} />
@@ -141,7 +141,7 @@ function DynamicHeader({
                 Logout
               </DropdownMenuItem>
             </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu> */}
         </div>
       </div>
     </header>
@@ -187,7 +187,7 @@ export default function RootLayout({
               toggleSidebar={toggleSidebar}
               isLoading={loading}
             />
-            <div className="p-6 flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900">
+            <div className="p-6 flex-1 overflow-y-auto bg-gray-50 dark:bg-neutral-900">
               {children}
             </div>
             <Toaster richColors position="top-center" />

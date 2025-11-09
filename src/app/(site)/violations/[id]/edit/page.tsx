@@ -60,13 +60,13 @@ export default function EditViolationPage() {
   };
 
   return (
-    <div className="flex flex-col overflow-x-hidden gap-6 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+    <div className="flex flex-col overflow-x-hidden gap-6 bg-gray-50 dark:bg-neutral-900 text-gray-900 dark:text-gray-100">
       <BreadcrumbContainer
         link="/violations"
         prevPage="Pelanggaran"
         currentPage={`Edit Pelanggaran - ID ${id}`}
       />
-      <Card>
+      <Card className="dark:bg-neutral-800">
         <CardContent>
           <ViolationsForm onSubmit={updateHandler} initialData={initialData} />
         </CardContent>

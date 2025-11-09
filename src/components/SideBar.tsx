@@ -15,16 +15,35 @@ import {
   User,
   Tag,
   ReceiptText,
+  ChevronsUpDown,
+  ChevronDown,
+  ChevronRight,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import { Button } from "./ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import Link from "next/link";
 
 interface NavItem {
   name: keyof typeof iconMap;
   path?: string;
+  role?: string[];
+}
+
+interface NavGroup {
+  title: string;
+  items: NavItem[];
   role?: string[];
 }
 
@@ -43,32 +62,59 @@ const iconMap = {
   Profil: <User size={18} />,
 };
 
-const navItems: NavItem[] = [
+// Grouped navigation structure
+const navGroups: NavGroup[] = [
   {
-    name: "Beranda",
-    path: "/dashboard",
-    role: ["admin", "kesiswaan", "kedisiplinan"],
+    title: "", // No title for single items
+    items: [
+      {
+        name: "Beranda",
+        path: "/dashboard",
+        role: ["admin", "kesiswaan", "kedisiplinan"],
+      },
+    ],
   },
-  { name: "Pelanggaran", path: "/violations", role: ["admin", "kesiswaan"] },
-  { name: "Kelas", path: "/classes", role: ["admin"] },
-  { name: "Siswa", path: "/students", role: ["admin"] },
   {
-    name: "Kategori Pelanggaran",
-    path: "/violation-categories",
+    title: "MANAJEMEN SISWA",
+    items: [
+      {
+        name: "Pelanggaran",
+        path: "/violations",
+        role: ["admin", "kesiswaan"],
+      },
+      { name: "Kelas", path: "/classes", role: ["admin"] },
+      { name: "Siswa", path: "/students", role: ["admin"] },
+    ],
+    role: ["admin", "kesiswaan"],
+  },
+  {
+    title: "PENGATURAN",
+    items: [
+      {
+        name: "Kategori Pelanggaran",
+        path: "/violation-categories",
+        role: ["admin"],
+      },
+      { name: "Tipe Pelanggaran", path: "/violations-type", role: ["admin"] },
+    ],
     role: ["admin"],
   },
-  { name: "Tipe Pelanggaran", path: "/violations-type", role: ["admin"] },
   {
-    name: "Profil",
-    path: "/profile",
-    role: ["admin", "kesiswaan", "kedisiplinan"],
+    title: "", // No title for single items
+    items: [
+      {
+        name: "Profil",
+        path: "/profile",
+        role: ["admin", "kesiswaan", "kedisiplinan"],
+      },
+    ],
   },
 ];
 
 const Sidebar = ({
   isOpen,
   setIsOpen,
-  style = "gradient", // 🔥 pilih: "flat" | "gradient" | "glass"
+  style = "gradient",
 }: {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -77,28 +123,59 @@ const Sidebar = ({
   const pathname = usePathname();
   const router = useRouter();
   const { user, loading, setIsAuthenticated, isAuthenticated } = useAuth();
-  const [isAccessible, setIsAccessible] = useState<NavItem[] | null>([]);
+  const [accessibleGroups, setAccessibleGroups] = useState<NavGroup[]>([]);
+  const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
+  const [activeIndex, setActiveIndex] = useState<string>("");
 
-  const [activeIndex, setActiveIndex] = useState<number>(0);
+  const initials =
+    user?.username
+      ?.split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase() ||
+    user?.username?.[0].toUpperCase() ||
+    "U";
 
   const closeSidebar = () => setIsOpen(false);
 
   useEffect(() => {
-    if (!isAccessible) return;
-    const index = isAccessible.findIndex(
-      (item) =>
-        item.path === pathname ||
-        (pathname.includes(item.path!) && pathname.endsWith(item.path!))
-    );
-    setActiveIndex(index);
-  }, [pathname, isAccessible]);
+    if (!accessibleGroups.length) return;
+
+    // Find active item and expand its group
+    accessibleGroups.forEach((group) => {
+      group.items.forEach((item) => {
+        if (
+          item.path === pathname ||
+          (pathname.includes(item.path!) && pathname.endsWith(item.path!))
+        ) {
+          setActiveIndex(item.path!);
+          if (group.title) {
+            setExpandedGroups((prev) => new Set(prev).add(group.title));
+          }
+        }
+      });
+    });
+  }, [pathname, accessibleGroups]);
 
   useEffect(() => {
     if (loading) return;
     if (!isAuthenticated && !loading) {
       router.push("/login");
     }
-    setIsAccessible(navItems.filter((item) => item.role?.includes(user!.role)));
+
+    // Filter groups and items based on user role
+    const filtered = navGroups
+      .map((group) => ({
+        ...group,
+        items: group.items.filter((item) => item.role?.includes(user!.role)),
+      }))
+      .filter((group) => group.items.length > 0);
+
+    setAccessibleGroups(filtered);
+
+    // Expand all groups by default
+    const allTitles = filtered.map((g) => g.title).filter(Boolean);
+    setExpandedGroups(new Set(allTitles));
   }, [loading, user, isAuthenticated, router]);
 
   const handleLogout = async () => {
@@ -119,9 +196,20 @@ const Sidebar = ({
     }
   };
 
-  // ✅ Style variants
+  const toggleGroup = (title: string) => {
+    setExpandedGroups((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(title)) {
+        newSet.delete(title);
+      } else {
+        newSet.add(title);
+      }
+      return newSet;
+    });
+  };
+
   const baseStyle = {
-    flat: "bg-sky-600 dark:bg-gray-800",
+    flat: "bg-sky-600 dark:bg-neutral-800",
     gradient:
       "bg-gradient-to-b from-sky-600 via-sky-700 to-sky-800 dark:from-gray-800 dark:via-gray-900 dark:to-gray-950",
     glass:
@@ -130,8 +218,48 @@ const Sidebar = ({
 
   const SidebarContent = (
     <>
+      {/* Custom Scrollbar Styles */}
+      <style jsx global>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.2);
+          border-radius: 10px;
+          transition: background 0.2s ease;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: rgba(255, 255, 255, 0.35);
+        }
+
+        /* For Firefox */
+        .custom-scrollbar {
+          scrollbar-width: thin;
+          scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+        }
+
+        /* Dark mode adjustments */
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(156, 163, 175, 0.3);
+        }
+
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: rgba(156, 163, 175, 0.5);
+        }
+
+        .dark .custom-scrollbar {
+          scrollbar-color: rgba(156, 163, 175, 0.3) transparent;
+        }
+      `}</style>
+
       {/* Logo */}
-      <div className="flex items-center gap-3 px-6 py-5 border-b border-white/10 dark:border-gray-700/50">
+      <div className="flex items-center gap-3 px-6 py-3.5 border-b border-white/30 dark:border-gray-700/90">
         <Image
           src="/logo_nekat.webp"
           width={200}
@@ -145,58 +273,136 @@ const Sidebar = ({
       </div>
 
       {/* Menu */}
-      <nav className="flex-1 overflow-y-auto px-3 py-6 space-y-1">
-        {isAccessible!.map((item, index) => {
-          const isActive = index === activeIndex;
-          return (
-            <button
-              key={item.path}
-              onClick={() => {
-                router.push(item.path!);
-                if (window.innerWidth < 1024) closeSidebar();
-              }}
-              className={`group whitespace-nowrap relative flex items-center gap-3 w-full px-8 py-3 rounded-xl text-sm font-medium transition-all
-        ${
-          isActive
-            ? "bg-white/15 dark:bg-gray-700/50 text-white dark:text-gray-100 shadow"
-            : "text-white/70 dark:text-gray-300 hover:bg-white/10 dark:hover:bg-gray-700/30 hover:text-white dark:hover:text-gray-100"
-        }`}
-            >
-              <span className="text-lg">{iconMap[item.name]}</span>
-              {item.name}
-
-              {/* 🔥 Animated Indicator */}
-              <AnimatePresence>
-                {isActive && (
-                  <motion.span
-                    layoutId="activeIndicator"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                    className="absolute left-2 w-1.5 h-6 bg-white dark:bg-gray-100 rounded-full"
-                  />
+      <nav className="flex-1 overflow-y-auto px-3 py-6 space-y-4 custom-scrollbar">
+        {accessibleGroups.map((group, groupIndex) => (
+          <div key={`${group.title}-${groupIndex}`}>
+            {/* Group Title */}
+            {group.title && (
+              <button
+                onClick={() => toggleGroup(group.title)}
+                className="flex items-center justify-between w-full px-3 py-2 text-xs font-semibold text-white/60 dark:text-gray-400 hover:text-white/80 dark:hover:text-gray-300 transition-colors uppercase tracking-wider"
+              >
+                <span>{group.title}</span>
+                {expandedGroups.has(group.title) ? (
+                  <ChevronDown size={16} />
+                ) : (
+                  <ChevronRight size={16} />
                 )}
-              </AnimatePresence>
-            </button>
-          );
-        })}
+              </button>
+            )}
+
+            {/* Group Items */}
+            <AnimatePresence initial={false}>
+              {(!group.title || expandedGroups.has(group.title)) && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="space-y-1 overflow-hidden"
+                >
+                  {group.items.map((item) => {
+                    const isActive = activeIndex === item.path;
+                    return (
+                      <button
+                        key={item.path}
+                        onClick={() => {
+                          router.push(item.path!);
+                          if (window.innerWidth < 1024) closeSidebar();
+                        }}
+                        className={`group whitespace-nowrap relative flex items-center gap-3 w-full px-8 py-3 rounded-xl text-sm font-medium transition-all
+                          ${
+                            isActive
+                              ? "bg-white/15 dark:bg-gray-700/50 text-white dark:text-gray-100 shadow"
+                              : "text-white/70 dark:text-gray-300 hover:bg-white/10 dark:hover:bg-gray-700/30 hover:text-white dark:hover:text-gray-100"
+                          }`}
+                      >
+                        <span className="text-lg">{iconMap[item.name]}</span>
+                        {item.name}
+
+                        {/* Animated Indicator */}
+                        <AnimatePresence>
+                          {isActive && (
+                            <motion.span
+                              layoutId="activeIndicator"
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                              transition={{
+                                type: "spring",
+                                stiffness: 500,
+                                damping: 30,
+                              }}
+                              className="absolute left-2 w-1.5 h-6 bg-white dark:bg-gray-100 rounded-full"
+                            />
+                          )}
+                        </AnimatePresence>
+                      </button>
+                    );
+                  })}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        ))}
       </nav>
 
-      {/* Logout */}
-      <div className="px-6 py-5 border-t border-white/10 dark:border-gray-700/50">
-        {/* <button
-          onClick={handleLogout}
-          className="w-full flex items-center justify-center gap-2 px-4 py-3 
-            bg-white text-red-600 hover:text-red-100 rounded-xl text-sm font-semibold shadow-md hover:bg-red-500 cursor-pointer transition"
-        >
-          <LogOut className="w-5 h-5" />
-          Logout
-        </button> */}
-        <small className="text-white/70 dark:text-gray-400">
-          &copy; {new Date().getFullYear()} Tefa RPL Nekat
-        </small>
-      </div>
+      {/* Footer */}
+      <footer className="px-2 py-2 border-t border-white/30 dark:border-gray-700/90">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              className="w-full h-full bg-white dark:bg-neutral-800 dark:hover:bg-neutral-900 flex items-center justify-start gap-3 cursor-pointer"
+            >
+              <span className="rounded-sm w-8 h-8 flex items-center justify-center bg-blue-600 text-white text-lg">
+                {initials}
+              </span>
+              <div className="flex items-center flex-1 justify-between">
+                <div className="flex flex-col items-start justify-start">
+                  <span className="font-medium text-black dark:text-gray-100">
+                    {user?.username}
+                  </span>
+                  <span className="text-xs text-gray-600 dark:text-gray-400">
+                    Sebagai: {user?.role}
+                  </span>
+                </div>
+                <ChevronsUpDown />
+              </div>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="max-w-[80vw] w-60">
+            <DropdownMenuItem
+              className="flex items-center justify-start"
+              asChild
+            >
+              <Link href={"/profile"}>
+                <div className="w-12 flex flex-col items-center justify-center">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src="" alt={user?.fullname || "User"} />
+                    <AvatarFallback className="bg-blue-600 text-white text-xl">
+                      {initials}
+                    </AvatarFallback>
+                  </Avatar>
+                </div>
+                <div className="flex flex-col justify-center items-start">
+                  <span className="font-medium capitalize">
+                    {user?.username}
+                  </span>
+                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                    {user?.role}
+                  </span>
+                </div>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={handleLogout} variant="destructive">
+              <LogOut size={18} />
+              Logout
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </footer>
     </>
   );
 
@@ -206,7 +412,6 @@ const Sidebar = ({
       <AnimatePresence>
         {isOpen && (
           <>
-            {/* 🔥 Overlay klik buat close */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}

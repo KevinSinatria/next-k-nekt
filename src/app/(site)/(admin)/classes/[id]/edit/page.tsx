@@ -11,6 +11,7 @@ import { ClassesForm, formSchema } from "../../_components/form";
 import { StudentsTable } from "../_components/studentsTable";
 import z from "zod";
 import { useRouter } from "next/navigation";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function ClassDetailPage() {
   const [initialData, setInitialData] = useState<DetailClass | null>(null);
@@ -57,24 +58,28 @@ export default function ClassDetailPage() {
   };
 
   return (
-    <div className="flex flex-col overflow-x-hidden gap-6 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-      <BreadcrumbContainer
-        link="/classes"
-        prevPage="Kelas"
-        currentPage={`Edit Kelas - ${initialData?.class ?? ""}`}
-      />
-      <ClassesForm
-        onSubmit={updateHandler}
-        rootPath="/classes"
-        initialData={initialData}
-      />
+    <Card className="dark:bg-neutral-800">
+      <CardContent>
+        <div className="flex flex-col overflow-x-hidden gap-6 bg-gray-50 dark:bg-neutral-800 text-gray-900 dark:text-gray-100">
+          <BreadcrumbContainer
+            link="/classes"
+            prevPage="Kelas"
+            currentPage={`Edit Kelas - ${initialData?.class ?? ""}`}
+          />
+          <ClassesForm
+            onSubmit={updateHandler}
+            rootPath="/classes"
+            initialData={initialData}
+          />
 
-      <StudentsTable
-        data={initialData ?? { id: 0, class: "", students: [] }}
-        setData={(data) => setInitialData(data)}
-        rootPath={`/classes/${id}/edit`}
-        minWidth={480}
-      />
-    </div>
+          <StudentsTable
+            data={initialData ?? { id: 0, class: "", students: [] }}
+            setData={(data) => setInitialData(data)}
+            rootPath={`/classes/${id}/edit`}
+            minWidth={480}
+          />
+        </div>
+      </CardContent>
+    </Card>
   );
 }

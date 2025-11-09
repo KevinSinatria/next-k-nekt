@@ -49,7 +49,7 @@ export default function ViolationCategoriesPage() {
     }, []);
 
     return (
-        <div className="flex flex-col h-full bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+        <div className="flex flex-col h-full bg-gray-50 dark:bg-neutral-900 text-gray-900 dark:text-gray-100">
           <ViolationCategoriesTable
             data={categories}
             setCategories={setCategories}
