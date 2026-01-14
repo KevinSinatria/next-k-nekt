@@ -4,10 +4,14 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
 import { BreadcrumbContainer } from "@/components/ui/breadcrumbContainer";
-import { getViolationCategoryById, updateViolationCategoryById } from "@/services/violation-categories";
+import {
+  getViolationCategoryById,
+  updateViolationCategoryById,
+} from "@/services/violation-categories";
 import { ViolationCategoryForm, formSchema } from "../../_components/form";
 import z from "zod";
 import { useRouter } from "next/navigation";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function EditViolationCategoryPage() {
   const [initialData, setInitialData] = useState<{ name: string } | null>(null);
@@ -55,11 +59,15 @@ export default function EditViolationCategoryPage() {
         prevPage="Kategori Pelanggaran"
         currentPage={`Edit Kategori - ${initialData?.name ?? ""}`}
       />
-      <ViolationCategoryForm
-        onSubmit={updateHandler}
-        rootPath="/violation-categories"
-        initialData={initialData}
-      />
+      <Card>
+        <CardContent>
+          <ViolationCategoryForm
+            onSubmit={updateHandler}
+            rootPath="/violation-categories"
+            initialData={initialData}
+          />
+        </CardContent>
+      </Card>
     </div>
   );
 }

@@ -4,8 +4,9 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
 import { BreadcrumbContainer } from "@/components/ui/breadcrumbContainer";
-import { ViolationCategoryForm} from "../_components/form";
+import { ViolationCategoryForm } from "../_components/form";
 import { getViolationCategoryById } from "@/services/violation-categories";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function ViolationCategoryDetailPage() {
   const [initialData, setInitialData] = useState<{ name: string } | null>(null);
@@ -35,11 +36,15 @@ export default function ViolationCategoryDetailPage() {
         prevPage="Kategori Pelanggaran"
         currentPage={`Detail Kategori - ${initialData?.name ?? ""}`}
       />
-      <ViolationCategoryForm
-        rootPath="/violation-categories"
-        readOnly={true}
-        initialData={initialData}
-      />
+      <Card>
+        <CardContent>
+          <ViolationCategoryForm
+            rootPath="/violation-categories"
+            readOnly={true}
+            initialData={initialData}
+          />
+        </CardContent>
+      </Card>
     </div>
   );
 }

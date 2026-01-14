@@ -8,6 +8,7 @@ import { getStudentByNIS } from "@/services/students";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { StudentType } from "@/types/students";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function StudentDetailPage() {
   const { id, nis } = useParams();
@@ -39,12 +40,16 @@ export default function StudentDetailPage() {
         id={id as string}
         currentPage={`Detail Siswa - NIS: ${nis}`}
       />
-      <StudentForm
-        rootPath={`/classes/${id}/students/${nis}`}
-        idClass={Number(id)}
-        initialData={initialData}
-        readOnly={true}
-      />
+      <Card>
+        <CardContent>
+          <StudentForm
+            rootPath={`/classes/${id}/students/${nis}`}
+            idClass={Number(id)}
+            initialData={initialData}
+            readOnly={true}
+          />
+        </CardContent>
+      </Card>
     </div>
   );
 }

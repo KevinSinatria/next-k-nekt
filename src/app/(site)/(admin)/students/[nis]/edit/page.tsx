@@ -58,21 +58,21 @@ export default function EditStudentPage() {
   };
 
   return (
-    <Card className="bg-neutral-800">
-      <CardContent>
-        <div className="flex flex-col overflow-x-hidden gap-6 bg-gray-50 dark:bg-neutral-800 text-gray-900 dark:text-gray-100">
-          <BreadcrumbContainer
-            link="/students"
-            prevPage="Siswa"
-            currentPage={`Edit Siswa - ${initialData?.name ?? ""}`}
-          />
+    <div className="flex flex-col gap-8">
+      <BreadcrumbContainer
+        link="/students"
+        prevPage="Siswa"
+        currentPage={`Edit Siswa - ${initialData?.name ?? ""}`}
+      />
+      <Card className="dark:bg-neutral-800">
+        <CardContent>
           <StudentForm
             onSubmit={updateHandler}
             rootPath={`/students`}
             initialData={initialData}
           />
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </div>
   );
 }
