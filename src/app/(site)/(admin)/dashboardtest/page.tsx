@@ -57,7 +57,7 @@ export default function Beranda() {
   }, []);
 
   useEffect(() => {
-    if (!loading && user!.role !== "admin") {
+    if (!loading && user?.roles.some((role) => role === "admin")) {
       router.push("/login");
       toast.error("Anda belum login, silahkan login terlebih dahulu.");
     }
@@ -66,11 +66,15 @@ export default function Beranda() {
 
   return (
     <div className="p-6 space-y-6 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-      <h1 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Beranda Admin</h1>
+      <h1 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
+        Beranda Admin
+      </h1>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card className="p-4 flex flex-col justify-center items-center text-center shadow bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
-          <span className="text-sm text-gray-600 dark:text-gray-300">Total Siswa</span>
+          <span className="text-sm text-gray-600 dark:text-gray-300">
+            Total Siswa
+          </span>
           <CountUp
             from={0}
             to={jumlahSiswa}
@@ -92,7 +96,9 @@ export default function Beranda() {
         </Card>
 
         <Card className="p-4 flex flex-col justify-center items-center text-center shadow bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
-          <span className="text-sm text-gray-600 dark:text-gray-300">Total Kelas</span>
+          <span className="text-sm text-gray-600 dark:text-gray-300">
+            Total Kelas
+          </span>
           <CountUp
             from={0}
             to={jumlahKelas}
@@ -120,7 +126,9 @@ export default function Beranda() {
         <div className="md:col-span-2 flex flex-col gap-4">
           <div className="grid grid-cols-1 ">
             <Card className="p-4 h-70 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
-              <h2 className="font-semibold mb-2 text-gray-900 dark:text-gray-100">Pelanggaran per Kategori</h2>
+              <h2 className="font-semibold mb-2 text-gray-900 dark:text-gray-100">
+                Pelanggaran per Kategori
+              </h2>
               <PieChartt />
             </Card>
           </div>

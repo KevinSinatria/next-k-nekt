@@ -149,7 +149,9 @@ export const StudentsTable = ({
           )}
         </div>
       </div>
-      <Table className={`min-w-[${minWidth}px] shadow-md relative bg-white dark:bg-neutral-800`}>
+      <Table
+        className={`min-w-[${minWidth}px] shadow-md relative bg-white dark:bg-neutral-800`}
+      >
         <TableHeader className="sticky shadow -top-[1px] bg-gray-100 dark:bg-neutral-700">
           <TableRow className="uppercase">
             {!readOnly && (
@@ -163,7 +165,7 @@ export const StudentsTable = ({
               </TableHead>
             )}
             <TableHead className="hidden sm:table-cell font-semibold">
-              Id
+              #
             </TableHead>
             <TableHead className="font-semibold">NIS</TableHead>
             <TableHead className="font-semibold">Nama</TableHead>
@@ -180,7 +182,10 @@ export const StudentsTable = ({
             </TableRow>
           ) : (
             data.students.map((row, index) => (
-              <TableRow key={index} className={`hover:bg-gray-100 dark:hover:bg-neutral-900 dark:text-gray-300 dark:bg-neutral-800 text-sm`}>
+              <TableRow
+                key={index}
+                className={`hover:bg-gray-100 dark:hover:bg-neutral-900 dark:text-gray-300 dark:bg-neutral-800 text-sm`}
+              >
                 {!readOnly && (
                   <TableCell>
                     <Checkbox
@@ -265,7 +270,7 @@ export const StudentsTable = ({
                   </TableCell>
                 )}
                 <TableCell className="hidden font-medium sm:table-cell">
-                  {row.id}
+                  {index + 1}
                 </TableCell>
                 <TableCell>{row.nis}</TableCell>
                 <TableCell>{row.name}</TableCell>

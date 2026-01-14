@@ -80,7 +80,7 @@ const navGroups: NavGroup[] = [
       {
         name: "Pelanggaran",
         path: "/violations",
-        role: ["admin", "kesiswaan"],
+        role: ["admin", "kesiswaan", "kedisiplinan"],
       },
       { name: "Kelas", path: "/classes", role: ["admin"] },
       { name: "Siswa", path: "/students", role: ["admin"] },
@@ -167,7 +167,9 @@ const Sidebar = ({
     const filtered = navGroups
       .map((group) => ({
         ...group,
-        items: group.items.filter((item) => item.role?.includes(user!.role)),
+        items: group.items.filter((item) =>
+          user?.roles.some((r) => item.role?.includes(r))
+        ),
       }))
       .filter((group) => group.items.length > 0);
 
@@ -364,7 +366,7 @@ const Sidebar = ({
                     {user?.username}
                   </span>
                   <span className="text-xs text-gray-600 dark:text-gray-400">
-                    Sebagai: {user?.role}
+                    Sebagai: {user?.roles.join(", ")}
                   </span>
                 </div>
                 <ChevronsUpDown />
@@ -390,7 +392,7 @@ const Sidebar = ({
                     {user?.username}
                   </span>
                   <span className="text-sm text-gray-600 dark:text-gray-400">
-                    {user?.role}
+                    {user?.roles.join(", ")}
                   </span>
                 </div>
               </Link>

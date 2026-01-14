@@ -16,7 +16,14 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader2, CheckCircle2, AlertCircle, Eye, EyeOff } from "lucide-react";
+import {
+  Loader2,
+  CheckCircle2,
+  AlertCircle,
+  Eye,
+  EyeOff,
+  LogOut,
+} from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
@@ -167,8 +174,12 @@ export default function ProfilePage() {
   return (
     <div className="space-y-6 max-w-4xl bg-gray-50 dark:bg-neutral-900 text-gray-900 dark:text-gray-100">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-neutral-100">Profil Saya</h1>
-        <p className="text-gray-600 dark:text-neutral-300 mt-2">Kelola informasi akun Anda</p>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-neutral-100">
+          Profil Saya
+        </h1>
+        <p className="text-gray-600 dark:text-neutral-300 mt-2">
+          Kelola informasi akun Anda
+        </p>
       </div>
 
       {message && (
@@ -191,8 +202,12 @@ export default function ProfilePage() {
 
       <Card className="bg-white dark:bg-neutral-800 border-gray-200 dark:border-neutral-700">
         <CardHeader>
-          <CardTitle className="text-gray-900 dark:text-neutral-100">Informasi Akun</CardTitle>
-          <CardDescription className="text-gray-600 dark:text-neutral-300">Detail akun saat ini</CardDescription>
+          <CardTitle className="text-gray-900 dark:text-neutral-100">
+            Informasi Akun
+          </CardTitle>
+          <CardDescription className="text-gray-600 dark:text-neutral-300">
+            Detail akun saat ini
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex items-center gap-4 mb-6">
@@ -203,10 +218,14 @@ export default function ProfilePage() {
               </AvatarFallback>
             </Avatar>
             <div>
-              <p className="font-medium text-lg text-gray-900 dark:text-neutral-100">{user?.fullname || "User"}</p>
-              <p className="text-sm text-gray-600 dark:text-neutral-300">{user?.username}</p>
+              <p className="font-medium text-lg text-gray-900 dark:text-neutral-100">
+                {user?.fullname || "User"}
+              </p>
+              <p className="text-sm text-gray-600 dark:text-neutral-300">
+                {user?.username}
+              </p>
               <p className="text-xs text-gray-500 dark:text-neutral-400 capitalize mt-1">
-                Role: {user?.role}
+                Role: {user?.roles.join(", ")}
               </p>
             </div>
           </div>
@@ -222,8 +241,12 @@ export default function ProfilePage() {
         <TabsContent value="profile">
           <Card className="bg-white dark:bg-neutral-800 border-gray-200 dark:border-neutral-700">
             <CardHeader>
-              <CardTitle className="text-gray-900 dark:text-neutral-100">Edit Profil</CardTitle>
-              <CardDescription className="text-gray-600 dark:text-neutral-300">Perbarui informasi profil Anda</CardDescription>
+              <CardTitle className="text-gray-900 dark:text-neutral-100">
+                Edit Profil
+              </CardTitle>
+              <CardDescription className="text-gray-600 dark:text-neutral-300">
+                Perbarui informasi profil Anda
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <form className="space-y-4">
@@ -304,8 +327,12 @@ export default function ProfilePage() {
         <TabsContent value="password">
           <Card className="bg-white dark:bg-neutral-800 border-gray-200 dark:border-neutral-700">
             <CardHeader>
-              <CardTitle className="text-gray-900 dark:text-neutral-100">Ubah Password</CardTitle>
-              <CardDescription className="text-gray-600 dark:text-neutral-300">Perbarui password akun Anda</CardDescription>
+              <CardTitle className="text-gray-900 dark:text-neutral-100">
+                Ubah Password
+              </CardTitle>
+              <CardDescription className="text-gray-600 dark:text-neutral-300">
+                Perbarui password akun Anda
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <form className="space-y-4">
@@ -493,6 +520,19 @@ export default function ProfilePage() {
           </Card>
         </TabsContent>
       </Tabs>
+      <Card className="mt-6">
+        <CardContent className="flex justify-end">
+          <Button
+            className="flex gap-3"
+            type="button"
+            variant="destructive"
+            onClick={handleLogout}
+          >
+            <LogOut />
+            Logout
+          </Button>
+        </CardContent>
+      </Card>
     </div>
   );
 }
