@@ -15,14 +15,17 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Image from "next/image";
 import Link from "next/link";
-import { LogOut } from "lucide-react";
+import { Book, LogOut, User } from "lucide-react";
 import { api } from "@/lib/api";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { useTheme } from "next-themes";
 
 type DynamicHeaderProps = {
   toggleSidebar: () => void;
@@ -35,6 +38,11 @@ function DynamicHeader({
   isLoading,
 }: DynamicHeaderProps) {
   const { title } = useHeader();
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
+
   const [yearPeriodDisplay, setYearPeriodDisplay] = useState<
     string | null | JSX.Element
   >(null);
@@ -74,8 +82,9 @@ function DynamicHeader({
       setYearPeriodDisplay(<Skeleton className="w-32 h-6" />);
     }
   }, [yearPeriod, isLoading]);
+  if (!mounted) return null;
   return (
-    <header className="sticky top-0 z-10 w-full flex items-center gap-8 bg-white dark:bg-neutral-800 shadow-md px-4 py-3.5 border-b border-gray-200 dark:border-gray-700">
+    <header className="sticky top-0 z-10 w-full flex items-center gap-8 bg-white dark:bg-neutral-800 shadow-md px-4 py-3 border-b border-gray-200 dark:border-gray-700">
       <div className="lg:hidden flex items-center justify-center top-4 left-4 z-30">
         <button
           onClick={toggleSidebar}
@@ -101,47 +110,79 @@ function DynamicHeader({
           {yearPeriodDisplay} - {title}
         </h1>
         <div className="flex items-center justify-between gap-4">
-          <ThemeToggle />
-          {/* <DropdownMenu>
+          <DropdownMenu>
             <DropdownMenuTrigger>
-              <Avatar className="h-12 w-12 ring-0 outline-none">
+              <Avatar className="h-10 w-10 ring-1 ring-gray-200 dark:ring-gray-700 outline-none">
                 <AvatarImage src="" alt={user?.fullname || "User"} />
                 <AvatarFallback className="bg-blue-600 text-white text-xl">
                   {initials}
                 </AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="absolute right-0 max-w-[80vw] w-60">
-              <DropdownMenuItem
-                className="flex items-center justify-start"
-                asChild
-              >
-                <Link href={"/profile"}>
-                  <div className="w-12 flex flex-col items-center justify-center">
+            <DropdownMenuContent className="max-w-[80vw] w-60 absolute -right-4">
+              <div className="flex items-center justify-start p-2">
+                <div>
+                  {/* <div className="w-12 flex flex-col items-center justify-center">
                     <Avatar className="h-8 w-8">
                       <AvatarImage src="" alt={user?.fullname || "User"} />
                       <AvatarFallback className="bg-blue-600 text-white text-xl">
                         {initials}
                       </AvatarFallback>
                     </Avatar>
-                  </div>
+                  </div> */}
                   <div className="flex flex-col justify-center items-start">
-                    <span className="font-medium capitalize">
+                    <span className="text-sm font-medium capitalize">
                       {user?.username}
                     </span>
-                    <span className="text-sm text-gray-600 dark:text-gray-400">
-                      {user?.role}
+                    <span className="text-xs text-gray-600 dark:text-gray-400">
+                      Sebagai: {user?.roles.join(", ")}
                     </span>
                   </div>
+                </div>
+              </div>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <Link
+                  className="flex items-center gap-3"
+                  href="/profile"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <User size={18} />
+                  Profil
                 </Link>
               </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link
+                  className="flex items-center gap-3"
+                  href="https://docs-k-nekat.vercel.app/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Book size={18} />
+                  Panduan Penggunaan
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuLabel>Tema</DropdownMenuLabel>
+              <DropdownMenuRadioGroup value={theme} onValueChange={setTheme}>
+                <DropdownMenuRadioItem value="light">
+                  Terang
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="dark">
+                  Gelap
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="system">
+                  Sistem
+                </DropdownMenuRadioItem>
+              </DropdownMenuRadioGroup>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleLogout} variant="destructive">
                 <LogOut size={18} />
                 Logout
               </DropdownMenuItem>
             </DropdownMenuContent>
-          </DropdownMenu> */}
+          </DropdownMenu>
         </div>
       </div>
     </header>
