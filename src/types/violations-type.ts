@@ -3,6 +3,6 @@ export interface ViolationType {
   name: string;
   point: number;
   category_id: number;
-  category_name: string;
+  category: string;
   punishment: string;
 }

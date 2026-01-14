@@ -13,7 +13,7 @@ interface AuthContextType {
     id: string;
     username: string;
     fullname: string;
-    role: string;
+    roles: string[];
   } | null;
   setIsAuthenticated: (isAuthenticated: boolean) => void;
   loading: boolean;
@@ -50,6 +50,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           setIsAuthenticated(false);
           setLoading(false);
         }
+        return;
       }
       toast.error("Terjadi kesalahan server.");
     }

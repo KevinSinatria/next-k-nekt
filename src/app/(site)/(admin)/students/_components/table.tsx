@@ -320,32 +320,50 @@ export const StudentsTable = ({
           </div>
         </div>
       </div>
-      <Table className={`min-w-[${minWidth}px] shadow-md relative bg-white dark:bg-neutral-800`}>
+      <Table
+        className={`min-w-[${minWidth}px] shadow-md relative bg-white dark:bg-neutral-800`}
+      >
         <TableHeader className="sticky shadow -top-[1px] bg-gray-100 dark:bg-neutral-700">
           <TableRow className="uppercase text-gray-900 dark:text-gray-100">
             <TableHead className="font-semibold text-gray-900 dark:text-gray-100">
               <span className="sr-only">Aksi</span>
             </TableHead>
             <TableHead className="hidden sm:table-cell font-semibold text-gray-900 dark:text-gray-100">
-              Id
+              #
             </TableHead>
-            <TableHead className="font-semibold text-gray-900 dark:text-gray-100">NIS</TableHead>
-            <TableHead className="font-semibold text-gray-900 dark:text-gray-100">Nama</TableHead>
-            <TableHead className="font-semibold text-gray-900 dark:text-gray-100">Kelas</TableHead>
-            <TableHead className="font-semibold text-gray-900 dark:text-gray-100">Total Poin</TableHead>
-            <TableHead className="font-semibold text-gray-900 dark:text-gray-100">Tahun Ajaran</TableHead>
+            <TableHead className="font-semibold text-gray-900 dark:text-gray-100">
+              NIS
+            </TableHead>
+            <TableHead className="font-semibold text-gray-900 dark:text-gray-100">
+              Nama
+            </TableHead>
+            <TableHead className="font-semibold text-gray-900 dark:text-gray-100">
+              Kelas
+            </TableHead>
+            <TableHead className="font-semibold text-gray-900 dark:text-gray-100">
+              Total Poin
+            </TableHead>
+            <TableHead className="font-semibold text-gray-900 dark:text-gray-100">
+              Tahun Ajaran
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {data.length === 0 ? (
             <TableRow className="text-sm">
-              <TableCell colSpan={12} className="text-center h-24 text-gray-600 dark:text-gray-300">
+              <TableCell
+                colSpan={12}
+                className="text-center h-24 text-gray-600 dark:text-gray-300"
+              >
                 Tidak ada data siswa.
               </TableCell>
             </TableRow>
           ) : (
-            data.map((row) => (
-              <TableRow key={row.nis} className={`hover:bg-gray-100 dark:hover:bg-neutral-900 text-sm text-gray-900 dark:text-gray-100`}>
+            data.map((row, index) => (
+              <TableRow
+                key={row.nis}
+                className={`hover:bg-gray-100 dark:hover:bg-neutral-900 text-sm text-gray-900 dark:text-gray-100`}
+              >
                 <TableCell>
                   <DropdownMenu
                     open={openMenuNIS === row.nis}
@@ -410,7 +428,7 @@ export const StudentsTable = ({
                   </DropdownMenu>
                 </TableCell>
                 <TableCell className="hidden font-medium sm:table-cell">
-                  {row.id}
+                  {(meta.page - 1) * meta.limit + index + 1}
                 </TableCell>
                 <TableCell>{row.nis}</TableCell>
                 <TableCell>{row.name}</TableCell>
