@@ -35,6 +35,7 @@ import {
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Link from "next/link";
+import { Badge } from "./ui/badge";
 
 interface NavItem {
   name: keyof typeof iconMap;
@@ -352,7 +353,7 @@ const Sidebar = ({
 
       {/* Footer */}
       <footer className="px-2 py-2 border-t border-white/30 dark:border-gray-700/90">
-        <DropdownMenu>
+        {/* <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
@@ -415,7 +416,23 @@ const Sidebar = ({
               Logout
             </DropdownMenuItem>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu> */}
+        <p className="text-xs text-gray-300">
+          Dikembangkan oleh{" "}
+          <Badge
+            variant={"outline"}
+            className="text-white ml-2 font-semibold"
+            asChild
+          >
+            <Link
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://tefa.rplnekat.com/"
+            >
+              Tim TeFa RPL.
+            </Link>
+          </Badge>
+        </p>
       </footer>
     </>
   );
