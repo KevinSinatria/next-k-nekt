@@ -58,14 +58,14 @@ export default function ClassDetailPage() {
   };
 
   return (
-    <Card className="dark:bg-neutral-800">
-      <CardContent>
-        <div className="flex flex-col overflow-x-hidden gap-6 bg-gray-50 dark:bg-neutral-800 text-gray-900 dark:text-gray-100">
-          <BreadcrumbContainer
-            link="/classes"
-            prevPage="Kelas"
-            currentPage={`Edit Kelas - ${initialData?.class ?? ""}`}
-          />
+    <div className="flex flex-col overflow-x-hidden gap-6 bg-gray-50 dark:bg-neutral-900 text-gray-900 dark:text-gray-100">
+      <BreadcrumbContainer
+        link="/classes"
+        prevPage="Kelas"
+        currentPage={`Edit Kelas - ${initialData?.class ?? ""}`}
+      />
+      <Card className="dark:bg-neutral-800">
+        <CardContent>
           <ClassesForm
             onSubmit={updateHandler}
             rootPath="/classes"
@@ -78,8 +78,8 @@ export default function ClassDetailPage() {
             rootPath={`/classes/${id}/edit`}
             minWidth={480}
           />
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </div>
   );
 }

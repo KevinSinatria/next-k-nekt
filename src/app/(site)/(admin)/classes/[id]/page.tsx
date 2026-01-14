@@ -4,11 +4,12 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
 import { BreadcrumbContainer } from "@/components/ui/breadcrumbContainer";
-import { ClassesForm} from "../_components/form";
+import { ClassesForm } from "../_components/form";
 import { getClassById } from "@/services/classes";
 import { useAuth } from "@/context/AuthContext";
 import { StudentsTable } from "./_components/studentsTable";
 import { DetailClass } from "@/types/classes";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function ClassDetailPage() {
   const [initialData, setInitialData] = useState<DetailClass | null>(null);
@@ -30,7 +31,7 @@ export default function ClassDetailPage() {
     if (id && !loading) {
       initialDataRender(id as string);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, loading]);
 
   return (
@@ -40,11 +41,16 @@ export default function ClassDetailPage() {
         prevPage="Kelas"
         currentPage={`Detail Kelas -  ${initialData?.class ?? ""}`}
       />
-      <ClassesForm
-        rootPath="/classes"
-        readOnly={true}
-        initialData={initialData}
-      />
+
+      <Card>
+        <CardContent>
+          <ClassesForm
+            rootPath="/classes"
+            readOnly={true}
+            initialData={initialData}
+          />
+        </CardContent>
+      </Card>
 
       <StudentsTable
         data={initialData ?? { id: 0, class: "", students: [] }}

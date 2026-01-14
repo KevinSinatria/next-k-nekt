@@ -18,6 +18,7 @@ import {
   ChevronsUpDown,
   ChevronDown,
   ChevronRight,
+  Book,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -398,6 +399,17 @@ const Sidebar = ({
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <Link
+                className="flex items-center gap-3"
+                href="https://docs-k-nekat.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Book size={18} />
+                Panduan Penggunaan
+              </Link>
+            </DropdownMenuItem>
             <DropdownMenuItem onClick={handleLogout} variant="destructive">
               <LogOut size={18} />
               Logout

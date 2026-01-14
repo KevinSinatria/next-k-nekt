@@ -7,6 +7,7 @@ import { createStudent } from "@/services/students";
 import { AxiosError } from "axios";
 import { BreadcrumbContainer } from "@/components/ui/breadcrumbContainer";
 import { formSchema, StudentForm } from "../_components/form";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function CreateStudentPage() {
   const router = useRouter();
@@ -33,11 +34,16 @@ export default function CreateStudentPage() {
 
   return (
     <div className="flex flex-col overflow-x-hidden gap-6 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-      <BreadcrumbContainer link="/students" prevPage="Siswa" currentPage="Tambah Siswa" />
-      <StudentForm
-        rootPath={`/students`}
-        onSubmit={onSubmit}
+      <BreadcrumbContainer
+        link="/students"
+        prevPage="Siswa"
+        currentPage="Tambah Siswa"
       />
+      <Card>
+        <CardContent>
+          <StudentForm rootPath={`/students`} onSubmit={onSubmit} />
+        </CardContent>
+      </Card>
     </div>
   );
 }

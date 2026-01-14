@@ -6,6 +6,7 @@ import { BreadcrumbContainer } from "@/components/ui/breadcrumbContainer";
 import { ClassesForm, formSchema } from "../_components/form";
 import z from "zod";
 import { createClass } from "@/services/classes";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function CreateClassPage() {
   const router = useRouter();
@@ -34,7 +35,11 @@ export default function CreateClassPage() {
         prevPage="Kelas"
         currentPage="Tambah Kelas"
       />
-      <ClassesForm rootPath="/classes" onSubmit={onSubmit} />
+      <Card>
+        <CardContent>
+          <ClassesForm rootPath="/classes" onSubmit={onSubmit} />
+        </CardContent>
+      </Card>
     </div>
   );
 }

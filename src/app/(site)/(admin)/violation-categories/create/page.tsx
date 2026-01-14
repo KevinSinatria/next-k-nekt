@@ -6,6 +6,7 @@ import { BreadcrumbContainer } from "@/components/ui/breadcrumbContainer";
 import { ViolationCategoryForm, formSchema } from "../_components/form";
 import z from "zod";
 import { createViolationCategory } from "@/services/violation-categories";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function CreateViolationCategoryPage() {
   const router = useRouter();
@@ -34,7 +35,14 @@ export default function CreateViolationCategoryPage() {
         prevPage="Kategori Pelanggaran"
         currentPage="Tambah Kategori"
       />
-      <ViolationCategoryForm rootPath="/violation-categories" onSubmit={onSubmit} />
+      <Card>
+        <CardContent>
+          <ViolationCategoryForm
+            rootPath="/violation-categories"
+            onSubmit={onSubmit}
+          />
+        </CardContent>
+      </Card>
     </div>
   );
 }

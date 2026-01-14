@@ -35,21 +35,21 @@ export default function DetailStudentPage() {
   }, [nis, loading]);
 
   return (
-    <Card className="dark:bg-neutral-800">
-      <CardContent>
-        <div className="flex flex-col overflow-x-hidden gap-6 bg-gray-50 dark:bg-neutral-800 text-gray-900 dark:text-gray-100">
-          <BreadcrumbContainer
-            link="/students"
-            prevPage="Siswa"
-            currentPage="Detail Siswa"
-          />
+    <div className="flex flex-col gap-8">
+      <BreadcrumbContainer
+        link="/students"
+        prevPage="Siswa"
+        currentPage="Detail Siswa"
+      />
+      <Card className="dark:bg-neutral-800">
+        <CardContent>
           <StudentForm
             rootPath={`/students`}
             initialData={initialData}
             readOnly={true}
           />
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </div>
   );
 }

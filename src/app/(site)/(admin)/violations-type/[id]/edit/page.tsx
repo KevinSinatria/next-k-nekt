@@ -4,11 +4,15 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
 import { BreadcrumbContainer } from "@/components/ui/breadcrumbContainer";
-import { getViolationTypeById, updateViolationTypeById } from "@/services/violation-types";
+import {
+  getViolationTypeById,
+  updateViolationTypeById,
+} from "@/services/violation-types";
 import { ViolationTypeForm, formSchema } from "../../_components/form";
 import z from "zod";
 import { useRouter } from "next/navigation";
 import { ViolationType } from "@/types/violations-type";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function EditViolationTypePage() {
   const [initialData, setInitialData] = useState<ViolationType | null>(null);
@@ -59,11 +63,15 @@ export default function EditViolationTypePage() {
         prevPage="Tipe Pelanggaran"
         currentPage={`Edit Tipe Pelanggaran - ${initialData?.name ?? ""}`}
       />
-      <ViolationTypeForm
-        onSubmit={updateHandler}
-        rootPath="/violations-type"
-        initialData={initialData}
-      />
+      <Card>
+        <CardContent>
+          <ViolationTypeForm
+            onSubmit={updateHandler}
+            rootPath="/violations-type"
+            initialData={initialData}
+          />
+        </CardContent>
+      </Card>
     </div>
   );
 }
