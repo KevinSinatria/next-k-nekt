@@ -6,6 +6,7 @@ import { BreadcrumbContainer } from "@/components/ui/breadcrumbContainer";
 import { ViolationTypeForm, formSchema } from "../_components/form";
 import z from "zod";
 import { createViolationType } from "@/services/violation-types";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function CreateViolationTypePage() {
   const router = useRouter();
@@ -37,7 +38,11 @@ export default function CreateViolationTypePage() {
         prevPage="Tipe Pelanggaran"
         currentPage="Tambah Tipe Pelanggaran"
       />
-      <ViolationTypeForm rootPath="/violations-type" onSubmit={onSubmit} />
+      <Card>
+        <CardContent>
+          <ViolationTypeForm rootPath="/violations-type" onSubmit={onSubmit} />
+        </CardContent>
+      </Card>
     </div>
   );
 }

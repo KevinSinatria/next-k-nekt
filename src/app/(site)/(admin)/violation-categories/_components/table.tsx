@@ -47,7 +47,10 @@ import { AxiosError } from "axios";
 import { useAuth } from "@/context/AuthContext";
 import { Input } from "@/components/ui/input";
 import { ViolationCategory } from "./form";
-import { deleteViolationCategoryById, getAllViolationCategories } from "@/services/violation-categories";
+import {
+  deleteViolationCategoryById,
+  getAllViolationCategories,
+} from "@/services/violation-categories";
 import { usePagination } from "@/hooks/usePagination";
 
 type ViolationCategoriesTableProps = {
@@ -217,28 +220,38 @@ export const ViolationCategoriesTable = ({
           </Button>
         </div>
       </div>
-      <Table className={`min-w-[${minWidth}px] shadow-md relative bg-white dark:bg-neutral-800`}>
+      <Table
+        className={`min-w-[${minWidth}px] shadow-md relative bg-white dark:bg-neutral-800`}
+      >
         <TableHeader className="sticky shadow -top-[1px] bg-gray-100 dark:bg-neutral-700">
           <TableRow className="uppercase text-gray-900 dark:text-gray-100">
             <TableHead className="font-semibold text-gray-900 dark:text-gray-100">
               <span className="sr-only">Aksi</span>
             </TableHead>
             <TableHead className="hidden sm:table-cell font-semibold text-gray-900 dark:text-gray-100">
-              Id
+              #
             </TableHead>
-            <TableHead className="font-semibold text-gray-900 dark:text-gray-100">Nama Kategori</TableHead>
+            <TableHead className="font-semibold text-gray-900 dark:text-gray-100">
+              Nama Kategori
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {data.length === 0 ? (
             <TableRow className="text-sm">
-              <TableCell colSpan={12} className="text-center h-24 text-gray-600 dark:text-gray-300">
+              <TableCell
+                colSpan={12}
+                className="text-center h-24 text-gray-600 dark:text-gray-300"
+              >
                 Tidak ada data kategori pelanggaran.
               </TableCell>
             </TableRow>
           ) : (
-            data.map((row) => (
-              <TableRow key={row.id} className={`hover:bg-gray-100 dark:hover:bg-neutral-700 text-sm text-gray-900 dark:text-gray-100`}>
+            data.map((row, index) => (
+              <TableRow
+                key={row.id}
+                className={`hover:bg-gray-100 dark:hover:bg-neutral-700 text-sm text-gray-900 dark:text-gray-100`}
+              >
                 <TableCell>
                   <DropdownMenu
                     open={openMenuId === row.id}
@@ -300,7 +313,7 @@ export const ViolationCategoriesTable = ({
                   </DropdownMenu>
                 </TableCell>
                 <TableCell className="hidden font-medium sm:table-cell">
-                  {row.id}
+                  {index + 1}
                 </TableCell>
                 <TableCell>{row.name}</TableCell>
               </TableRow>

@@ -37,9 +37,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="id">
+    <html lang="id" suppressHydrationWarning>
       <body
-        suppressHydrationWarning
         className={`${plusJakartaSans.className} min-h-screen bg-gray-100 text-gray-900 antialiased`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>

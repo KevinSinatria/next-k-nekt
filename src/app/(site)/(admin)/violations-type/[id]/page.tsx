@@ -4,9 +4,10 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
 import { BreadcrumbContainer } from "@/components/ui/breadcrumbContainer";
-import { ViolationTypeForm} from "../_components/form";
+import { ViolationTypeForm } from "../_components/form";
 import { getViolationTypeById } from "@/services/violation-types";
 import { ViolationType } from "@/types/violations-type";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function ViolationTypeDetailPage() {
   const [initialData, setInitialData] = useState<ViolationType | null>(null);
@@ -36,11 +37,15 @@ export default function ViolationTypeDetailPage() {
         prevPage="Tipe Pelanggaran"
         currentPage={`Detail Tipe Pelanggaran - ${initialData?.name ?? ""}`}
       />
-      <ViolationTypeForm
-        rootPath="/violations-type"
-        readOnly={true}
-        initialData={initialData}
-      />
+      <Card>
+        <CardContent>
+          <ViolationTypeForm
+            rootPath="/violations-type"
+            readOnly={true}
+            initialData={initialData}
+          />
+        </CardContent>
+      </Card>
     </div>
   );
 }

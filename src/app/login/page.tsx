@@ -31,8 +31,13 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+  const [mounted, setMounted] = useState(false);
   const { loading, setLoading, setIsAuthenticated } = useAuth();
-  const {setTheme, theme} = useTheme();
+  const { setTheme, theme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const fetchYearPeriods = async () => {
     try {
@@ -64,11 +69,7 @@ export default function LoginPage() {
         setLoading(false);
 
         if (!loading) {
-          if (res.user.role === "admin") {
-            router.push("/dashboard");
-          } else {
-            router.push("/dashboard");
-          }
+          router.push("/dashboard");
         }
       } else {
         toast.error(res.message || "Login gagal!");
@@ -96,11 +97,7 @@ export default function LoginPage() {
     try {
       const user = await getUserData();
       if (user) {
-        if (user.role === "admin") {
-          router.push("/dashboard");
-        } else {
-          router.push("/dashboard");
-        }
+        router.push("/dashboard");
       }
     } catch (error) {
       console.error(error);
@@ -109,28 +106,23 @@ export default function LoginPage() {
           return;
         }
       }
-      toast.error("Terjadi kesalahan server.");
     }
   };
 
   useEffect(() => {
-    if (pathname === "/login") {
-      // const token = localStorage.getItem("access_token");
-      // if (token) {
-      //   const user = JSON.parse(String(localStorage.getItem("user")));
-      //   if (user.role === "admin") {
-      //     router.push("/dashboard");
-      //   } else {
-      //     router.push("/dashboard");
-      //   }
-      // }
+    if (pathname === "/login" && localStorage.getItem("access_token")) {
       getAuthUserData();
     }
   }, [pathname, router]);
 
+  if (!mounted) return null;
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-300 dark:bg-neutral-900 p-4">
-      <Button className="rounded-full absolute top-8 right-8" onClick={() => setTheme(theme === "light" ? "dark" : "light")}>
+      <Button
+        className="rounded-full absolute top-8 right-8"
+        onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+      >
         {theme === "light" ? <Moon /> : <Sun />}
       </Button>
       <motion.div
@@ -239,7 +231,6 @@ export default function LoginPage() {
               value={password}
               placeholder="Masukkan password"
               className="dark:text-white"
-
               onChange={(e) => setPassword(e.target.value)}
               required
             />

@@ -9,6 +9,7 @@ import { formSchema, StudentForm } from "../../../../_components/studentForm";
 import { StudentType } from "@/types/students";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function EditStudentPage() {
   const router = useRouter();
@@ -58,12 +59,16 @@ export default function EditStudentPage() {
   return (
     <div className="flex flex-col overflow-x-hidden gap-6">
       <BreadcrumbDetailClassAction id={id as string} currentPage="Edit Siswa" />
-      <StudentForm
-        idClass={Number(id)}
-        rootPath={`/classes/${id}`}
-        onSubmit={onSubmit}
-        initialData={initialData}
-      />
+      <Card>
+        <CardContent>
+          <StudentForm
+            idClass={Number(id)}
+            rootPath={`/classes/${id}`}
+            onSubmit={onSubmit}
+            initialData={initialData}
+          />
+        </CardContent>
+      </Card>
     </div>
   );
 }

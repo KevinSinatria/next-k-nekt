@@ -7,6 +7,7 @@ import { BreadcrumbDetailClassAction } from "../../../_components/BreadcrumbDeta
 import { createStudent } from "@/services/students";
 import { formSchema, StudentForm } from "../../../_components/studentForm";
 import { AxiosError } from "axios";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function CreateStudentPage() {
   const router = useRouter();
@@ -39,11 +40,15 @@ export default function CreateStudentPage() {
         id={id as string}
         currentPage="Tambah Siswa"
       />
-      <StudentForm
-        idClass={Number(id)}
-        rootPath={`/classes/${id}/edit`}
-        onSubmit={onSubmit}
-      />
+      <Card>
+        <CardContent>
+          <StudentForm
+            idClass={Number(id)}
+            rootPath={`/classes/${id}/edit`}
+            onSubmit={onSubmit}
+          />
+        </CardContent>
+      </Card>
     </div>
   );
 }

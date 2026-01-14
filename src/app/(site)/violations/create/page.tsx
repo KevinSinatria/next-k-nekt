@@ -4,6 +4,7 @@ import { createViolation } from "@/services/violations";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { BreadcrumbContainer } from "@/components/ui/breadcrumbContainer";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function CreateViolationPage() {
   const router = useRouter();
@@ -34,7 +35,11 @@ export default function CreateViolationPage() {
         prevPage="Pelanggaran"
         currentPage="Tambah Pelanggaran"
       />
-      <ViolationsForm onSubmit={onSubmit} />
+      <Card>
+        <CardContent>
+          <ViolationsForm onSubmit={onSubmit} />
+        </CardContent>
+      </Card>
     </div>
   );
 }
