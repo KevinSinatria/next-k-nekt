@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { StudentType } from "@/types/students";
 import { Card, CardContent } from "@/components/ui/card";
+import PointTable from "@/app/(site)/(admin)/students/_components/PointTable";
 
 export default function StudentDetailPage() {
   const { id, nis } = useParams();
@@ -48,6 +49,7 @@ export default function StudentDetailPage() {
             initialData={initialData}
             readOnly={true}
           />
+          <PointTable data={initialData?.audit_point ?? []} />
         </CardContent>
       </Card>
     </div>

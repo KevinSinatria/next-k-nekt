@@ -96,23 +96,39 @@ export function ViolationTypeForm({
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col gap-4 p-4"
-      >
-        <main className="flex flex-wrap gap-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        {/* Header */}
+        <div className="border-b pb-4 mb-4">
+          <h3 className="text-lg font-semibold text-gray-800">
+            {readOnly
+              ? "Detail Jenis Pelanggaran"
+              : initialData
+              ? "Edit Jenis Pelanggaran"
+              : "Tambah Jenis Pelanggaran"}
+          </h3>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
-              <FormItem className="max-w-[300px] w-full">
-                <FormLabel>Nama Pelanggaran</FormLabel>
+              <FormItem className="md:col-span-2">
+                <FormLabel className="text-gray-500">
+                  Nama Pelanggaran
+                </FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="Nama Pelanggaran"
-                    {...field}
-                    disabled={readOnly}
-                  />
+                  {readOnly ? (
+                    <p className="font-medium text-gray-900 py-2 border-b border-dashed">
+                      {field.value || "-"}
+                    </p>
+                  ) : (
+                    <Input
+                      placeholder="Nama Pelanggaran"
+                      {...field}
+                      disabled={readOnly}
+                    />
+                  )}
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -122,15 +138,21 @@ export function ViolationTypeForm({
             control={form.control}
             name="point"
             render={({ field }) => (
-              <FormItem className="max-w-[200px] w-full">
-                <FormLabel>Point</FormLabel>
+              <FormItem>
+                <FormLabel className="text-gray-500">Point</FormLabel>
                 <FormControl>
-                  <Input 
-                    type="number"
-                    placeholder="Point" 
-                    {...field} 
-                    disabled={readOnly} 
-                  />
+                  {readOnly ? (
+                    <p className="font-medium text-gray-900 py-2 border-b border-dashed">
+                      {field.value || "0"}
+                    </p>
+                  ) : (
+                    <Input
+                      type="number"
+                      placeholder="Point"
+                      {...field}
+                      disabled={readOnly}
+                    />
+                  )}
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -140,28 +162,36 @@ export function ViolationTypeForm({
             control={form.control}
             name="category_id"
             render={({ field }) => (
-              <FormItem className="max-w-[250px] w-full">
-                <FormLabel>Kategori</FormLabel>
+              <FormItem>
+                <FormLabel className="text-gray-500">Kategori</FormLabel>
                 <FormControl>
-                  <Select
-                    value={field.value ? String(field.value) : ""}
-                    onValueChange={(value) => field.onChange(Number(value))}
-                    disabled={readOnly}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Pilih Kategori" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {violationCategories.map((category) => (
-                        <SelectItem
-                          key={category.id}
-                          value={String(category.id)}
-                        >
-                          {category.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  {readOnly ? (
+                    <p className="font-medium text-gray-900 py-2 border-b border-dashed">
+                      {violationCategories.find(
+                        (c) => c.id === Number(field.value)
+                      )?.name || "-"}
+                    </p>
+                  ) : (
+                    <Select
+                      value={field.value ? String(field.value) : ""}
+                      onValueChange={(value) => field.onChange(Number(value))}
+                      disabled={readOnly}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Pilih Kategori" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {violationCategories.map((category) => (
+                          <SelectItem
+                            key={category.id}
+                            value={String(category.id)}
+                          >
+                            {category.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -171,40 +201,41 @@ export function ViolationTypeForm({
             control={form.control}
             name="punishment"
             render={({ field }) => (
-              <FormItem className="max-w-[300px] w-full">
-                <FormLabel>Hukuman</FormLabel>
+              <FormItem className="md:col-span-2">
+                <FormLabel className="text-gray-500">Hukuman</FormLabel>
                 <FormControl>
-                  <Input placeholder="Hukuman" {...field} disabled={readOnly} />
+                  {readOnly ? (
+                    <p className="font-medium text-gray-900 py-2 border-b border-dashed">
+                      {field.value || "-"}
+                    </p>
+                  ) : (
+                    <Input
+                      placeholder="Hukuman"
+                      {...field}
+                      disabled={readOnly}
+                    />
+                  )}
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-        </main>
-        <div className="flex gap-4">
+        </div>
+
+        {/* Tombol Action */}
+        <div className="flex justify-end gap-3 pt-6 border-t">
           {!readOnly ? (
             <>
-              <Button
-                className="bg-gray-400 hover:bg-gray-500 text-white"
-                onClick={() => onCancel()}
-                type="button"
-              >
+              <Button variant="outline" onClick={onCancel} type="button">
                 Batal
               </Button>
-              <Button
-                className="bg-sky-500 hover:bg-sky-600 text-white"
-                type="submit"
-              >
-                Simpan
+              <Button className="bg-sky-600 hover:bg-sky-700" type="submit">
+                Simpan Data
               </Button>
             </>
           ) : (
-            <Button
-              className="bg-sky-500 hover:bg-sky-600 text-white"
-              type="button"
-              onClick={() => onCancel()}
-            >
-              Kembali
+            <Button variant="secondary" onClick={onCancel} type="button">
+              Tutup Detail
             </Button>
           )}
         </div>

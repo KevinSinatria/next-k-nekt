@@ -35,7 +35,7 @@ export const getAllViolations = async ({
           "Content-Type": "application/json",
           Accept: "application/json",
         },
-      }
+      },
     );
     return violations.data;
   } catch (error) {
@@ -44,9 +44,13 @@ export const getAllViolations = async ({
   }
 };
 
-export const getAllViolationsWithoutPagination = async () => {
+export const getAllViolationsWithoutPagination = async ({
+  year_id,
+}: {
+  year_id: string;
+}) => {
   try {
-    const violations = await api.get(`/violations/all`, {
+    const violations = await api.get(`/violations/all?year_id=${year_id}`, {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -108,7 +112,7 @@ export const getViolationById = async (id: string) => {
 
 export const updateViolationById = async (
   id: string,
-  data: z.infer<typeof formSchema>
+  data: z.infer<typeof formSchema>,
 ) => {
   try {
     const response = await api.put(`/violations/${id}`, data, {
@@ -134,7 +138,7 @@ export const implementViolationById = async (id: string) => {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
-      }
+      },
     );
     return response.data;
   } catch (error) {
@@ -153,7 +157,7 @@ export const unimplementViolationById = async (id: string) => {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
-      }
+      },
     );
     return response.data;
   } catch (error) {

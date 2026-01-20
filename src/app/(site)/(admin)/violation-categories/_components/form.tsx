@@ -65,50 +65,58 @@ export function ViolationCategoryForm({
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col gap-4 p-4"
-      >
-        <main className="flex flex-wrap gap-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        {/* Header */}
+        <div className="border-b pb-4 mb-4">
+          <h3 className="text-lg font-semibold text-gray-800">
+            {readOnly
+              ? "Detail Data Kategori"
+              : initialData
+              ? "Edit Data Kategori"
+              : "Tambah Kategori Baru"}
+          </h3>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
-              <FormItem className="max-w-[300px] w-full">
-                <FormLabel>Nama Kategori</FormLabel>
+              <FormItem className="md:col-span-3">
+                <FormLabel className="text-gray-500">Nama Kategori</FormLabel>
                 <FormControl>
-                  <Input placeholder="Nama Kategori (Contoh: Kedisiplinan)" {...field} />
+                  {readOnly ? (
+                    <p className="font-medium text-gray-900 py-2 border-b border-dashed">
+                      {field.value || "-"}
+                    </p>
+                  ) : (
+                    <Input
+                      placeholder="Nama Kategori (Contoh: Kedisiplinan)"
+                      {...field}
+                      disabled={readOnly}
+                    />
+                  )}
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
-            disabled={readOnly}
           />
-        </main>
-        <div className="flex gap-4">
+        </div>
+
+        {/* Tombol Action */}
+        <div className="flex justify-end gap-3 pt-6 border-t">
           {!readOnly ? (
             <>
-              <Button
-                className="bg-gray-400 hover:bg-gray-500 text-white"
-                onClick={() => onCancel()}
-                type="button"
-              >
+              <Button variant="outline" onClick={onCancel} type="button">
                 Batal
               </Button>
-              <Button
-                className="bg-sky-500 hover:bg-sky-600 text-white"
-                type="submit"
-              >
-                Simpan
+              <Button className="bg-sky-600 hover:bg-sky-700" type="submit">
+                Simpan Data
               </Button>
             </>
           ) : (
-            <Button
-              className="bg-sky-500 hover:bg-sky-600 text-white"
-              type="button"
-              onClick={() => onCancel()}
-            >
-              Kembali
+            <Button variant="secondary" onClick={onCancel} type="button">
+              Tutup Detail
             </Button>
           )}
         </div>
