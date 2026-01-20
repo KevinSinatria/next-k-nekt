@@ -142,12 +142,7 @@ function DynamicHeader({
               </div>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
-                <Link
-                  className="flex items-center gap-3"
-                  href="/profile"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <Link className="flex items-center gap-3" href="/profile">
                   <User size={18} />
                   Profil
                 </Link>

@@ -129,228 +129,250 @@ export function ViolationsForm({
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-wrap gap-4"
-      >
-        <FormField
-          control={form.control}
-          name="nis"
-          render={({ field }) => (
-            <FormItem className="max-w-[200px] w-full">
-              <FormLabel>NIS</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="NIS"
-                  className="bg-white/0 cursor-not-allowed border-gray-200 dark:border-slate-800 focus-visible:ring-0 focus-visible:border-0"
-                  {...field}
-                  readOnly
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        {readOnly ? (
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        {/* Header */}
+        <div className="border-b pb-4 mb-4">
+          <h3 className="text-lg font-semibold text-gray-800">
+            {readOnly
+              ? "Detail Pelanggaran"
+              : initialData
+              ? "Edit Pelanggaran"
+              : "Catat Pelanggaran Baru"}
+          </h3>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <FormField
+            control={form.control}
+            name="nis"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-gray-500">NIS</FormLabel>
+                <FormControl>
+                  {readOnly ? (
+                    <p className="font-medium text-gray-900 py-2 border-b border-dashed">
+                      {field.value || "-"}
+                    </p>
+                  ) : (
+                    <Input
+                      placeholder="NIS"
+                      className="bg-gray-50 border-gray-200 text-gray-500"
+                      {...field}
+                      readOnly
+                    />
+                  )}
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
-              <FormItem className="max-w-[200px] w-full">
-                <FormLabel>Nama Siswa</FormLabel>
+              <FormItem className="md:col-span-2">
+                <FormLabel className="text-gray-500">Nama Siswa</FormLabel>
                 <FormControl>
-                  <Input
-                    className="disabled:text-black dark:disabled:text-white"
-                    placeholder="Nama Siswa"
-                    disabled
-                    {...field}
-                  />
+                  {readOnly ? (
+                    <p className="font-medium text-gray-900 py-2 border-b border-dashed">
+                      {field.value || "-"}
+                    </p>
+                  ) : (
+                    <ComboboxSearchStudent />
+                  )}
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-        ) : (
+
           <FormField
             control={form.control}
-            name="name"
+            name="class"
             render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>Nama Siswa</FormLabel>
+              <FormItem>
+                <FormLabel className="text-gray-500">Kelas</FormLabel>
                 <FormControl>
-                  <ComboboxSearchStudent />
+                  {readOnly ? (
+                    <p className="font-medium text-gray-900 py-2 border-b border-dashed">
+                      {field.value || "-"}
+                    </p>
+                  ) : (
+                    <Input
+                      className="bg-gray-50 border-gray-200 text-gray-500"
+                      placeholder="Kelas"
+                      readOnly
+                      {...field}
+                    />
+                  )}
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-        )}
-        <FormField
-          control={form.control}
-          name="class"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Kelas</FormLabel>
-              <FormControl>
-                <Input
-                  className="max-w-md w-full disabled:text-black dark:disabled:text-white"
-                  placeholder="Kelas"
-                  disabled
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        {readOnly ? (
+
           <FormField
             control={form.control}
             name="violation_name"
             render={({ field }) => (
-              <FormItem className="max-w-md w-full">
-                <FormLabel>Nama Pelanggaran</FormLabel>
+              <FormItem className="md:col-span-2">
+                <FormLabel className="text-gray-500">
+                  Nama Pelanggaran
+                </FormLabel>
                 <FormControl>
-                  <Input
-                    disabled
-                    placeholder="Nama Pelanggaran"
-                    className="disabled:text-black dark:disabled:text-white"
-                    {...field}
-                  />
+                  {readOnly ? (
+                    <p className="font-medium text-gray-900 py-2 border-b border-dashed">
+                      {field.value || "-"}
+                    </p>
+                  ) : (
+                    <ComboboxSearchViolation />
+                  )}
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-        ) : (
+
           <FormField
             control={form.control}
-            name="violation_name"
+            name="violation_category"
             render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>Nama Pelanggaran</FormLabel>
+              <FormItem>
+                <FormLabel className="text-gray-500">Kategori</FormLabel>
                 <FormControl>
-                  <ComboboxSearchViolation />
+                  {readOnly ? (
+                    <p className="font-medium text-gray-900 py-2 border-b border-dashed">
+                      {field.value || "-"}
+                    </p>
+                  ) : (
+                    <Input
+                      placeholder="Kategori"
+                      className="bg-gray-50 border-gray-200 text-gray-500"
+                      readOnly
+                      {...field}
+                    />
+                  )}
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-        )}
-        <FormField
-          control={form.control}
-          name="punishment_point"
-          render={({ field }) => (
-            <FormItem className="max-w-md w-full">
-              <FormLabel>Point Pelanggaran</FormLabel>
-              <FormControl>
-                <Input
-                  disabled
-                  placeholder="Point Pelanggaran"
-                  className="disabled:text-black dark:disabled:text-white"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="punishment"
-          render={({ field }) => (
-            <FormItem className="max-w-md w-full">
-              <FormLabel>Sanksi</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="Sanksi"
-                  className="disabled:text-black dark:disabled:text-white"
-                  disabled
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="violation_category"
-          render={({ field }) => (
-            <FormItem className="max-w-md w-full">
-              <FormLabel>Kategori Pelanggaran</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="Kategori Pelanggaran"
-                  className=" disabled:text-black dark:disabled:text-white"
-                  disabled
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem className="max-w-xl w-full">
-              <FormLabel>Deskripsi Pelanggaran</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Deskripsi"
-                  className="disabled:text-black"
-                  disabled={readOnly}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="implemented"
-          render={({ field }) => (
-            <FormItem className="max-w-md w-full">
-              <FormLabel>Dilaksanakan</FormLabel>
-              <FormControl>
-                <Switch
-                  className="checked:bg-blue-400"
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                  disabled={readOnly}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div className="flex gap-4">
+
+          <FormField
+            control={form.control}
+            name="punishment_point"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-gray-500">Point</FormLabel>
+                <FormControl>
+                  {readOnly ? (
+                    <p className="font-medium text-gray-900 py-2 border-b border-dashed">
+                      {field.value || "0"}
+                    </p>
+                  ) : (
+                    <Input
+                      readOnly
+                      placeholder="Point"
+                      className="bg-gray-50 border-gray-200 text-gray-500"
+                      {...field}
+                    />
+                  )}
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="punishment"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-gray-500">Sanksi</FormLabel>
+                <FormControl>
+                  {readOnly ? (
+                    <p className="font-medium text-gray-900 py-2 border-b border-dashed">
+                      {field.value || "-"}
+                    </p>
+                  ) : (
+                    <Input
+                      placeholder="Sanksi"
+                      className="bg-gray-50 border-gray-200 text-gray-500"
+                      readOnly
+                      {...field}
+                    />
+                  )}
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem className="md:col-span-3">
+                <FormLabel className="text-gray-500">
+                  Deskripsi Pelanggaran
+                </FormLabel>
+                <FormControl>
+                  {readOnly ? (
+                    <p className="font-medium text-gray-900 py-2 border-b border-dashed whitespace-pre-wrap">
+                      {field.value || "-"}
+                    </p>
+                  ) : (
+                    <Textarea
+                      placeholder="Deskripsi detail pelanggaran..."
+                      className="min-h-[100px]"
+                      {...field}
+                    />
+                  )}
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="implemented"
+            render={({ field }) => (
+              <FormItem className="md:col-span-3 flex flex-row items-center justify-between rounded-lg border p-4 shadow-sm">
+                <div className="space-y-0.5">
+                  <FormLabel className="text-base">Dilaksanakan</FormLabel>
+                  <p className="text-sm text-muted-foreground">
+                    Status pelaksanaan hukuman oleh siswa.
+                  </p>
+                </div>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                    disabled={readOnly}
+                    className="data-[state=checked]:bg-sky-600"
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+        </div>
+
+        {/* Tombol Action */}
+        <div className="flex justify-end gap-3 pt-6 border-t">
           {!readOnly ? (
             <>
-              <Button
-                className="bg-gray-400 hover:bg-gray-500 text-white"
-                onClick={() => onCancel()}
-                type="button"
-              >
+              <Button variant="outline" onClick={onCancel} type="button">
                 Batal
               </Button>
-              <Button
-                className="bg-sky-500 hover:bg-sky-600 text-white"
-                type="submit"
-              >
-                Simpan
+              <Button className="bg-sky-600 hover:bg-sky-700" type="submit">
+                Simpan Data
               </Button>
             </>
           ) : (
-            <Button
-              className="bg-sky-500 hover:bg-sky-600 text-white"
-              type="button"
-              onClick={() => onCancel()}
-            >
-              Kembali
+            <Button variant="secondary" onClick={onCancel} type="button">
+              Tutup Detail
             </Button>
           )}
         </div>

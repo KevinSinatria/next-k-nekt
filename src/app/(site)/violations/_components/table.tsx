@@ -156,7 +156,7 @@ export const ViolationsTable = ({
   >([]);
   const [teachers, setTeachers] = useState<TeacherType[]>([]);
   const [openFilterDialog, setOpenFilterDialog] = useState<boolean>(false);
-  const { user, loading } = useAuth();
+  const { user, loading, yearPeriods } = useAuth();
 
   const implementHandler = async (id: string) => {
     toast.loading("Loading...");
@@ -204,7 +204,7 @@ export const ViolationsTable = ({
     toast.loading("Loading...");
     const originalViolations = [...violations];
     const newViolations = violations.filter(
-      (violation) => violation.id !== parseInt(id)
+      (violation) => violation.id !== parseInt(id),
     );
     setViolations(newViolations);
 
@@ -239,14 +239,17 @@ export const ViolationsTable = ({
   };
 
   const exportHandler = async () => {
-    toast.loading("Mempersiapkan data untuk diekspor...");
+    toast.loading("Mempersiapkan data untuk diekspor...", { id: "export" });
 
     try {
       // Fetching all violations
-      const allViolations = await getAllViolationsWithoutPagination();
+      const allViolations = await getAllViolationsWithoutPagination({
+        year_id: String(yearPeriods!.id),
+      });
 
       if (allViolations.length === 0) {
         toast.info("Tidak ada data untuk diekspor.");
+        toast.dismiss("export");
         return;
       }
 
@@ -274,7 +277,7 @@ export const ViolationsTable = ({
 
           return acc;
         },
-        {}
+        {},
       );
 
       // Create a new Excel workbook
@@ -368,11 +371,14 @@ export const ViolationsTable = ({
       <Table className="min-w-[1200px] shadow-md relative bg-white dark:bg-neutral-800">
         <TableHeader className="sticky shadow -top-[1px] bg-gray-100 dark:bg-neutral-700">
           <TableRow className="uppercase text-gray-900 dark:text-gray-100">
-            {!loading && user!.roles.some((role) => role === "kesiswaan" || role === "admin") && (
-              <TableHead className="font-semibold">
-                <span className="sr-only">Aksi</span>
-              </TableHead>
-            )}
+            {!loading &&
+              user!.roles.some(
+                (role) => role === "kesiswaan" || role === "admin",
+              ) && (
+                <TableHead className="font-semibold">
+                  <span className="sr-only">Aksi</span>
+                </TableHead>
+              )}
             <TableHead className="hidden sm:table-cell font-semibold text-gray-900 dark:text-gray-100">
               #
             </TableHead>
@@ -428,7 +434,7 @@ export const ViolationsTable = ({
                   user!.roles.some(
                     (role) =>
                       role.toLowerCase() === "admin" ||
-                      role.toLowerCase() === "kedisiplinan"
+                      role.toLowerCase() === "kedisiplinan",
                   ) && (
                     <TableCell>
                       <DropdownMenu
