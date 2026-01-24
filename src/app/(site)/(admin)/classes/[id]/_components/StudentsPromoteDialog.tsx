@@ -54,7 +54,7 @@ export const StudentsPromoteDialog = ({
 
   const promoteStudentsHandler = async (
     data: PromoteStudentsPayload,
-    year_period_id: number
+    year_period_id: number,
   ) => {
     toast.loading("Loading...", { id: "promote-students" });
     try {
@@ -88,7 +88,11 @@ export const StudentsPromoteDialog = ({
     <Dialog open={open} onOpenChange={setOpen}>
       <form>
         <DialogTrigger asChild>
-          <Button variant="outline" disabled={selectedNISs.length === 0} className="dark:bg-neutral-500">
+          <Button
+            variant="outline"
+            disabled={selectedNISs.length === 0}
+            className="dark:bg-neutral-500"
+          >
             Naikkan kelas dari
             {selectedNISs.length ? ` ${selectedNISs.length} ` : " "}siswa
           </Button>
@@ -103,15 +107,17 @@ export const StudentsPromoteDialog = ({
           </DialogHeader>
           <div className="grid gap-4">
             <div className="grid gap-3">
-              <Label>Kelas sekarang</Label>
+              <Label className="text-muted-foreground">Kelas sekarang</Label>
               <Input
-                className="focus:outline-none focus-visible:ring-0 active:outline-none hover:cursor-not-allowed"
+                className="focus:outline-none focus-visible:ring-0 active:outline-none hover:cursor-not-allowed bg-muted/50 border-border text-foreground"
                 readOnly
                 value={className ?? ""}
               />
             </div>
             <div className="grid gap-3">
-              <Label htmlFor="name-1">Pilih kelas tujuan</Label>
+              <Label htmlFor="name-1" className="text-muted-foreground">
+                Pilih kelas tujuan
+              </Label>
               <Select
                 required
                 onValueChange={(value) => setClassId(Number(value))}
@@ -146,7 +152,7 @@ export const StudentsPromoteDialog = ({
                     nis: selectedNISs,
                     class_id_to: classId,
                   },
-                  Number(yearPeriods!.id)
+                  Number(yearPeriods!.id),
                 );
                 setSelectedNISs([]);
                 setOpen(false);

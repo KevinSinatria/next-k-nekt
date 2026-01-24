@@ -86,7 +86,7 @@ export function StudentForm({
       form.setValue("year_id", yearPeriods!.id);
       form.setValue("class_id", idClass);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialData, form, loading, idClass]);
 
   return (
@@ -101,12 +101,13 @@ export function StudentForm({
             name="nis"
             render={({ field }) => (
               <FormItem className="max-w-[200px] w-full">
-                <FormLabel>NIS</FormLabel>
+                <FormLabel className="text-muted-foreground">NIS</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Nomor Induk Siswa (Contoh: 12345)"
                     {...field}
                     disabled={readOnly}
+                    className="bg-transparent"
                   />
                 </FormControl>
                 <FormMessage />
@@ -118,11 +119,12 @@ export function StudentForm({
             name="name"
             render={({ field }) => (
               <FormItem className="max-w-[200px] w-full">
-                <FormLabel>Nama</FormLabel>
+                <FormLabel className="text-muted-foreground">Nama</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Nama Siswa (Contoh: John Doe)"
                     {...field}
+                    className="bg-transparent"
                   />
                 </FormControl>
                 <FormMessage />
@@ -135,12 +137,13 @@ export function StudentForm({
             name="point"
             render={({ field }) => (
               <FormItem className="max-w-[200px] w-full">
-                <FormLabel>Poin</FormLabel>
+                <FormLabel className="text-muted-foreground">Poin</FormLabel>
                 <FormControl>
                   <Input
                     type="number"
                     placeholder="Total Poin saat ini (Contoh: 10 (boleh berisi 0))"
                     {...field}
+                    className="bg-transparent"
                   />
                 </FormControl>
                 <FormMessage />

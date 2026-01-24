@@ -251,7 +251,9 @@ export default function ProfilePage() {
             <CardContent>
               <form className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="fullname">Nama Lengkap</Label>
+                  <Label htmlFor="fullname" className="text-muted-foreground">
+                    Nama Lengkap
+                  </Label>
                   <Input
                     id="fullname"
                     value={profileData.fullname}
@@ -265,7 +267,9 @@ export default function ProfilePage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="username">Username</Label>
+                  <Label htmlFor="username" className="text-muted-foreground">
+                    Username
+                  </Label>
                   <Input
                     id="username"
                     value={profileData.username}
@@ -337,7 +341,12 @@ export default function ProfilePage() {
             <CardContent>
               <form className="space-y-4">
                 <div className="space-y-2 relative">
-                  <Label htmlFor="oldPassword">Password Lama</Label>
+                  <Label
+                    htmlFor="oldPassword"
+                    className="text-muted-foreground"
+                  >
+                    Password Lama
+                  </Label>
                   <Input
                     id="oldPassword"
                     type={
@@ -369,8 +378,8 @@ export default function ProfilePage() {
                       onClick={() =>
                         setIsShowPassword(
                           isShowPassword.filter(
-                            (item) => item !== "oldPassword"
-                          )
+                            (item) => item !== "oldPassword",
+                          ),
                         )
                       }
                     />
@@ -378,7 +387,12 @@ export default function ProfilePage() {
                 </div>
 
                 <div className="space-y-2 relative">
-                  <Label htmlFor="newPassword">Password Baru</Label>
+                  <Label
+                    htmlFor="newPassword"
+                    className="text-muted-foreground"
+                  >
+                    Password Baru
+                  </Label>
                   <Input
                     id="newPassword"
                     type={
@@ -410,8 +424,8 @@ export default function ProfilePage() {
                       onClick={() =>
                         setIsShowPassword(
                           isShowPassword.filter(
-                            (item) => item !== "newPassword"
-                          )
+                            (item) => item !== "newPassword",
+                          ),
                         )
                       }
                     />
@@ -419,7 +433,10 @@ export default function ProfilePage() {
                 </div>
 
                 <div className="space-y-2 relative">
-                  <Label htmlFor="confirmPassword">
+                  <Label
+                    htmlFor="confirmPassword"
+                    className="text-muted-foreground"
+                  >
                     Konfirmasi Password Baru
                   </Label>
                   <Input
@@ -456,8 +473,8 @@ export default function ProfilePage() {
                       onClick={() =>
                         setIsShowPassword(
                           isShowPassword.filter(
-                            (item) => item !== "confirmPassword"
-                          )
+                            (item) => item !== "confirmPassword",
+                          ),
                         )
                       }
                     />
@@ -470,7 +487,7 @@ export default function ProfilePage() {
                     setIsOpenDialog(
                       isOpen
                         ? [...isOpenDialog, "password"]
-                        : isOpenDialog.filter((item) => item !== "password")
+                        : isOpenDialog.filter((item) => item !== "password"),
                     )
                   }
                 >
@@ -505,7 +522,7 @@ export default function ProfilePage() {
                       <AlertDialogAction
                         onClick={(e) => {
                           setIsOpenDialog(
-                            isOpenDialog.filter((item) => item !== "password")
+                            isOpenDialog.filter((item) => item !== "password"),
                           );
                           handlePasswordUpdate(e);
                         }}

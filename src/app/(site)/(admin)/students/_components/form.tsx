@@ -99,8 +99,8 @@ export function StudentForm({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         {/* Header Kecil biar lebih pro */}
-        <div className="border-b pb-4 mb-4">
-          <h3 className="text-lg font-semibold text-gray-800">
+        <div className="border-b border-border pb-4 mb-4">
+          <h3 className="text-lg font-semibold text-foreground dark:text-gray-100">
             {readOnly
               ? "Detail Data Siswa"
               : initialData
@@ -116,10 +116,10 @@ export function StudentForm({
             name="nis"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-gray-500">NIS</FormLabel>
+                <FormLabel className="text-muted-foreground">NIS</FormLabel>
                 <FormControl>
                   {readOnly ? (
-                    <p className="font-medium text-gray-900 py-2 border-b border-dashed">
+                    <p className="font-medium text-foreground py-2 border-b border-dashed border-border">
                       {field.value || "-"}
                     </p>
                   ) : (
@@ -137,10 +137,12 @@ export function StudentForm({
             name="name"
             render={({ field }) => (
               <FormItem className="md:col-span-2">
-                <FormLabel className="text-gray-500">Nama Lengkap</FormLabel>
+                <FormLabel className="text-muted-foreground">
+                  Nama Lengkap
+                </FormLabel>
                 <FormControl>
                   {readOnly ? (
-                    <p className="font-bold text-lg text-gray-900 py-1 border-b border-dashed">
+                    <p className="font-bold text-lg text-foreground py-1 border-b border-dashed border-border">
                       {field.value || "-"}
                     </p>
                   ) : (
@@ -158,10 +160,10 @@ export function StudentForm({
             name="class"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-gray-500">Kelas</FormLabel>
+                <FormLabel className="text-muted-foreground">Kelas</FormLabel>
                 <FormControl>
                   {readOnly ? (
-                    <p className="font-medium text-gray-900 py-2 border-b border-dashed">
+                    <p className="font-medium text-foreground py-2 border-b border-dashed border-border">
                       {field.value || "-"}
                     </p>
                   ) : (
@@ -179,20 +181,26 @@ export function StudentForm({
             name="point"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-gray-500">Akumulasi Poin</FormLabel>
+                <FormLabel className="text-muted-foreground">
+                  Akumulasi Poin
+                </FormLabel>
                 <FormControl>
                   <div className="flex items-center gap-3 py-1">
                     {!readOnly && (
-                      <Input type="number" className="w-24" {...field} />
+                      <Input
+                        type="number"
+                        className="w-24 bg-transparent"
+                        {...field}
+                      />
                     )}
                     <Badge
                       variant="outline"
                       className={`px-4 py-1 text-sm font-bold rounded-full ${
                         Number(field.value) > 40
-                          ? "bg-red-50 border-red-200 text-red-600"
+                          ? "bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800 text-red-600 dark:text-red-400"
                           : Number(field.value) > 10
-                            ? "bg-amber-50 border-amber-200 text-amber-600"
-                            : "bg-green-50 border-green-200 text-green-600"
+                            ? "bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800 text-amber-600 dark:text-amber-400"
+                            : "bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800 text-green-600 dark:text-green-400"
                       }`}
                     >
                       {field.value} Poin
@@ -206,7 +214,7 @@ export function StudentForm({
         </div>
 
         {/* Tombol Action */}
-        <div className="flex justify-end gap-3 pt-6 border-t">
+        <div className="flex justify-end gap-3 pt-6 border-t border-border">
           {!readOnly && (
             <>
               <Button variant="outline" onClick={onCancel} type="button">

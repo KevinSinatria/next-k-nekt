@@ -98,13 +98,13 @@ export function ViolationTypeForm({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         {/* Header */}
-        <div className="border-b pb-4 mb-4">
-          <h3 className="text-lg font-semibold text-gray-800">
+        <div className="border-b border-border pb-4 mb-4">
+          <h3 className="text-lg font-semibold text-foreground dark:text-gray-100">
             {readOnly
               ? "Detail Jenis Pelanggaran"
               : initialData
-              ? "Edit Jenis Pelanggaran"
-              : "Tambah Jenis Pelanggaran"}
+                ? "Edit Jenis Pelanggaran"
+                : "Tambah Jenis Pelanggaran"}
           </h3>
         </div>
 
@@ -114,12 +114,12 @@ export function ViolationTypeForm({
             name="name"
             render={({ field }) => (
               <FormItem className="md:col-span-2">
-                <FormLabel className="text-gray-500">
+                <FormLabel className="text-muted-foreground">
                   Nama Pelanggaran
                 </FormLabel>
                 <FormControl>
                   {readOnly ? (
-                    <p className="font-medium text-gray-900 py-2 border-b border-dashed">
+                    <p className="font-medium text-foreground py-2 border-b border-dashed border-border">
                       {field.value || "-"}
                     </p>
                   ) : (
@@ -139,10 +139,10 @@ export function ViolationTypeForm({
             name="point"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-gray-500">Point</FormLabel>
+                <FormLabel className="text-muted-foreground">Point</FormLabel>
                 <FormControl>
                   {readOnly ? (
-                    <p className="font-medium text-gray-900 py-2 border-b border-dashed">
+                    <p className="font-medium text-foreground py-2 border-b border-dashed border-border">
                       {field.value || "0"}
                     </p>
                   ) : (
@@ -163,12 +163,14 @@ export function ViolationTypeForm({
             name="category_id"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-gray-500">Kategori</FormLabel>
+                <FormLabel className="text-muted-foreground">
+                  Kategori
+                </FormLabel>
                 <FormControl>
                   {readOnly ? (
-                    <p className="font-medium text-gray-900 py-2 border-b border-dashed">
+                    <p className="font-medium text-foreground py-2 border-b border-dashed border-border">
                       {violationCategories.find(
-                        (c) => c.id === Number(field.value)
+                        (c) => c.id === Number(field.value),
                       )?.name || "-"}
                     </p>
                   ) : (
@@ -202,10 +204,10 @@ export function ViolationTypeForm({
             name="punishment"
             render={({ field }) => (
               <FormItem className="md:col-span-2">
-                <FormLabel className="text-gray-500">Hukuman</FormLabel>
+                <FormLabel className="text-muted-foreground">Hukuman</FormLabel>
                 <FormControl>
                   {readOnly ? (
-                    <p className="font-medium text-gray-900 py-2 border-b border-dashed">
+                    <p className="font-medium text-foreground py-2 border-b border-dashed border-border">
                       {field.value || "-"}
                     </p>
                   ) : (
@@ -223,7 +225,7 @@ export function ViolationTypeForm({
         </div>
 
         {/* Tombol Action */}
-        <div className="flex justify-end gap-3 pt-6 border-t">
+        <div className="flex justify-end gap-3 pt-6 border-t border-border">
           {!readOnly ? (
             <>
               <Button variant="outline" onClick={onCancel} type="button">
