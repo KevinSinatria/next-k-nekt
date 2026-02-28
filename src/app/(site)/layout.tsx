@@ -84,14 +84,14 @@ function DynamicHeader({
   }, [yearPeriod, isLoading]);
   if (!mounted) return null;
   return (
-    <header className="sticky top-0 z-10 w-full flex items-center gap-8 bg-white dark:bg-neutral-800 shadow-md px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-      <div className="lg:hidden flex items-center justify-center top-4 left-4 z-30">
+    <header className="sticky top-0 z-10 w-full flex items-center justify-between gap-4 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md px-6 py-2.5 shadow-sm border-b border-gray-100/50 dark:border-gray-800/50 transition-all duration-300">
+      <div className="lg:hidden flex items-center z-30">
         <button
           onClick={toggleSidebar}
-          className="text-gray-900 dark:text-gray-100 focus:outline-none"
+          className="text-gray-900 dark:text-gray-100 focus:outline-none hover:bg-gray-100 border border-gray-300 bg-gray-50 dark:bg-gray-900 active:scale-95 dark:border-gray-800 dark:hover:bg-gray-800 p-2 rounded-md transition-colors"
         >
           <svg
-            className="w-8 h-8"
+            className="w-6 h-6"
             fill="none"
             stroke="currentColor"
             strokeWidth="2"
@@ -105,75 +105,96 @@ function DynamicHeader({
           </svg>
         </button>
       </div>
+
       <div className="flex justify-between w-full items-center">
-        <h1 className="text-lg flex font-semibold text-gray-900 dark:text-gray-100">
-          {yearPeriodDisplay} - {title}
-        </h1>
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-3">
+          <div className="flex items-center gap-2">
+            {isLoading ? (
+              <Skeleton className="w-24 h-6 rounded-md" />
+            ) : (
+              <span className="px-3 py-1 rounded-full text-xs font-bold tracking-wide bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-300 ring-1 ring-blue-100 dark:ring-blue-800">
+                {yearPeriodDisplay}
+              </span>
+            )}
+          </div>
+          <h1 className="text-lg md:text-xl font-semibold text-gray-800 dark:text-gray-100 tracking-tight">
+            {title}
+          </h1>
+        </div>
+
+        <div className="flex items-center gap-4">
           <DropdownMenu>
-            <DropdownMenuTrigger>
-              <Avatar className="h-10 w-10 ring-1 ring-gray-200 dark:ring-gray-700 outline-none">
-                <AvatarImage src="" alt={user?.fullname || "User"} />
-                <AvatarFallback className="bg-blue-600 text-white text-xl">
-                  {initials}
-                </AvatarFallback>
-              </Avatar>
+            <DropdownMenuTrigger className="focus:outline-none">
+              <div className="flex items-center gap-3 px-2.5 border border-gray-100 dark:border-gray-800 py-1 rounded-full bg-gray-50 dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800/50 transition-all cursor-pointer group">
+                <div className="hidden md:flex flex-col items-end mr-1">
+                  <span className="text-sm font-semibold text-gray-700 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">
+                    {user?.username}
+                  </span>
+                </div>
+                <Avatar className="h-9 w-9 ring-2 ring-white dark:ring-gray-800 shadow-sm group-hover:scale-105 transition-transform">
+                  <AvatarImage src="" alt={user?.fullname || "User"} />
+                  <AvatarFallback className="bg-gradient-to-br from-blue-500 to-indigo-600 text-white text-sm font-medium">
+                    {initials}
+                  </AvatarFallback>
+                </Avatar>
+              </div>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="max-w-[80vw] w-60 absolute -right-4">
-              <div className="flex items-center justify-start p-2">
-                <div>
-                  {/* <div className="w-12 flex flex-col items-center justify-center">
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage src="" alt={user?.fullname || "User"} />
-                      <AvatarFallback className="bg-blue-600 text-white text-xl">
-                        {initials}
-                      </AvatarFallback>
-                    </Avatar>
-                  </div> */}
-                  <div className="flex flex-col justify-center items-start">
-                    <span className="text-sm font-medium capitalize">
-                      {user?.username}
-                    </span>
-                    <span className="text-xs text-gray-600 dark:text-gray-400">
-                      Sebagai: {user?.roles.join(", ")}
-                    </span>
-                  </div>
+            <DropdownMenuContent className="w-56 mt-2" align="end" forceMount>
+              <div className="flex items-center justify-start gap-2 p-2">
+                <div className="flex flex-col space-y-1 leading-none">
+                  {user?.fullname && (
+                    <p className="font-medium">{user.fullname}</p>
+                  )}
+                  <p className="w-[200px] truncate text-xs text-muted-foreground">
+                    {user?.roles.join(", ")}
+                  </p>
                 </div>
               </div>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <Link className="flex items-center gap-3" href="/profile">
-                  <User size={18} />
-                  Profil
+              <DropdownMenuItem className="cursor-pointer">
+                <Link
+                  className="flex items-center gap-2 w-full"
+                  href="/profile"
+                >
+                  <User size={16} />
+                  <span>Profil</span>
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer">
                 <Link
-                  className="flex items-center gap-3"
+                  className="flex items-center gap-2 w-full"
                   href="https://docs-k-nekat.vercel.app/"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <Book size={18} />
-                  Panduan Penggunaan
+                  <Book size={16} />
+                  <span>Panduan</span>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuLabel>Tema</DropdownMenuLabel>
+              <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">
+                Tema
+              </DropdownMenuLabel>
               <DropdownMenuRadioGroup value={theme} onValueChange={setTheme}>
-                <DropdownMenuRadioItem value="light">
+                <DropdownMenuRadioItem value="light" className="cursor-pointer">
                   Terang
                 </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="dark">
+                <DropdownMenuRadioItem value="dark" className="cursor-pointer">
                   Gelap
                 </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="system">
+                <DropdownMenuRadioItem
+                  value="system"
+                  className="cursor-pointer"
+                >
                   Sistem
                 </DropdownMenuRadioItem>
               </DropdownMenuRadioGroup>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleLogout} variant="destructive">
-                <LogOut size={18} />
+              <DropdownMenuItem
+                onClick={handleLogout}
+                className="text-red-600 dark:text-red-400 focus:text-red-600 focus:bg-red-50 dark:focus:bg-red-900/10 cursor-pointer"
+              >
+                <LogOut size={16} className="mr-2" />
                 Logout
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -210,7 +231,7 @@ export default function RootLayout({
       <HeaderProvider>
         <div
           suppressHydrationWarning
-          className="flex h-screen bg-gray-50 dark:bg-gray-900 text-gray-950 dark:text-gray-100"
+          className="flex h-[100dvh] bg-gray-50 dark:bg-gray-900 text-gray-950 dark:text-gray-100"
         >
           <Sidebar
             isOpen={isSidebarOpen}
