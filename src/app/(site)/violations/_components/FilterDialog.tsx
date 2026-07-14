@@ -90,7 +90,9 @@ export const FilterDialog = ({
           </DialogHeader>
           <div className="grid gap-4">
             <div className="grid gap-3">
-              <Label htmlFor="date_range">Periode Waktu</Label>
+              <Label htmlFor="date_range" className="text-muted-foreground">
+                Periode Waktu
+              </Label>
               <Select value={timePreset} onValueChange={setTimePreset}>
                 <SelectTrigger>
                   <SelectValue placeholder="Pilih Periode Waktu" />
@@ -106,7 +108,7 @@ export const FilterDialog = ({
               </Select>
             </div>
             <div className="grid gap-3">
-              <Label>Kelas</Label>
+              <Label className="text-muted-foreground">Kelas</Label>
               <Select value={classId} onValueChange={setClassId}>
                 <SelectTrigger>
                   <SelectValue placeholder="Pilih Kelas" />
@@ -125,7 +127,9 @@ export const FilterDialog = ({
               </Select>
             </div>
             <div className="grid gap-3">
-              <Label>Kategori Pelanggaran</Label>
+              <Label className="text-muted-foreground">
+                Kategori Pelanggaran
+              </Label>
               <Select value={categoryId} onValueChange={setCategoryId}>
                 <SelectTrigger>
                   <SelectValue placeholder="Pilih Kategori" />
@@ -144,7 +148,7 @@ export const FilterDialog = ({
               </Select>
             </div>
             <div className="grid gap-3">
-              <Label>Status Ditindak</Label>
+              <Label className="text-muted-foreground">Status Ditindak</Label>
               <Select value={status} onValueChange={setStatus}>
                 <SelectTrigger>
                   <SelectValue placeholder="Pilih Status" />
@@ -157,7 +161,7 @@ export const FilterDialog = ({
               </Select>
             </div>
             <div className="grid gap-3">
-              <Label>Guru</Label>
+              <Label className="text-muted-foreground">Guru</Label>
               <Select value={teacherId} onValueChange={setTeacherId}>
                 <SelectTrigger>
                   <SelectValue placeholder="Pilih Guru" />

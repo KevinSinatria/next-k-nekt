@@ -67,13 +67,13 @@ export function ViolationCategoryForm({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         {/* Header */}
-        <div className="border-b pb-4 mb-4">
-          <h3 className="text-lg font-semibold text-gray-800">
+        <div className="border-b border-border pb-4 mb-4">
+          <h3 className="text-lg font-semibold text-foreground dark:text-gray-100">
             {readOnly
               ? "Detail Data Kategori"
               : initialData
-              ? "Edit Data Kategori"
-              : "Tambah Kategori Baru"}
+                ? "Edit Data Kategori"
+                : "Tambah Kategori Baru"}
           </h3>
         </div>
 
@@ -83,10 +83,12 @@ export function ViolationCategoryForm({
             name="name"
             render={({ field }) => (
               <FormItem className="md:col-span-3">
-                <FormLabel className="text-gray-500">Nama Kategori</FormLabel>
+                <FormLabel className="text-muted-foreground">
+                  Nama Kategori
+                </FormLabel>
                 <FormControl>
                   {readOnly ? (
-                    <p className="font-medium text-gray-900 py-2 border-b border-dashed">
+                    <p className="font-medium text-foreground py-2 border-b border-dashed border-border">
                       {field.value || "-"}
                     </p>
                   ) : (
@@ -104,7 +106,7 @@ export function ViolationCategoryForm({
         </div>
 
         {/* Tombol Action */}
-        <div className="flex justify-end gap-3 pt-6 border-t">
+        <div className="flex justify-end gap-3 pt-6 border-t border-border">
           {!readOnly ? (
             <>
               <Button variant="outline" onClick={onCancel} type="button">

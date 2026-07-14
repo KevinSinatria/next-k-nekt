@@ -131,13 +131,13 @@ export function ViolationsForm({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         {/* Header */}
-        <div className="border-b pb-4 mb-4">
-          <h3 className="text-lg font-semibold text-gray-800">
+        <div className="border-b border-border pb-4 mb-4">
+          <h3 className="text-lg font-semibold text-foreground dark:text-gray-100">
             {readOnly
               ? "Detail Pelanggaran"
               : initialData
-              ? "Edit Pelanggaran"
-              : "Catat Pelanggaran Baru"}
+                ? "Edit Pelanggaran"
+                : "Catat Pelanggaran Baru"}
           </h3>
         </div>
 
@@ -147,16 +147,16 @@ export function ViolationsForm({
             name="nis"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-gray-500">NIS</FormLabel>
+                <FormLabel className="text-muted-foreground">NIS</FormLabel>
                 <FormControl>
                   {readOnly ? (
-                    <p className="font-medium text-gray-900 py-2 border-b border-dashed">
+                    <p className="font-medium text-foreground py-2 border-b border-dashed border-border">
                       {field.value || "-"}
                     </p>
                   ) : (
                     <Input
                       placeholder="NIS"
-                      className="bg-gray-50 border-gray-200 text-gray-500"
+                      className="bg-muted/50 border-border text-foreground"
                       {...field}
                       readOnly
                     />
@@ -172,10 +172,12 @@ export function ViolationsForm({
             name="name"
             render={({ field }) => (
               <FormItem className="md:col-span-2">
-                <FormLabel className="text-gray-500">Nama Siswa</FormLabel>
+                <FormLabel className="text-muted-foreground">
+                  Nama Siswa
+                </FormLabel>
                 <FormControl>
                   {readOnly ? (
-                    <p className="font-medium text-gray-900 py-2 border-b border-dashed">
+                    <p className="font-medium text-foreground py-2 border-b border-dashed border-border">
                       {field.value || "-"}
                     </p>
                   ) : (
@@ -192,15 +194,15 @@ export function ViolationsForm({
             name="class"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-gray-500">Kelas</FormLabel>
+                <FormLabel className="text-muted-foreground">Kelas</FormLabel>
                 <FormControl>
                   {readOnly ? (
-                    <p className="font-medium text-gray-900 py-2 border-b border-dashed">
+                    <p className="font-medium text-foreground py-2 border-b border-dashed border-border">
                       {field.value || "-"}
                     </p>
                   ) : (
                     <Input
-                      className="bg-gray-50 border-gray-200 text-gray-500"
+                      className="bg-muted/50 border-border text-foreground"
                       placeholder="Kelas"
                       readOnly
                       {...field}
@@ -217,12 +219,12 @@ export function ViolationsForm({
             name="violation_name"
             render={({ field }) => (
               <FormItem className="md:col-span-2">
-                <FormLabel className="text-gray-500">
+                <FormLabel className="text-muted-foreground">
                   Nama Pelanggaran
                 </FormLabel>
                 <FormControl>
                   {readOnly ? (
-                    <p className="font-medium text-gray-900 py-2 border-b border-dashed">
+                    <p className="font-medium text-foreground py-2 border-b border-dashed border-border">
                       {field.value || "-"}
                     </p>
                   ) : (
@@ -239,16 +241,18 @@ export function ViolationsForm({
             name="violation_category"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-gray-500">Kategori</FormLabel>
+                <FormLabel className="text-muted-foreground">
+                  Kategori
+                </FormLabel>
                 <FormControl>
                   {readOnly ? (
-                    <p className="font-medium text-gray-900 py-2 border-b border-dashed">
+                    <p className="font-medium text-foreground py-2 border-b border-dashed border-border">
                       {field.value || "-"}
                     </p>
                   ) : (
                     <Input
                       placeholder="Kategori"
-                      className="bg-gray-50 border-gray-200 text-gray-500"
+                      className="bg-muted/50 border-border text-foreground"
                       readOnly
                       {...field}
                     />
@@ -264,17 +268,17 @@ export function ViolationsForm({
             name="punishment_point"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-gray-500">Point</FormLabel>
+                <FormLabel className="text-muted-foreground">Point</FormLabel>
                 <FormControl>
                   {readOnly ? (
-                    <p className="font-medium text-gray-900 py-2 border-b border-dashed">
+                    <p className="font-medium text-foreground py-2 border-b border-dashed border-border">
                       {field.value || "0"}
                     </p>
                   ) : (
                     <Input
                       readOnly
                       placeholder="Point"
-                      className="bg-gray-50 border-gray-200 text-gray-500"
+                      className="bg-muted/50 border-border text-foreground"
                       {...field}
                     />
                   )}
@@ -289,16 +293,16 @@ export function ViolationsForm({
             name="punishment"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-gray-500">Sanksi</FormLabel>
+                <FormLabel className="text-muted-foreground">Sanksi</FormLabel>
                 <FormControl>
                   {readOnly ? (
-                    <p className="font-medium text-gray-900 py-2 border-b border-dashed">
+                    <p className="font-medium text-foreground py-2 border-b border-dashed border-border">
                       {field.value || "-"}
                     </p>
                   ) : (
                     <Input
                       placeholder="Sanksi"
-                      className="bg-gray-50 border-gray-200 text-gray-500"
+                      className="bg-muted/50 border-border text-foreground"
                       readOnly
                       {...field}
                     />
@@ -314,18 +318,18 @@ export function ViolationsForm({
             name="description"
             render={({ field }) => (
               <FormItem className="md:col-span-3">
-                <FormLabel className="text-gray-500">
+                <FormLabel className="text-muted-foreground">
                   Deskripsi Pelanggaran
                 </FormLabel>
                 <FormControl>
                   {readOnly ? (
-                    <p className="font-medium text-gray-900 py-2 border-b border-dashed whitespace-pre-wrap">
+                    <p className="font-medium text-foreground py-2 border-b border-dashed border-border whitespace-pre-wrap">
                       {field.value || "-"}
                     </p>
                   ) : (
                     <Textarea
                       placeholder="Deskripsi detail pelanggaran..."
-                      className="min-h-[100px]"
+                      className="min-h-[100px] bg-transparent"
                       {...field}
                     />
                   )}
@@ -360,7 +364,7 @@ export function ViolationsForm({
         </div>
 
         {/* Tombol Action */}
-        <div className="flex justify-end gap-3 pt-6 border-t">
+        <div className="flex justify-end gap-3 pt-6 border-t border-border">
           {!readOnly ? (
             <>
               <Button variant="outline" onClick={onCancel} type="button">

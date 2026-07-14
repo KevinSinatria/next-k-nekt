@@ -170,7 +170,7 @@ const Sidebar = ({
       .map((group) => ({
         ...group,
         items: group.items.filter((item) =>
-          user?.roles.some((r) => item.role?.includes(r))
+          user?.roles.some((r) => item.role?.includes(r)),
         ),
       }))
       .filter((group) => group.items.length > 0);
