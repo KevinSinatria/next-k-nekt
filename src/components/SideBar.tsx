@@ -98,6 +98,7 @@ const navGroups: NavGroup[] = [
         role: ["admin"],
       },
       { name: "Tipe Pelanggaran", path: "/violations-type", role: ["admin"] },
+      { name: "Kelola User", path: "/users", role: ["admin"] },
     ],
     role: ["admin"],
   },
