@@ -99,12 +99,12 @@ export function ViolationTypeForm({
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         {/* Header */}
         <div className="border-b pb-4 mb-4">
-          <h3 className="text-lg font-semibold text-gray-800">
+          <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
             {readOnly
               ? "Detail Jenis Pelanggaran"
               : initialData
-              ? "Edit Jenis Pelanggaran"
-              : "Tambah Jenis Pelanggaran"}
+                ? "Edit Jenis Pelanggaran"
+                : "Tambah Jenis Pelanggaran"}
           </h3>
         </div>
 
@@ -150,6 +150,18 @@ export function ViolationTypeForm({
                       type="number"
                       placeholder="Point"
                       {...field}
+                      onChange={(e) => {
+                        const target = e.target as HTMLInputElement;
+                        const value = target.value;
+                        if (value === "") {
+                          field.onChange(0);
+                        } else {
+                          const numericValue = parseInt(value, 10);
+                          if (!isNaN(numericValue)) {
+                            field.onChange(numericValue);
+                          }
+                        }
+                      }}
                       disabled={readOnly}
                     />
                   )}
@@ -168,7 +180,7 @@ export function ViolationTypeForm({
                   {readOnly ? (
                     <p className="font-medium text-gray-900 py-2 border-b border-dashed">
                       {violationCategories.find(
-                        (c) => c.id === Number(field.value)
+                        (c) => c.id === Number(field.value),
                       )?.name || "-"}
                     </p>
                   ) : (
