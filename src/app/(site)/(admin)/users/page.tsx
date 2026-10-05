@@ -19,7 +19,14 @@ export interface Meta {
 
 export default function UsersPage() {
   const [users, setUsers] = useState<UserType[]>([]);
-  const [meta, setMeta] = useState<Meta>({ page: 0, limit: 0, totalItems: 0, totalPage: 0, hasNextPage: false, hasPrevPage: false });
+  const [meta, setMeta] = useState<Meta>({
+    page: 0,
+    limit: 0,
+    totalItems: 0,
+    totalPage: 0,
+    hasNextPage: false,
+    hasPrevPage: false,
+  });
   const { setTitle } = useHeader();
   const { setIsAuthenticated } = useAuth();
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
@@ -33,7 +40,8 @@ export default function UsersPage() {
       setMeta(res.meta);
     } catch (error) {
       toast.dismiss("getUsers");
-      if (error instanceof AxiosError && error.status !== 401) toast.error("Gagal memuat data: " + error.response?.data.message);
+      if (error instanceof AxiosError && error.status !== 401)
+        toast.error("Gagal memuat data: " + error.response?.data.message);
       else setIsAuthenticated(false);
     }
   };
@@ -48,12 +56,15 @@ export default function UsersPage() {
       if (res.success) {
         toast.dismiss("deleteUser");
         toast.success("Data berhasil dihapus");
-        await getUsers(users.length === 1 && meta.page > 1 ? meta.page - 1 : meta.page);
+        await getUsers(
+          users.length === 1 && meta.page > 1 ? meta.page - 1 : meta.page,
+        );
       }
     } catch (error) {
       toast.dismiss("deleteUser");
       setUsers(original);
-      if (error instanceof AxiosError) toast.error(error.response?.data.message ?? "Gagal menghapus");
+      if (error instanceof AxiosError)
+        toast.error(error.response?.data.message ?? "Gagal menghapus");
       else toast.error("Data gagal dihapus");
     }
   };
@@ -67,17 +78,33 @@ export default function UsersPage() {
       setMeta(res.meta);
     } catch (error) {
       toast.dismiss("searchUsers");
-      if (error instanceof AxiosError && error.status !== 401) toast.error("Gagal memuat data: " + error.response?.data.message);
+      if (error instanceof AxiosError && error.status !== 401)
+        toast.error("Gagal memuat data: " + error.response?.data.message);
       else setIsAuthenticated(false);
     }
   };
 
-  useEffect(() => { getUsers(); }, []);
-  useEffect(() => { setTitle("Kelola User"); }, [setTitle]);
+  useEffect(() => {
+    if (!users.length) getUsers();
+  }, []);
+
+  useEffect(() => {
+    setTitle("Kelola User");
+  }, [setTitle]);
 
   return (
     <div className="flex flex-col h-full bg-gray-50 dark:bg-neutral-900 text-gray-900 dark:text-gray-100">
-      <UsersTable rootPath="/users" minWidth={400} data={users} meta={meta} handlePageChange={getUsers} deleteHandler={deleteHandler} searchHandler={handleSearch} openMenuId={openMenuId} setOpenMenuId={setOpenMenuId} />
+      <UsersTable
+        rootPath="/users"
+        minWidth={400}
+        data={users}
+        meta={meta}
+        handlePageChange={getUsers}
+        deleteHandler={deleteHandler}
+        searchHandler={handleSearch}
+        openMenuId={openMenuId}
+        setOpenMenuId={setOpenMenuId}
+      />
     </div>
   );
 }
