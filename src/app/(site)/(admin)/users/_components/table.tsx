@@ -31,11 +31,10 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { getAllUsersForExport } from "@/services/users";
 import { AxiosError } from "axios";
-import { useAuth } from "@/context/AuthContext";
 import { UserType } from "@/types/users";
 import {
   Pagination,
@@ -47,7 +46,6 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import * as XLSX from "xlsx";
-import { useDebounce } from "use-debounce";
 import { Badge } from "@/components/ui/badge";
 import { api } from "@/lib/api";
 import { ExcelImporter } from "@/components/ExcelImporter";
@@ -59,7 +57,8 @@ type UsersTableProps = {
   meta: Meta;
   handlePageChange: (page: number) => void;
   deleteHandler: (id: string) => void;
-  searchHandler: (search: string) => void;
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
   setOpenMenuId: (id: number | null) => void;
   openMenuId: number | null;
   rootPath: string;
@@ -129,16 +128,14 @@ export const UsersTable = ({
   meta,
   handlePageChange,
   deleteHandler,
-  searchHandler,
+  searchQuery,
+  setSearchQuery,
   setOpenMenuId,
   openMenuId,
   rootPath,
 }: UsersTableProps) => {
   const router = useRouter();
-  const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [search] = useDebounce(searchQuery, 600);
-  const { setIsAuthenticated } = useAuth();
 
   const onDetailClick = (id: number) => router.push(`${rootPath}/${id}`);
   const onEditClick = (id: number) => router.push(`${rootPath}/${id}/edit`);
@@ -177,14 +174,6 @@ export const UsersTable = ({
     }
   };
 
-  useEffect(() => {
-    if (search.length < 2) {
-      if (search.length === 0) handlePageChange(1);
-      return;
-    }
-    searchHandler(search);
-  }, [search]);
-
   const handleUpload = async (selectedFile: File) => {
     if (!selectedFile) {
       toast.error("Pilih file Excel terlebih dahulu!");
@@ -217,9 +206,11 @@ export const UsersTable = ({
         <div className="relative flex-1 min-w-[260px]">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 pointer-events-none" />
           <Input
+            id="users-search"
             type="search"
             placeholder="Cari username, nama, NIP..."
             className="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-200 bg-white shadow-sm focus:border-sky-500 focus:ring-2 focus:ring-sky-500/30 transition-all placeholder:text-gray-400"
+            value={searchQuery}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               setSearchQuery(e.target.value)
             }

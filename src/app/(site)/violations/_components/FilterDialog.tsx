@@ -21,11 +21,12 @@ import { ClassType } from "@/types/classes";
 import { TeacherType } from "@/types/users";
 import { ViolationCategoryType } from "@/types/violation-categories";
 import { FilterIcon, FilterX } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 interface FilterDialogProps {
   onApply?: (filter: FilterType) => void;
+  value: FilterType;
   classOptions: ClassType[];
   categoryOptions: ViolationCategoryType[];
   teacherOptions: TeacherType[];
@@ -43,18 +44,39 @@ export type FilterType = {
 
 export const FilterDialog = ({
   onApply,
+  value,
   classOptions,
   categoryOptions,
   teacherOptions,
   open,
   setOpen,
 }: FilterDialogProps) => {
-  const [timePreset, setTimePreset] = useState<string | undefined>();
-  const [classId, setClassId] = useState<string | undefined>();
-  const [categoryId, setCategoryId] = useState<string | undefined>();
-  const [teacherId, setTeacherId] = useState<string | undefined>();
-  const [status, setStatus] = useState<string | undefined>();
-  const [applied, setApplied] = useState(false);
+  const [timePreset, setTimePreset] = useState<string | undefined>(
+    value.timePreset,
+  );
+  const [classId, setClassId] = useState<string | undefined>(value.classId);
+  const [categoryId, setCategoryId] = useState<string | undefined>(
+    value.categoryId,
+  );
+  const [teacherId, setTeacherId] = useState<string | undefined>(
+    value.teacherId,
+  );
+  const [status, setStatus] = useState<string | undefined>(value.status);
+
+  useEffect(() => {
+    setTimePreset(value.timePreset);
+    setClassId(value.classId);
+    setCategoryId(value.categoryId);
+    setTeacherId(value.teacherId);
+    setStatus(value.status);
+  }, [value]);
+
+  const applied =
+    value.timePreset !== undefined ||
+    value.classId !== undefined ||
+    value.categoryId !== undefined ||
+    value.teacherId !== undefined ||
+    value.status !== undefined;
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -194,7 +216,6 @@ export const FilterDialog = ({
                 });
                 setOpen(false);
                 toast.success("Filter direset");
-                setApplied(false);
               }}
             >
               <FilterX className="mr-2 h-4 w-4" />
@@ -224,7 +245,6 @@ export const FilterDialog = ({
                 };
                 onApply!(data);
                 setOpen(false);
-                setApplied(true);
               }}
             >
               Terapkan Filter
