@@ -29,7 +29,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { getAllStudentsForExport } from "@/services/students";
 import { AxiosError } from "axios";
@@ -45,8 +45,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import * as XLSX from "xlsx";
-import { useDebounce } from "use-debounce";
-import { Meta } from "../../classes/page";
+import { Meta } from "../page";
 import { api } from "@/lib/api";
 import { ExcelImporter } from "@/components/ExcelImporter";
 import { usePagination } from "@/hooks/usePagination";
@@ -58,7 +57,8 @@ type StudentsTableProps = {
   meta: Meta;
   handlePageChange: (page: number) => void;
   deleteHandler: (nis: string) => void;
-  searchHandler: (search: string) => void;
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
   setOpenMenuNIS: (id: string | null) => void;
   openMenuNIS: string | null;
 };
@@ -140,15 +140,14 @@ export const StudentsTable = ({
   meta,
   handlePageChange,
   deleteHandler,
-  searchHandler,
+  searchQuery,
+  setSearchQuery,
   setOpenMenuNIS,
   openMenuNIS,
 }: StudentsTableProps) => {
   const router = useRouter();
   const { yearPeriods, loading } = useAuth();
-  const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [search] = useDebounce(searchQuery, 600);
 
   const onDetailClick = (nis: string) => {
     router.push(`${rootPath}/${nis}`);
@@ -215,17 +214,6 @@ export const StudentsTable = ({
     }
   };
 
-  useEffect(() => {
-    if (search.length < 2) {
-      if (search.length === 0) {
-        handlePageChange(1);
-      }
-      return;
-    }
-    searchHandler(search);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search]);
-
   const handleUpload = async (selectedFile: File) => {
     if (!selectedFile) {
       toast.error("Pilih file Excel terlebih dahulu!");
@@ -280,11 +268,13 @@ export const StudentsTable = ({
         <div className="relative flex-1 min-w-[260px]">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 pointer-events-none" />
           <Input
+            id="students-search"
             type="search"
             placeholder="Cari berdasarkan nama siswa, kelas atau lainnya..."
             className="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-200 bg-white shadow-sm
-               focus:border-sky-500 focus:ring-2 focus:ring-sky-500/30 
+               focus:border-sky-500 focus:ring-2 focus:ring-sky-500/30
                transition-all duration-200 placeholder:text-gray-400"
+            value={searchQuery}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               setSearchQuery(e.target.value)
             }
