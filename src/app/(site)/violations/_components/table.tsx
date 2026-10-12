@@ -67,6 +67,7 @@ interface ViolationsTableProps {
   handlePageChange: (page: number) => void;
   filter: FilterType;
   setFilter: (filter: FilterType) => void;
+  searchQuery: string;
   setSearchQuery: (query: string) => void;
 }
 
@@ -145,7 +146,9 @@ export const ViolationsTable = ({
   setViolations,
   meta,
   handlePageChange,
+  filter,
   setFilter,
+  searchQuery,
   setSearchQuery,
 }: ViolationsTableProps) => {
   const router = useRouter();
@@ -328,11 +331,13 @@ export const ViolationsTable = ({
         <div className="relative flex-1 min-w-[260px]">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 pointer-events-none" />
           <Input
+            id="violations-search"
             type="search"
             placeholder="Cari berdasarkan nama siswa, kelas atau lainnya..."
             className="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-200 bg-white shadow-sm
-               focus:border-sky-500 focus:ring-2 focus:ring-sky-500/30 
+               focus:border-sky-500 focus:ring-2 focus:ring-sky-500/30
                transition-all duration-200 placeholder:text-gray-400"
+            value={searchQuery}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               setSearchQuery(e.target.value)
             }
@@ -343,6 +348,7 @@ export const ViolationsTable = ({
             open={openFilterDialog}
             setOpen={setOpenFilterDialog}
             onApply={setFilter}
+            value={filter}
             classOptions={classes}
             categoryOptions={violationCategories}
             teacherOptions={teachers}
